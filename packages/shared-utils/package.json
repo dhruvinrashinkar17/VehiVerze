@@ -1,0 +1,33 @@
+{
+  "name": "@vehiverze/shared-utils",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./cn": {
+      "types": "./src/cn.ts",
+      "default": "./dist/cn.js"
+    },
+    "./format-date": {
+      "types": "./src/format-date.ts",
+      "default": "./dist/format-date.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.5"
+  },
+  "devDependencies": {
+    "@vehiverze/eslint-config": "workspace:*",
+    "@vehiverze/typescript-config": "workspace:*",
+    "eslint": "^8.57.0",
+    "typescript": "^5"
+  }
+}
+
