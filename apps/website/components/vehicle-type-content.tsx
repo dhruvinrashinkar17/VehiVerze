@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   Search,
   Star,
@@ -17,34 +17,43 @@ import {
   FileText,
   Phone,
   Mail,
-} from "lucide-react"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Slider } from "@vehiverze/ui/slider"
-import { Checkbox } from "@vehiverze/ui/checkbox"
-import { Label } from "@vehiverze/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@vehiverze/ui/accordion"
-import { Card, CardContent } from "@vehiverze/ui/card"
-import { Badge } from "@vehiverze/ui/badge"
-import { useRouter } from "next/navigation"
-import { SEO } from "@/components/seo"
+} from "lucide-react";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Slider } from "@vehiverze/ui/slider";
+import { Checkbox } from "@vehiverze/ui/checkbox";
+import { Label } from "@vehiverze/ui/label";
 import {
-  generateVehicleStructuredData,
-  generateBreadcrumbStructuredData,
-  generateFAQStructuredData,
-} from "@/lib/seo-config"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@vehiverze/ui/accordion";
+import { Card, CardContent } from "@vehiverze/ui/card";
+import { Badge } from "@vehiverze/ui/badge";
+import { useRouter } from "next/navigation";
 
 interface VehicleTypeContentProps {
-  vehicleType: string
-  title: string
-  description: string
+  vehicleType: string;
+  title: string;
+  description: string;
 }
 
-export function VehicleTypeContent({ vehicleType, title, description }: VehicleTypeContentProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [priceRange, setPriceRange] = useState([0, 100])
-  const [selectedCategory, setSelectedCategory] = useState("all")
+export function VehicleTypeContent({
+  vehicleType,
+  title,
+  description,
+}: VehicleTypeContentProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFilters, setSelectedFilters] = useState({
     brand: [],
     fuelType: [],
@@ -52,9 +61,9 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
     bodyType: [],
     year: [],
     location: [],
-  })
+  });
 
-  const router = useRouter()
+  const router = useRouter();
 
   // Get vehicle data based on type
   const getVehicles = () => {
@@ -108,7 +117,11 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
             rating: 4.6,
             type: "Street",
             fuelType: "Petrol",
-            features: ["LED Headlight", "Digital Console", "Single Channel ABS"],
+            features: [
+              "LED Headlight",
+              "Digital Console",
+              "Single Channel ABS",
+            ],
             verified: true,
             discount: "11% off",
           },
@@ -163,7 +176,7 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
             verified: true,
             discount: "10% off",
           },
-        ]
+        ];
       case "3-wheeler":
         return [
           {
@@ -234,7 +247,7 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
             verified: true,
             discount: "11% off",
           },
-        ]
+        ];
       case "4-wheeler":
         return [
           {
@@ -339,7 +352,7 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
             verified: true,
             discount: "11% off",
           },
-        ]
+        ];
       case "6-wheeler":
         return [
           {
@@ -410,7 +423,7 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
             verified: true,
             discount: "11% off",
           },
-        ]
+        ];
       case "more-than-8-wheeler":
         return [
           {
@@ -481,71 +494,76 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
             verified: true,
             discount: "12% off",
           },
-        ]
+        ];
       default:
-        return []
+        return [];
     }
-  }
+  };
 
-  const vehicles = getVehicles()
+  const vehicles = getVehicles();
 
   // Filter vehicles based on search query and category
   const filteredVehicles = vehicles.filter((vehicle) => {
-    const matchesSearch = searchQuery === "" || vehicle.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesSearch =
+      searchQuery === "" ||
+      vehicle.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
       vehicleType !== "4-wheeler" ||
       selectedCategory === "all" ||
-      vehicle.type.toLowerCase().includes(selectedCategory.toLowerCase())
+      vehicle.type.toLowerCase().includes(selectedCategory.toLowerCase());
 
     // Basic price range filter
-    const maxPrice = vehicles.length > 0 ? Math.max(...vehicles.map((v) => v.price)) : 5000000
-    const minPrice = vehicles.length > 0 ? Math.min(...vehicles.map((v) => v.price)) : 0
-    const priceFactor = (maxPrice - minPrice) / 100
+    const maxPrice =
+      vehicles.length > 0 ? Math.max(...vehicles.map((v) => v.price)) : 5000000;
+    const minPrice =
+      vehicles.length > 0 ? Math.min(...vehicles.map((v) => v.price)) : 0;
+    const priceFactor = (maxPrice - minPrice) / 100;
     const matchesPrice =
-      vehicle.price >= priceRange[0] * priceFactor + minPrice && vehicle.price <= priceRange[1] * priceFactor + minPrice
+      vehicle.price >= priceRange[0] * priceFactor + minPrice &&
+      vehicle.price <= priceRange[1] * priceFactor + minPrice;
 
-    return matchesSearch && matchesCategory && matchesPrice
-  })
+    return matchesSearch && matchesCategory && matchesPrice;
+  });
 
   const formatPrice = (price: number) => {
     if (price >= 10000000) {
-      return `₹${(price / 10000000).toFixed(2)} Cr`
+      return `₹${(price / 10000000).toFixed(2)} Cr`;
     } else if (price >= 100000) {
-      return `₹${(price / 100000).toFixed(2)} Lakh`
+      return `₹${(price / 100000).toFixed(2)} Lakh`;
     } else if (price >= 1000) {
-      return `₹${(price / 1000).toFixed(2)} K`
+      return `₹${(price / 1000).toFixed(2)} K`;
     } else {
-      return `₹${price}`
+      return `₹${price}`;
     }
-  }
+  };
 
   const handleViewDetails = (vehicleId: number) => {
-    router.push(`/buy/vehicle-details/${vehicleId}`)
-  }
+    router.push(`/buy/vehicle-details/${vehicleId}`);
+  };
 
   const handleContactSeller = (vehicleId: number) => {
     // Handle contact seller logic
-    console.log("Contact seller for vehicle:", vehicleId)
-  }
+    console.log("Contact seller for vehicle:", vehicleId);
+  };
 
   const getVehicleTypeCategories = () => {
     switch (vehicleType) {
       case "2-wheeler":
-        return ["all", "scooter", "bike", "electric"]
+        return ["all", "scooter", "bike", "electric"];
       case "3-wheeler":
-        return ["all", "passenger auto", "cargo auto", "e-rickshaw"]
+        return ["all", "passenger auto", "cargo auto", "e-rickshaw"];
       case "4-wheeler":
-        return ["all", "hatchback", "sedan", "suv", "muv"]
+        return ["all", "hatchback", "sedan", "suv", "muv"];
       case "6-wheeler":
-        return ["all", "goods carrier", "tipper", "bus"]
+        return ["all", "goods carrier", "tipper", "bus"];
       case "more-than-8-wheeler":
-        return ["all", "heavy truck", "container truck", "luxury bus"]
+        return ["all", "heavy truck", "container truck", "luxury bus"];
       default:
-        return ["all"]
+        return ["all"];
     }
-  }
+  };
 
-  const categories = getVehicleTypeCategories()
+  const categories = getVehicleTypeCategories();
 
   const faqs = [
     {
@@ -567,21 +585,10 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
       answer:
         "To purchase a vehicle, you'll need identification proof (Aadhar Card, PAN Card, Voter ID), address proof, income proof (for financing), and a valid driving license. For the vehicle transfer, you'll need the transfer form, insurance documents, and NOC if the vehicle is registered in a different state.",
     },
-  ]
-
-  const structuredData = [
-    generateVehicleStructuredData(vehicleType, undefined, undefined),
-    generateBreadcrumbStructuredData([
-      { name: "Home", url: "/" },
-      { name: "Buy", url: "/buy" },
-      { name: title, url: `/buy/${vehicleType}` },
-    ]),
-    generateFAQStructuredData(faqs),
-  ]
+  ];
 
   return (
     <>
-      <SEO title={title} description={description} canonical={`/buy/${vehicleType}`} structuredData={structuredData} />
       <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
         <div className="container mx-auto px-4 py-8">
           {/* Hero Section */}
@@ -590,18 +597,25 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
             <div className="relative z-10 px-6 py-12 md:py-16 md:px-12 text-white">
               <div className="max-w-4xl mx-auto text-center">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">{title}</h1>
-                <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-90 mb-8">{description}</p>
+                <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-90 mb-8">
+                  {description}
+                </p>
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
                   {[
-                    { number: `${vehicles.length}+`, label: "Vehicles Available" },
+                    {
+                      number: `${vehicles.length}+`,
+                      label: "Vehicles Available",
+                    },
                     { number: "200+", label: "Quality Checks" },
                     { number: "100+", label: "Cities Covered" },
                     { number: "4.8/5", label: "Customer Rating" },
                   ].map((stat, index) => (
                     <div key={index} className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-white">{stat.number}</div>
+                      <div className="text-2xl md:text-3xl font-bold text-white">
+                        {stat.number}
+                      </div>
                       <div className="text-sm text-white/80">{stat.label}</div>
                     </div>
                   ))}
@@ -624,10 +638,18 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="relevance">Relevance</SelectItem>
-                      <SelectItem value="price-low">Price: Low to High</SelectItem>
-                      <SelectItem value="price-high">Price: High to Low</SelectItem>
-                      <SelectItem value="year-new">Year: Newest First</SelectItem>
-                      <SelectItem value="km-low">Kilometers: Low to High</SelectItem>
+                      <SelectItem value="price-low">
+                        Price: Low to High
+                      </SelectItem>
+                      <SelectItem value="price-high">
+                        Price: High to Low
+                      </SelectItem>
+                      <SelectItem value="year-new">
+                        Year: Newest First
+                      </SelectItem>
+                      <SelectItem value="km-low">
+                        Kilometers: Low to High
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -642,7 +664,9 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                 {categories.map((category) => (
                   <Button
                     key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
+                    variant={
+                      selectedCategory === category ? "default" : "outline"
+                    }
                     onClick={() => setSelectedCategory(category)}
                     className={`px-6 py-2 rounded-full transition-all duration-300 capitalize ${
                       selectedCategory === category
@@ -669,7 +693,9 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
 
                 {/* Price Range Filter */}
                 <div className="border-b border-gray-100 pb-5 mb-5">
-                  <h3 className="font-medium mb-4 text-gray-800">Price Range</h3>
+                  <h3 className="font-medium mb-4 text-gray-800">
+                    Price Range
+                  </h3>
                   <div className="px-2">
                     <Slider
                       defaultValue={[0, 100]}
@@ -681,7 +707,11 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                     <div className="flex justify-between text-sm text-gray-600">
                       <span>{formatPrice(0)}</span>
                       <span>
-                        {formatPrice(vehicles.length > 0 ? Math.max(...vehicles.map((v) => v.price)) : 5000000)}
+                        {formatPrice(
+                          vehicles.length > 0
+                            ? Math.max(...vehicles.map((v) => v.price))
+                            : 5000000
+                        )}
                       </span>
                     </div>
                   </div>
@@ -691,14 +721,22 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                 <div className="border-b border-gray-100 pb-5 mb-5">
                   <h3 className="font-medium mb-4 text-gray-800">Brand</h3>
                   <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                    {Array.from(new Set(vehicles.map((v) => v.brand))).map((brand) => (
-                      <div key={brand} className="flex items-center">
-                        <Checkbox id={`brand-${brand}`} className="text-blue-600 rounded-sm" />
-                        <Label htmlFor={`brand-${brand}`} className="ml-2 text-sm cursor-pointer">
-                          {brand}
-                        </Label>
-                      </div>
-                    ))}
+                    {Array.from(new Set(vehicles.map((v) => v.brand))).map(
+                      (brand) => (
+                        <div key={brand} className="flex items-center">
+                          <Checkbox
+                            id={`brand-${brand}`}
+                            className="text-blue-600 rounded-sm"
+                          />
+                          <Label
+                            htmlFor={`brand-${brand}`}
+                            className="ml-2 text-sm cursor-pointer"
+                          >
+                            {brand}
+                          </Label>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
 
@@ -706,14 +744,22 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                 <div className="border-b border-gray-100 pb-5 mb-5">
                   <h3 className="font-medium mb-4 text-gray-800">Type</h3>
                   <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                    {Array.from(new Set(vehicles.map((v) => v.type))).map((type) => (
-                      <div key={type} className="flex items-center">
-                        <Checkbox id={`type-${type}`} className="text-blue-600 rounded-sm" />
-                        <Label htmlFor={`type-${type}`} className="ml-2 text-sm cursor-pointer">
-                          {type}
-                        </Label>
-                      </div>
-                    ))}
+                    {Array.from(new Set(vehicles.map((v) => v.type))).map(
+                      (type) => (
+                        <div key={type} className="flex items-center">
+                          <Checkbox
+                            id={`type-${type}`}
+                            className="text-blue-600 rounded-sm"
+                          />
+                          <Label
+                            htmlFor={`type-${type}`}
+                            className="ml-2 text-sm cursor-pointer"
+                          >
+                            {type}
+                          </Label>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
 
@@ -725,8 +771,14 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                       .sort((a, b) => b - a)
                       .map((year) => (
                         <div key={year} className="flex items-center">
-                          <Checkbox id={`year-${year}`} className="text-blue-600 rounded-sm" />
-                          <Label htmlFor={`year-${year}`} className="ml-2 text-sm cursor-pointer">
+                          <Checkbox
+                            id={`year-${year}`}
+                            className="text-blue-600 rounded-sm"
+                          />
+                          <Label
+                            htmlFor={`year-${year}`}
+                            className="ml-2 text-sm cursor-pointer"
+                          >
                             {year}
                           </Label>
                         </div>
@@ -738,20 +790,33 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                 <div className="border-b border-gray-100 pb-5 mb-5">
                   <h3 className="font-medium mb-4 text-gray-800">Location</h3>
                   <div className="space-y-2">
-                    {Array.from(new Set(vehicles.map((v) => v.location))).map((location) => (
-                      <div key={location} className="flex items-center">
-                        <Checkbox id={`location-${location}`} className="text-blue-600 rounded-sm" />
-                        <Label htmlFor={`location-${location}`} className="ml-2 text-sm cursor-pointer">
-                          {location}
-                        </Label>
-                      </div>
-                    ))}
+                    {Array.from(new Set(vehicles.map((v) => v.location))).map(
+                      (location) => (
+                        <div key={location} className="flex items-center">
+                          <Checkbox
+                            id={`location-${location}`}
+                            className="text-blue-600 rounded-sm"
+                          />
+                          <Label
+                            htmlFor={`location-${location}`}
+                            className="ml-2 text-sm cursor-pointer"
+                          >
+                            {location}
+                          </Label>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
 
                 <div className="pt-4 flex flex-col gap-3">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">Apply Filters</Button>
-                  <Button variant="outline" className="w-full border-gray-200 text-gray-700 bg-transparent">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    Apply Filters
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full border-gray-200 text-gray-700 bg-transparent"
+                  >
                     Reset
                   </Button>
                 </div>
@@ -765,10 +830,17 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                 <div className="mb-10">
                   <div className="flex justify-between items-center mb-6">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900">Featured Listings</h2>
-                      <p className="text-sm text-gray-500">Handpicked vehicles from verified sellers</p>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Featured Listings
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        Handpicked vehicles from verified sellers
+                      </p>
                     </div>
-                    <Button variant="link" className="text-blue-600 font-medium">
+                    <Button
+                      variant="link"
+                      className="text-blue-600 font-medium"
+                    >
                       View All
                     </Button>
                   </div>
@@ -795,7 +867,7 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                               variant="ghost"
                               className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
                               onClick={(e) => {
-                                e.stopPropagation()
+                                e.stopPropagation();
                                 // Handle wishlist
                               }}
                             >
@@ -810,19 +882,28 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                           <div className="absolute bottom-3 left-3 right-3">
                             <div className="flex items-center justify-between text-white">
                               <div className="flex items-center gap-1 bg-black/50 rounded-full px-2 py-1">
-                                <Star className="h-3 w-3 text-yellow-400" fill="currentColor" />
-                                <span className="text-xs font-medium">{vehicle.rating}</span>
+                                <Star
+                                  className="h-3 w-3 text-yellow-400"
+                                  fill="currentColor"
+                                />
+                                <span className="text-xs font-medium">
+                                  {vehicle.rating}
+                                </span>
                               </div>
                               <div className="flex items-center gap-1 bg-black/50 rounded-full px-2 py-1">
                                 <MapPin className="h-3 w-3" />
-                                <span className="text-xs">{vehicle.location}</span>
+                                <span className="text-xs">
+                                  {vehicle.location}
+                                </span>
                               </div>
                             </div>
                           </div>
                         </div>
                         <CardContent className="p-4">
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="font-semibold text-gray-900 text-lg leading-tight">{vehicle.name}</h3>
+                            <h3 className="font-semibold text-gray-900 text-lg leading-tight">
+                              {vehicle.name}
+                            </h3>
                             <Badge variant="outline" className="text-xs">
                               {vehicle.type}
                             </Badge>
@@ -844,26 +925,34 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                           </div>
 
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="text-2xl font-bold text-green-600">{formatPrice(vehicle.price)}</span>
+                            <span className="text-2xl font-bold text-green-600">
+                              {formatPrice(vehicle.price)}
+                            </span>
                             <span className="text-sm text-gray-500 line-through">
                               {formatPrice(vehicle.originalPrice)}
                             </span>
                           </div>
 
                           <div className="flex flex-wrap gap-1 mb-4">
-                            {vehicle.features.slice(0, 3).map((feature, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {feature}
-                              </Badge>
-                            ))}
+                            {vehicle.features
+                              .slice(0, 3)
+                              .map((feature, index) => (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {feature}
+                                </Badge>
+                              ))}
                           </div>
 
                           <div className="flex gap-2">
                             <Button
                               className="flex-1 bg-blue-600 hover:bg-blue-700"
                               onClick={(e) => {
-                                e.stopPropagation()
-                                handleViewDetails(vehicle.id)
+                                e.stopPropagation();
+                                handleViewDetails(vehicle.id);
                               }}
                             >
                               View Details
@@ -872,8 +961,8 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                               variant="outline"
                               className="flex-1 bg-transparent"
                               onClick={(e) => {
-                                e.stopPropagation()
-                                handleContactSeller(vehicle.id)
+                                e.stopPropagation();
+                                handleContactSeller(vehicle.id);
                               }}
                             >
                               <Phone className="h-4 w-4 mr-1" />
@@ -890,7 +979,9 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
               {/* All Vehicle Listings */}
               <div className="mb-10">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">All Available {title}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    All Available {title}
+                  </h2>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <span>{filteredVehicles.length} vehicles found</span>
                   </div>
@@ -922,7 +1013,7 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                               variant="ghost"
                               className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
                               onClick={(e) => {
-                                e.stopPropagation()
+                                e.stopPropagation();
                                 // Handle wishlist
                               }}
                             >
@@ -937,19 +1028,28 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                           <div className="absolute bottom-3 left-3 right-3">
                             <div className="flex items-center justify-between text-white">
                               <div className="flex items-center gap-1 bg-black/50 rounded-full px-2 py-1">
-                                <Star className="h-3 w-3 text-yellow-400" fill="currentColor" />
-                                <span className="text-xs font-medium">{vehicle.rating}</span>
+                                <Star
+                                  className="h-3 w-3 text-yellow-400"
+                                  fill="currentColor"
+                                />
+                                <span className="text-xs font-medium">
+                                  {vehicle.rating}
+                                </span>
                               </div>
                               <div className="flex items-center gap-1 bg-black/50 rounded-full px-2 py-1">
                                 <MapPin className="h-3 w-3" />
-                                <span className="text-xs">{vehicle.location}</span>
+                                <span className="text-xs">
+                                  {vehicle.location}
+                                </span>
                               </div>
                             </div>
                           </div>
                         </div>
                         <CardContent className="p-4">
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="font-semibold text-gray-900 text-lg leading-tight">{vehicle.name}</h3>
+                            <h3 className="font-semibold text-gray-900 text-lg leading-tight">
+                              {vehicle.name}
+                            </h3>
                             <Badge variant="outline" className="text-xs">
                               {vehicle.type}
                             </Badge>
@@ -971,26 +1071,34 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                           </div>
 
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="text-2xl font-bold text-green-600">{formatPrice(vehicle.price)}</span>
+                            <span className="text-2xl font-bold text-green-600">
+                              {formatPrice(vehicle.price)}
+                            </span>
                             <span className="text-sm text-gray-500 line-through">
                               {formatPrice(vehicle.originalPrice)}
                             </span>
                           </div>
 
                           <div className="flex flex-wrap gap-1 mb-4">
-                            {vehicle.features.slice(0, 3).map((feature, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {feature}
-                              </Badge>
-                            ))}
+                            {vehicle.features
+                              .slice(0, 3)
+                              .map((feature, index) => (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {feature}
+                                </Badge>
+                              ))}
                           </div>
 
                           <div className="flex gap-2">
                             <Button
                               className="flex-1 bg-blue-600 hover:bg-blue-700"
                               onClick={(e) => {
-                                e.stopPropagation()
-                                handleViewDetails(vehicle.id)
+                                e.stopPropagation();
+                                handleViewDetails(vehicle.id);
                               }}
                             >
                               View Details
@@ -999,8 +1107,8 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                               variant="outline"
                               className="flex-1 bg-transparent"
                               onClick={(e) => {
-                                e.stopPropagation()
-                                handleContactSeller(vehicle.id)
+                                e.stopPropagation();
+                                handleContactSeller(vehicle.id);
                               }}
                             >
                               <Phone className="h-4 w-4 mr-1" />
@@ -1017,15 +1125,24 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                       <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
                         <Search className="h-12 w-12 text-gray-400" />
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-700 mb-2">No vehicles found</h3>
+                      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                        No vehicles found
+                      </h3>
                       <p className="text-gray-500 mb-6">
-                        Try adjusting your search or filter criteria to find more vehicles
+                        Try adjusting your search or filter criteria to find
+                        more vehicles
                       </p>
                       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <Button onClick={() => setSearchQuery("")} variant="outline">
+                        <Button
+                          onClick={() => setSearchQuery("")}
+                          variant="outline"
+                        >
                           Clear Search
                         </Button>
-                        <Button onClick={() => setSelectedCategory("all")} className="bg-blue-600 hover:bg-blue-700">
+                        <Button
+                          onClick={() => setSelectedCategory("all")}
+                          className="bg-blue-600 hover:bg-blue-700"
+                        >
                           Reset Filters
                         </Button>
                       </div>
@@ -1037,7 +1154,11 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
               {/* Load More */}
               {filteredVehicles.length > 0 && (
                 <div className="text-center">
-                  <Button variant="outline" size="lg" className="px-8 bg-transparent">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="px-8 bg-transparent"
+                  >
                     Load More Vehicles
                   </Button>
                 </div>
@@ -1048,23 +1169,28 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
           {/* Trust Indicators */}
           <div className="mt-16 mb-8">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Why Choose Vehiverze?</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Why Choose Vehiverze?
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   {
                     icon: <Shield className="h-8 w-8 text-blue-600" />,
                     title: "Verified Vehicles",
-                    description: "All vehicles undergo thorough inspection and verification",
+                    description:
+                      "All vehicles undergo thorough inspection and verification",
                   },
                   {
                     icon: <CreditCard className="h-8 w-8 text-green-600" />,
                     title: "Easy Financing",
-                    description: "Get instant loan approval with competitive rates",
+                    description:
+                      "Get instant loan approval with competitive rates",
                   },
                   {
                     icon: <FileText className="h-8 w-8 text-purple-600" />,
                     title: "Paperwork Support",
-                    description: "Complete RC transfer and documentation assistance",
+                    description:
+                      "Complete RC transfer and documentation assistance",
                   },
                   {
                     icon: <Truck className="h-8 w-8 text-orange-600" />,
@@ -1073,9 +1199,15 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
                   },
                 ].map((feature, index) => (
                   <div key={index} className="text-center">
-                    <div className="flex justify-center mb-4">{feature.icon}</div>
-                    <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                    <p className="text-sm text-gray-600">{feature.description}</p>
+                    <div className="flex justify-center mb-4">
+                      {feature.icon}
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {feature.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -1084,10 +1216,16 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
 
           {/* FAQ Section */}
           <div className="mt-16 mb-8 bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Frequently Asked Questions
+            </h2>
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
-                <AccordionItem key={`faq-${index}`} value={`item-${index + 1}`} className="border-b border-gray-200">
+                <AccordionItem
+                  key={`faq-${index}`}
+                  value={`item-${index + 1}`}
+                  className="border-b border-gray-200"
+                >
                   <AccordionTrigger className="text-gray-800 hover:text-blue-600 hover:no-underline py-4">
                     {faq.question}
                   </AccordionTrigger>
@@ -1101,16 +1239,22 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
 
           {/* Call to Action */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 text-white text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to find your perfect vehicle?</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Ready to find your perfect vehicle?
+            </h2>
             <p className="text-lg opacity-90 max-w-2xl mx-auto mb-6">
-              Browse our growing collection of quality vehicles and find the one that fits your needs and budget.
+              Browse our growing collection of quality vehicles and find the one
+              that fits your needs and budget.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button className="bg-white text-blue-600 hover:bg-blue-50">
                 <Phone className="h-4 w-4 mr-2" />
                 Contact Our Team
               </Button>
-              <Button variant="outline" className="text-white border-white hover:bg-blue-700 bg-transparent">
+              <Button
+                variant="outline"
+                className="text-white border-white hover:bg-blue-700 bg-transparent"
+              >
                 <Mail className="h-4 w-4 mr-2" />
                 Schedule a Visit
               </Button>
@@ -1119,30 +1263,37 @@ export function VehicleTypeContent({ vehicleType, title, description }: VehicleT
         </div>
       </div>
     </>
-  )
+  );
 }
 
 // Helper function to get vehicle type specific content
 export function getVehicleTypeContent(vehicleType: string) {
-  const typeMap: Record<string, { title: string; description: string; categories: string[] }> = {
+  const typeMap: Record<
+    string,
+    { title: string; description: string; categories: string[] }
+  > = {
     "2-wheeler": {
       title: "Two Wheeler Vehicles",
-      description: "Browse our collection of bikes, scooters, and other two-wheeler vehicles",
+      description:
+        "Browse our collection of bikes, scooters, and other two-wheeler vehicles",
       categories: ["Bikes", "Scooters", "Electric"],
     },
     "3-wheeler": {
       title: "Three Wheeler Vehicles",
-      description: "Browse our collection of auto rickshaws and other three-wheeler vehicles",
+      description:
+        "Browse our collection of auto rickshaws and other three-wheeler vehicles",
       categories: ["Auto Rickshaws", "Electric Rickshaws", "Delivery Vehicles"],
     },
     "4-wheeler": {
       title: "Four Wheeler Vehicles",
-      description: "Browse our collection of cars, SUVs, and other four-wheeler vehicles",
+      description:
+        "Browse our collection of cars, SUVs, and other four-wheeler vehicles",
       categories: ["Cars", "Commercial Cars", "Trucks"],
     },
     "6-wheeler": {
       title: "Six Wheeler Vehicles",
-      description: "Browse our collection of medium trucks, buses, and other six-wheeler vehicles",
+      description:
+        "Browse our collection of medium trucks, buses, and other six-wheeler vehicles",
       categories: ["Trucks", "Bus"],
     },
     "more-than-8-wheeler": {
@@ -1151,7 +1302,7 @@ export function getVehicleTypeContent(vehicleType: string) {
         "Browse our collection of heavy trucks, trailers, and other commercial vehicles with more than 8 wheels",
       categories: ["Trucks", "Bus"],
     },
-  }
+  };
 
   return (
     typeMap[vehicleType] || {
@@ -1159,7 +1310,5 @@ export function getVehicleTypeContent(vehicleType: string) {
       description: "Browse our collection of vehicles",
       categories: ["All"],
     }
-  )
+  );
 }
-
-

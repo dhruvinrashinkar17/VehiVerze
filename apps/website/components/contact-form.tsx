@@ -1,33 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Label } from "@vehiverze/ui/label"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Label } from "@vehiverze/ui/label";
 
 export function ContactForm() {
-  const router = useRouter()
+  const router = useRouter();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
-  })
+  });
 
-  const handleChange = (e) => {
-    const { id, value } = e.target
-    setFormData((prev) => ({ ...prev, [id]: value }))
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     // Process form data
-    router.push("/verify") // Navigate to verification page
-  }
+    router.push("/verify"); // Navigate to verification page
+  };
 
   return (
     <div className="max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6">Your Contact Information</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">
+        Your Contact Information
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
@@ -69,13 +71,14 @@ export function ContactForm() {
           <Button variant="outline" type="button" onClick={() => router.back()}>
             Back
           </Button>
-          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
             Continue
           </Button>
         </div>
       </form>
     </div>
-  )
+  );
 }
-
-

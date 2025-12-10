@@ -1,43 +1,50 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@vehiverze/ui/table"
-import { Badge } from "@vehiverze/ui/badge"
-import { Button } from "@vehiverze/ui/button"
-import { formatDate } from "@vehiverze/shared-utils/cn"
+import { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@vehiverze/ui/table";
+import { Badge } from "@vehiverze/ui/badge";
+import { Button } from "@vehiverze/ui/button";
+import { formatDate } from "@vehiverze/shared-utils/format-date";
 
 interface SellOrder {
-  id: string
-  status: string
-  vehicleType: string
-  brand: string
-  model: string
-  condition: string
-  sellerName: string
-  estimatedPriceMin: number
-  estimatedPriceMax: number
-  createdAt: string
+  id: string;
+  status: string;
+  vehicleType: string;
+  brand: string;
+  model: string;
+  condition: string;
+  sellerName: string;
+  estimatedPriceMin: number;
+  estimatedPriceMax: number;
+  createdAt: string;
 }
 
 export function SellOrdersTable() {
-  const [orders, setOrders] = useState<SellOrder[]>([])
-  const [loading, setLoading] = useState(true)
+  const [orders, setOrders] = useState<SellOrder[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchOrders()
-  }, [])
+    fetchOrders();
+  }, []);
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("/api/sell-orders")
-      const data = await response.json()
-      setOrders(data)
+      const response = await fetch("/api/sell-orders");
+      const data = await response.json();
+      setOrders(data);
     } catch (error) {
-      console.error("Failed to fetch orders:", error)
+      console.error("Failed to fetch orders:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     const colors = {
@@ -50,12 +57,12 @@ export function SellOrdersTable() {
       PAYMENT_PENDING: "bg-blue-500",
       COMPLETED: "bg-green-500",
       CANCELLED: "bg-gray-500",
-    }
-    return colors[status as keyof typeof colors] || "bg-gray-500"
-  }
+    };
+    return colors[status as keyof typeof colors] || "bg-gray-500";
+  };
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
@@ -81,16 +88,21 @@ export function SellOrdersTable() {
                   <div className="font-medium">
                     {order.brand} {order.model}
                   </div>
-                  <div className="text-sm text-gray-400">{order.vehicleType}</div>
+                  <div className="text-sm text-gray-400">
+                    {order.vehicleType}
+                  </div>
                 </div>
               </TableCell>
               <TableCell>{order.sellerName}</TableCell>
               <TableCell>{order.condition}</TableCell>
               <TableCell>
-                ₹{order.estimatedPriceMin.toLocaleString()} - ₹{order.estimatedPriceMax.toLocaleString()}
+                ₹{order.estimatedPriceMin.toLocaleString()} - ₹
+                {order.estimatedPriceMax.toLocaleString()}
               </TableCell>
               <TableCell>
-                <Badge className={getStatusColor(order.status)}>{order.status.replace(/_/g, " ")}</Badge>
+                <Badge className={getStatusColor(order.status)}>
+                  {order.status.replace(/_/g, " ")}
+                </Badge>
               </TableCell>
               <TableCell>
                 <Button
@@ -108,7 +120,5 @@ export function SellOrdersTable() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
-
-

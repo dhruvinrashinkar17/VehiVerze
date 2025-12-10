@@ -1,22 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ProductList } from "@/components/products/product-list"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@vehiverze/ui/dialog"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { Button } from "@vehiverze/ui/button"
-import { Badge } from "@vehiverze/ui/badge"
-import { Input } from "@vehiverze/ui/input"
-import { Label } from "@vehiverze/ui/label"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@vehiverze/ui/accordion"
-import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group"
-import { Progress } from "@vehiverze/ui/progress"
-import type { VehicleProduct } from "@/lib/mock-data/vehicle-types"
-import { ProductForm } from "@/components/products/product-form"
-import { conditionColors } from "@/lib/mock-data/vehicle-types"
-import { vehiclesDb } from "@/lib/mock-data/vehicle-store"
-import type { VehicleCondition } from "@/lib/mock-data/inspection-questions"
-import { Save, Calculator } from "lucide-react"
+import { useState } from "react";
+import { ProductList } from "@/components/products/product-list";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@vehiverze/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { Button } from "@vehiverze/ui/button";
+import { Badge } from "@vehiverze/ui/badge";
+import { Input } from "@vehiverze/ui/input";
+import { Label } from "@vehiverze/ui/label";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@vehiverze/ui/accordion";
+import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group";
+import { Progress } from "@vehiverze/ui/progress";
+import type { VehicleProduct } from "@/lib/mock-data/vehicle-types";
+import { ProductForm } from "@/components/products/product-form";
+import { conditionColors } from "@/lib/mock-data/vehicle-types";
+import { vehiclesDb } from "@/lib/mock-data/vehicle-store";
+import type { VehicleCondition } from "@/lib/mock-data/inspection-questions";
+import { Save, Calculator } from "lucide-react";
 
 // Complete 300-point inspection questions for each vehicle type
 const inspectionQuestions = {
@@ -2048,21 +2059,28 @@ const inspectionQuestions = {
       "Commercial overall vehicle condition",
     ],
   },
-}
+};
 
 export default function ProductManagementPage() {
-  const [editingProduct, setEditingProduct] = useState<VehicleProduct | null>(null)
-  const [inspectingProduct, setInspectingProduct] = useState<VehicleProduct | null>(null)
-  const [inspectionAnswers, setInspectionAnswers] = useState<Record<string, VehicleCondition>>({})
-  const [customBasePrice, setCustomBasePrice] = useState<number>(0)
-  const [vehicles, setVehicles] = useState(() => vehiclesDb.getAll())
-  const [conditionPriceAdjustments, setConditionPriceAdjustments] = useState<Record<VehicleCondition, number>>({
+  const [editingProduct, setEditingProduct] = useState<VehicleProduct | null>(
+    null
+  );
+  const [inspectingProduct, setInspectingProduct] =
+    useState<VehicleProduct | null>(null);
+  const [inspectionAnswers, setInspectionAnswers] = useState<
+    Record<string, VehicleCondition>
+  >({});
+  const [customBasePrice, setCustomBasePrice] = useState<number>(0);
+  const [_vehicles, setVehicles] = useState(() => vehiclesDb.getAll());
+  const [conditionPriceAdjustments, setConditionPriceAdjustments] = useState<
+    Record<VehicleCondition, number>
+  >({
     Excellent: 0,
     "Very Good": -2000,
     Good: -3000,
     Average: -4500,
     Poor: -6000,
-  })
+  });
 
   const conditionPoints: Record<VehicleCondition, number> = {
     Excellent: 1.0,
@@ -2070,36 +2088,42 @@ export default function ProductManagementPage() {
     Good: 0.6,
     Average: 0.4,
     Poor: 0.2,
-  }
+  };
 
-  const calculateAdjustedPrice = (basePrice: number, condition: VehicleCondition): number => {
-    return Math.max(0, basePrice + conditionPriceAdjustments[condition])
-  }
+  const calculateAdjustedPrice = (
+    basePrice: number,
+    condition: VehicleCondition
+  ): number => {
+    return Math.max(0, basePrice + conditionPriceAdjustments[condition]);
+  };
 
   const handleStartInspection = (product: VehicleProduct) => {
-    if (product.serviceType !== "Sell") return
+    if (product.serviceType !== "Sell") return;
 
-    setInspectingProduct(product)
-    setCustomBasePrice(product.basePrice)
+    setInspectingProduct(product);
+    setCustomBasePrice(product.basePrice);
 
     // Load existing inspection results if available
     if (product.inspectionResults && product.inspectionResults.length > 0) {
-      const existingAnswers: Record<string, VehicleCondition> = {}
+      const existingAnswers: Record<string, VehicleCondition> = {};
       product.inspectionResults.forEach((result: any) => {
-        existingAnswers[result.questionId] = result.condition
-      })
-      setInspectionAnswers(existingAnswers)
+        existingAnswers[result.questionId] = result.condition;
+      });
+      setInspectionAnswers(existingAnswers);
     } else {
-      setInspectionAnswers({})
+      setInspectionAnswers({});
     }
-  }
+  };
 
-  const handleAnswerChange = (questionId: string, condition: VehicleCondition) => {
+  const handleAnswerChange = (
+    questionId: string,
+    condition: VehicleCondition
+  ) => {
     setInspectionAnswers((prev) => ({
       ...prev,
       [questionId]: condition,
-    }))
-  }
+    }));
+  };
 
   const calculateCurrentResults = () => {
     if (!inspectingProduct)
@@ -2108,54 +2132,62 @@ export default function ProductManagementPage() {
         maxScore: 0,
         condition: "Good" as VehicleCondition,
         adjustedPrice: 0,
-      }
+      };
 
-    const questions = inspectionQuestions[inspectingProduct.type as keyof typeof inspectionQuestions]
+    const questions =
+      inspectionQuestions[
+        inspectingProduct.type as keyof typeof inspectionQuestions
+      ];
     if (!questions)
       return {
         totalScore: 0,
         maxScore: 0,
         condition: "Good" as VehicleCondition,
         adjustedPrice: 0,
-      }
+      };
 
-    let totalScore = 0
-    let maxScore = 0
+    let totalScore = 0;
+    let maxScore = 0;
 
     Object.values(questions).forEach((categoryQuestions) => {
       categoryQuestions.forEach((_, index) => {
-        const questionId = `${inspectingProduct.type}_${index + 1}`
-        const condition = inspectionAnswers[questionId] || "Good"
-        totalScore += Math.round(1 * conditionPoints[condition])
-        maxScore += 1
-      })
-    })
+        const questionId = `${inspectingProduct.type}_${index + 1}`;
+        const condition = inspectionAnswers[questionId] || "Good";
+        totalScore += Math.round(1 * conditionPoints[condition]);
+        maxScore += 1;
+      });
+    });
 
-    const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0
-    let overallCondition: VehicleCondition = "Good"
+    const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
+    let overallCondition: VehicleCondition = "Good";
 
-    if (percentage >= 90) overallCondition = "Excellent"
-    else if (percentage >= 75) overallCondition = "Very Good"
-    else if (percentage >= 60) overallCondition = "Good"
-    else if (percentage >= 45) overallCondition = "Average"
-    else overallCondition = "Poor"
+    if (percentage >= 90) overallCondition = "Excellent";
+    else if (percentage >= 75) overallCondition = "Very Good";
+    else if (percentage >= 60) overallCondition = "Good";
+    else if (percentage >= 45) overallCondition = "Average";
+    else overallCondition = "Poor";
 
-    const adjustedPrice = Math.round(calculateAdjustedPrice(customBasePrice, overallCondition))
+    const adjustedPrice = Math.round(
+      calculateAdjustedPrice(customBasePrice, overallCondition)
+    );
 
-    return { totalScore, maxScore, condition: overallCondition, adjustedPrice }
-  }
+    return { totalScore, maxScore, condition: overallCondition, adjustedPrice };
+  };
 
   const handleSaveInspection = () => {
-    if (!inspectingProduct) return
+    if (!inspectingProduct) return;
 
-    const { totalScore, maxScore, condition, adjustedPrice } = calculateCurrentResults()
+    const { totalScore, maxScore, condition, adjustedPrice } =
+      calculateCurrentResults();
 
-    const results = Object.entries(inspectionAnswers).map(([questionId, conditionValue]) => ({
-      questionId,
-      condition: conditionValue,
-      points: Math.round(1 * conditionPoints[conditionValue]),
-      maxPoints: 1,
-    }))
+    const results = Object.entries(inspectionAnswers).map(
+      ([questionId, conditionValue]) => ({
+        questionId,
+        condition: conditionValue,
+        points: Math.round(1 * conditionPoints[conditionValue]),
+        maxPoints: 1,
+      })
+    );
 
     vehiclesDb.update(inspectingProduct.id, {
       basePrice: customBasePrice,
@@ -2165,20 +2197,24 @@ export default function ProductManagementPage() {
       maxInspectionScore: maxScore,
       inspectionDate: new Date().toISOString(),
       inspectionResults: results,
-    })
+    });
 
-    setVehicles(vehiclesDb.getAll())
-    setInspectingProduct(null)
-    setInspectionAnswers({})
-  }
+    setVehicles(vehiclesDb.getAll());
+    setInspectingProduct(null);
+    setInspectionAnswers({});
+  };
 
-  const { totalScore, maxScore, condition, adjustedPrice } = calculateCurrentResults()
+  const { totalScore, maxScore, condition, adjustedPrice } =
+    calculateCurrentResults();
   const completionPercentage = inspectingProduct
     ? (Object.keys(inspectionAnswers).length /
-        Object.values(inspectionQuestions[inspectingProduct.type as keyof typeof inspectionQuestions] || {}).flat()
-          .length) *
+        Object.values(
+          inspectionQuestions[
+            inspectingProduct.type as keyof typeof inspectionQuestions
+          ] || {}
+        ).flat().length) *
       100
-    : 0
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -2187,17 +2223,31 @@ export default function ProductManagementPage() {
       </div>
 
       {/* Edit Dialog */}
-      <Dialog open={!!editingProduct} onOpenChange={() => setEditingProduct(null)}>
+      <Dialog
+        open={!!editingProduct}
+        onOpenChange={() => setEditingProduct(null)}
+      >
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Vehicle</DialogTitle>
-            <DialogDescription>Update the vehicle details below.</DialogDescription>
+            <DialogDescription>
+              Update the vehicle details below.
+            </DialogDescription>
           </DialogHeader>
-          {editingProduct && <ProductForm product={editingProduct} onSuccess={() => setEditingProduct(null)} />}
+          {editingProduct && (
+            <ProductForm
+              product={editingProduct}
+              onSuccess={() => setEditingProduct(null)}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
-      <ProductList onEdit={setEditingProduct} showServiceType={true} onInspect={handleStartInspection} />
+      <ProductList
+        onEdit={setEditingProduct}
+        showServiceType={true}
+        onInspect={handleStartInspection}
+      />
 
       {/* 300-Point Inspection Section for Sell Service Type */}
       {inspectingProduct && inspectingProduct.serviceType === "Sell" && (
@@ -2205,14 +2255,21 @@ export default function ProductManagementPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>
-                300-Point Inspection: {inspectingProduct.brand} {inspectingProduct.model}
+                300-Point Inspection: {inspectingProduct.brand}{" "}
+                {inspectingProduct.model}
               </CardTitle>
               <div className="flex gap-2">
-                <Button onClick={handleSaveInspection} className="bg-green-600 hover:bg-green-700">
+                <Button
+                  onClick={handleSaveInspection}
+                  className="bg-green-600 hover:bg-green-700"
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Save Inspection & Update Price
                 </Button>
-                <Button variant="outline" onClick={() => setInspectingProduct(null)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setInspectingProduct(null)}
+                >
                   Cancel
                 </Button>
               </div>
@@ -2222,7 +2279,9 @@ export default function ProductManagementPage() {
               {Object.keys(inspectionAnswers).length} /{" "}
               {
                 Object.values(
-                  inspectionQuestions[inspectingProduct.type as keyof typeof inspectionQuestions] || {},
+                  inspectionQuestions[
+                    inspectingProduct.type as keyof typeof inspectionQuestions
+                  ] || {}
                 ).flat().length
               }{" "}
               questions completed
@@ -2242,21 +2301,31 @@ export default function ProductManagementPage() {
                 />
               </div>
               <div className="text-center">
-                <div className="text-sm text-muted-foreground">Current Score</div>
+                <div className="text-sm text-muted-foreground">
+                  Current Score
+                </div>
                 <div className="text-2xl font-bold">
                   {totalScore}/{maxScore}
                 </div>
               </div>
               <div className="text-center">
                 <div className="text-sm text-muted-foreground">Condition</div>
-                <Badge className={conditionColors[condition]}>{condition}</Badge>
+                <Badge className={conditionColors[condition]}>
+                  {condition}
+                </Badge>
               </div>
               <div className="text-center">
-                <div className="text-sm text-muted-foreground">Adjusted Price</div>
-                <div className="text-xl font-bold text-primary">₹{adjustedPrice.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground">
+                  Adjusted Price
+                </div>
+                <div className="text-xl font-bold text-primary">
+                  ₹{adjustedPrice.toLocaleString()}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-sm text-muted-foreground">Price Change</div>
+                <div className="text-sm text-muted-foreground">
+                  Price Change
+                </div>
                 <div
                   className={`text-lg font-medium ${
                     adjustedPrice > customBasePrice
@@ -2278,9 +2347,19 @@ export default function ProductManagementPage() {
               <div className="text-center">
                 <Label className="text-sm font-medium">Condition Pricing</Label>
               </div>
-              {(["Excellent", "Very Good", "Good", "Average", "Poor"] as VehicleCondition[]).map((condition) => (
+              {(
+                [
+                  "Excellent",
+                  "Very Good",
+                  "Good",
+                  "Average",
+                  "Poor",
+                ] as VehicleCondition[]
+              ).map((condition) => (
                 <div key={condition} className="space-y-2">
-                  <Label className="text-xs text-center block">{condition}</Label>
+                  <Label className="text-xs text-center block">
+                    {condition}
+                  </Label>
                   <div className="flex items-center space-x-1">
                     <span className="text-xs">₹</span>
                     <Input
@@ -2297,7 +2376,11 @@ export default function ProductManagementPage() {
                     />
                   </div>
                   <div className="text-xs text-center text-muted-foreground">
-                    = ₹{calculateAdjustedPrice(customBasePrice, condition).toLocaleString()}
+                    = ₹
+                    {calculateAdjustedPrice(
+                      customBasePrice,
+                      condition
+                    ).toLocaleString()}
                   </div>
                 </div>
               ))}
@@ -2311,131 +2394,178 @@ export default function ProductManagementPage() {
               </h3>
 
               {(() => {
-                const questions = inspectionQuestions[inspectingProduct.type as keyof typeof inspectionQuestions]
+                const questions =
+                  inspectionQuestions[
+                    inspectingProduct.type as keyof typeof inspectionQuestions
+                  ];
                 if (!questions) {
                   return (
                     <div className="text-center py-8 text-muted-foreground">
-                      No inspection questions available for {inspectingProduct.type}
+                      No inspection questions available for{" "}
+                      {inspectingProduct.type}
                     </div>
-                  )
+                  );
                 }
 
                 return (
                   <Accordion type="multiple" className="w-full">
-                    {Object.entries(questions).map(([category, categoryQuestions]) => {
-                      const answeredCount = categoryQuestions.filter((_, index) => {
-                        const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(categoryQuestions[index]) + 1}`
-                        return inspectionAnswers[questionId]
-                      }).length
+                    {Object.entries(questions).map(
+                      ([category, categoryQuestions]) => {
+                        const answeredCount = categoryQuestions.filter(
+                          (_, index) => {
+                            const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(categoryQuestions[index]) + 1}`;
+                            return inspectionAnswers[questionId];
+                          }
+                        ).length;
 
-                      const categoryScore = categoryQuestions.reduce((sum, _, index) => {
-                        const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(categoryQuestions[index]) + 1}`
-                        const condition = inspectionAnswers[questionId] || "Good"
-                        return sum + Math.round(1 * conditionPoints[condition])
-                      }, 0)
+                        const categoryScore = categoryQuestions.reduce(
+                          (sum, _, index) => {
+                            const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(categoryQuestions[index]) + 1}`;
+                            const condition =
+                              inspectionAnswers[questionId] || "Good";
+                            return (
+                              sum + Math.round(1 * conditionPoints[condition])
+                            );
+                          },
+                          0
+                        );
 
-                      const maxCategoryScore = categoryQuestions.length
+                        const maxCategoryScore = categoryQuestions.length;
 
-                      return (
-                        <AccordionItem key={category} value={category}>
-                          <AccordionTrigger className="text-left">
-                            <div className="flex items-center justify-between w-full mr-4">
-                              <span className="font-medium">{category}</span>
-                              <div className="flex items-center gap-4">
-                                <Badge variant="outline">
-                                  {answeredCount}/{categoryQuestions.length} answered
-                                </Badge>
-                                <Badge variant="secondary">
-                                  {categoryScore}/{maxCategoryScore} points
-                                </Badge>
+                        return (
+                          <AccordionItem key={category} value={category}>
+                            <AccordionTrigger className="text-left">
+                              <div className="flex items-center justify-between w-full mr-4">
+                                <span className="font-medium">{category}</span>
+                                <div className="flex items-center gap-4">
+                                  <Badge variant="outline">
+                                    {answeredCount}/{categoryQuestions.length}{" "}
+                                    answered
+                                  </Badge>
+                                  <Badge variant="secondary">
+                                    {categoryScore}/{maxCategoryScore} points
+                                  </Badge>
+                                </div>
                               </div>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <div className="grid gap-4">
-                              {categoryQuestions.map((question, index) => {
-                                const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(question) + 1}`
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="grid gap-4">
+                                {categoryQuestions.map((question, index) => {
+                                  const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(question) + 1}`;
 
-                                return (
-                                  <Card key={questionId} className="p-4">
-                                    <div className="space-y-3">
-                                      <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                          <div className="flex items-center gap-2 mb-2">
-                                            <Badge variant="secondary" className="text-xs">
-                                              {index + 1}
-                                            </Badge>
-                                            <span className="text-xs text-muted-foreground">1 point</span>
-                                          </div>
-                                          <p className="font-medium">{question}</p>
-                                        </div>
-                                      </div>
-
-                                      <RadioGroup
-                                        value={inspectionAnswers[questionId] || ""}
-                                        onValueChange={(value) =>
-                                          handleAnswerChange(questionId, value as VehicleCondition)
-                                        }
-                                      >
-                                        <div className="grid grid-cols-5 gap-2">
-                                          {(
-                                            ["Excellent", "Very Good", "Good", "Average", "Poor"] as VehicleCondition[]
-                                          ).map((conditionOption) => (
-                                            <div key={conditionOption} className="flex items-center space-x-2">
-                                              <RadioGroupItem
-                                                value={conditionOption}
-                                                id={`${questionId}-${conditionOption}`}
-                                              />
-                                              <Label
-                                                htmlFor={`${questionId}-${conditionOption}`}
-                                                className="text-xs cursor-pointer"
+                                  return (
+                                    <Card key={questionId} className="p-4">
+                                      <div className="space-y-3">
+                                        <div className="flex items-start justify-between">
+                                          <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-2">
+                                              <Badge
+                                                variant="secondary"
+                                                className="text-xs"
                                               >
-                                                {conditionOption}
-                                              </Label>
-                                              <div className="text-xs text-muted-foreground">
-                                                (₹
-                                                {calculateAdjustedPrice(
-                                                  customBasePrice,
-                                                  conditionOption,
-                                                ).toLocaleString()}
-                                                )
-                                              </div>
+                                                {index + 1}
+                                              </Badge>
+                                              <span className="text-xs text-muted-foreground">
+                                                1 point
+                                              </span>
                                             </div>
-                                          ))}
+                                            <p className="font-medium">
+                                              {question}
+                                            </p>
+                                          </div>
                                         </div>
-                                      </RadioGroup>
 
-                                      {inspectionAnswers[questionId] && (
-                                        <div className="flex items-center justify-between text-sm">
-                                          <Badge
-                                            className={conditionColors[inspectionAnswers[questionId]]}
-                                            variant="secondary"
-                                          >
-                                            {inspectionAnswers[questionId]}
-                                          </Badge>
-                                          <span className="text-muted-foreground">
-                                            Points: {Math.round(1 * conditionPoints[inspectionAnswers[questionId]])} / 1
-                                          </span>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </Card>
-                                )
-                              })}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      )
-                    })}
+                                        <RadioGroup
+                                          value={
+                                            inspectionAnswers[questionId] || ""
+                                          }
+                                          onValueChange={(value) =>
+                                            handleAnswerChange(
+                                              questionId,
+                                              value as VehicleCondition
+                                            )
+                                          }
+                                        >
+                                          <div className="grid grid-cols-5 gap-2">
+                                            {(
+                                              [
+                                                "Excellent",
+                                                "Very Good",
+                                                "Good",
+                                                "Average",
+                                                "Poor",
+                                              ] as VehicleCondition[]
+                                            ).map((conditionOption) => (
+                                              <div
+                                                key={conditionOption}
+                                                className="flex items-center space-x-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={conditionOption}
+                                                  id={`${questionId}-${conditionOption}`}
+                                                />
+                                                <Label
+                                                  htmlFor={`${questionId}-${conditionOption}`}
+                                                  className="text-xs cursor-pointer"
+                                                >
+                                                  {conditionOption}
+                                                </Label>
+                                                <div className="text-xs text-muted-foreground">
+                                                  (₹
+                                                  {calculateAdjustedPrice(
+                                                    customBasePrice,
+                                                    conditionOption
+                                                  ).toLocaleString()}
+                                                  )
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </RadioGroup>
+
+                                        {inspectionAnswers[questionId] && (
+                                          <div className="flex items-center justify-between text-sm">
+                                            <Badge
+                                              className={
+                                                conditionColors[
+                                                  inspectionAnswers[questionId]
+                                                ]
+                                              }
+                                              variant="secondary"
+                                            >
+                                              {inspectionAnswers[questionId]}
+                                            </Badge>
+                                            <span className="text-muted-foreground">
+                                              Points:{" "}
+                                              {Math.round(
+                                                1 *
+                                                  conditionPoints[
+                                                    inspectionAnswers[
+                                                      questionId
+                                                    ]
+                                                  ]
+                                              )}{" "}
+                                              / 1
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </Card>
+                                  );
+                                })}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        );
+                      }
+                    )}
                   </Accordion>
-                )
+                );
               })()}
             </div>
           </CardContent>
         </Card>
       )}
     </div>
-  )
+  );
 }
-
-

@@ -1,45 +1,59 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent } from "@vehiverze/ui/card"
-import { Badge } from "@vehiverze/ui/badge"
-import { Input } from "@vehiverze/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { vendorSellRequestsDb, type VendorSellRequest } from "@/lib/mock-data/vendor-sell-requests"
-import Link from "next/link"
-import { Search } from "lucide-react"
-import Image from "next/image"
+import { useState } from "react";
+import { Card, CardContent } from "@vehiverze/ui/card";
+import { Badge } from "@vehiverze/ui/badge";
+import { Input } from "@vehiverze/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import {
+  vendorSellRequestsDb,
+  type VendorSellRequest,
+} from "@/lib/mock-data/vendor-sell-requests";
+import Link from "next/link";
+import { Search } from "lucide-react";
+import Image from "next/image";
 
 export default function VendorSellRequestsPage() {
-  const [requests, setRequests] = useState<VendorSellRequest[]>(vendorSellRequestsDb.getAll())
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [vehicleTypeFilter, setVehicleTypeFilter] = useState<string>("all")
+  const [requests, _setRequests] = useState<VendorSellRequest[]>(
+    vendorSellRequestsDb.getAll()
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [vehicleTypeFilter, setVehicleTypeFilter] = useState<string>("all");
 
   const filteredRequests = requests.filter((req) => {
     const matchesSearch =
       req.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
       req.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      req.vendorName.toLowerCase().includes(searchTerm.toLowerCase())
+      req.vendorName.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === "all" || req.status === statusFilter
-    const matchesVehicleType = vehicleTypeFilter === "all" || req.vehicleType === vehicleTypeFilter
+    const matchesStatus = statusFilter === "all" || req.status === statusFilter;
+    const matchesVehicleType =
+      vehicleTypeFilter === "all" || req.vehicleType === vehicleTypeFilter;
 
-    return matchesSearch && matchesStatus && matchesVehicleType
-  })
+    return matchesSearch && matchesStatus && matchesVehicleType;
+  });
 
   const statusColors: Record<string, string> = {
     Pending: "bg-amber-500/10 text-amber-500 border-amber-500/20",
     Accepted: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
     Rejected: "bg-red-500/10 text-red-500 border-red-500/20",
-  }
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">Vendor Sell Requests</h1>
-        <p className="text-muted-foreground mt-2">Manage vehicle submissions from vendors</p>
+        <p className="text-muted-foreground mt-2">
+          Manage vehicle submissions from vendors
+        </p>
       </div>
 
       {/* Stats */}
@@ -100,7 +114,10 @@ export default function VendorSellRequestsPage() {
                 <SelectItem value="Rejected">Rejected</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={vehicleTypeFilter} onValueChange={setVehicleTypeFilter}>
+            <Select
+              value={vehicleTypeFilter}
+              onValueChange={setVehicleTypeFilter}
+            >
               <SelectTrigger className="w-full md:w-40">
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>
@@ -127,7 +144,10 @@ export default function VendorSellRequestsPage() {
           </Card>
         ) : (
           filteredRequests.map((request) => (
-            <Link key={request.id} href={`/admin/vendor-sell-requests/${request.id}`}>
+            <Link
+              key={request.id}
+              href={`/admin/vendor-sell-requests/${request.id}`}
+            >
               <Card className="bg-card border-border hover:border-primary/50 transition-all cursor-pointer">
                 <CardContent className="pt-6">
                   <div className="flex gap-4">
@@ -149,9 +169,15 @@ export default function VendorSellRequestsPage() {
                           <h3 className="font-semibold text-lg">
                             {request.brand} {request.model} ({request.year})
                           </h3>
-                          <p className="text-sm text-muted-foreground">{request.variant}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {request.variant}
+                          </p>
                         </div>
-                        <Badge className={`${statusColors[request.status]} border`}>{request.status}</Badge>
+                        <Badge
+                          className={`${statusColors[request.status]} border`}
+                        >
+                          {request.status}
+                        </Badge>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -165,11 +191,19 @@ export default function VendorSellRequestsPage() {
                         </div>
                         <div>
                           <span className="text-muted-foreground">Price:</span>
-                          <p className="font-medium">₹{request.price.toLocaleString()}</p>
+                          <p className="font-medium">
+                            ₹{request.price.toLocaleString()}
+                          </p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Submitted:</span>
-                          <p className="font-medium">{new Date(request.submissionDate).toLocaleDateString()}</p>
+                          <span className="text-muted-foreground">
+                            Submitted:
+                          </span>
+                          <p className="font-medium">
+                            {new Date(
+                              request.submissionDate
+                            ).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -181,7 +215,5 @@ export default function VendorSellRequestsPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
-
-

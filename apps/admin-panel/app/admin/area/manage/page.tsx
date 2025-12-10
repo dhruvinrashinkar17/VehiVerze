@@ -1,25 +1,38 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { Input } from "@vehiverze/ui/input"
-import { Button } from "@vehiverze/ui/button"
-import { Badge } from "@vehiverze/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@vehiverze/ui/table"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { Input } from "@vehiverze/ui/input";
+import { Button } from "@vehiverze/ui/button";
+import { Badge } from "@vehiverze/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@vehiverze/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
 
 type Pincode = {
-  code: string
-  city: string
-  state: string
-  deviceType: string
-  status: "Live" | "In active"
-}
+  code: string;
+  city: string;
+  state: string;
+  deviceType: string;
+  status: "Live" | "In active";
+};
 
 export default function AreaManagementPage() {
-  const [pincodes, setPincodes] = useState<Pincode[]>([
+  const [pincodes, _setPincodes] = useState<Pincode[]>([
     {
       code: "400001",
       city: "Mumbai",
@@ -34,12 +47,12 @@ export default function AreaManagementPage() {
       deviceType: "laptop",
       status: "Live",
     },
-  ])
+  ]);
 
   const handleAddPincode = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Add pincode logic
-  }
+  };
 
   return (
     <div className="grid gap-6 md:grid-cols-[1fr_300px]">
@@ -67,7 +80,13 @@ export default function AreaManagementPage() {
                     <TableCell>{pincode.state}</TableCell>
                     <TableCell>{pincode.deviceType}</TableCell>
                     <TableCell>
-                      <Badge variant={pincode.status === "Live" ? "success" : "destructive"}>{pincode.status}</Badge>
+                      <Badge
+                        variant={
+                          pincode.status === "Live" ? "success" : "destructive"
+                        }
+                      >
+                        {pincode.status}
+                      </Badge>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -86,17 +105,26 @@ export default function AreaManagementPage() {
             <form onSubmit={handleAddPincode} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm text-gray-400">Pincode</label>
-                <Input placeholder="Enter pincode" className="bg-[#2A2A2A] border-[#3A3A3A]" />
+                <Input
+                  placeholder="Enter pincode"
+                  className="bg-[#2A2A2A] border-[#3A3A3A]"
+                />
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm text-gray-400">City</label>
-                <Input placeholder="Enter city" className="bg-[#2A2A2A] border-[#3A3A3A]" />
+                <Input
+                  placeholder="Enter city"
+                  className="bg-[#2A2A2A] border-[#3A3A3A]"
+                />
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm text-gray-400">State</label>
-                <Input placeholder="Enter state" className="bg-[#2A2A2A] border-[#3A3A3A]" />
+                <Input
+                  placeholder="Enter state"
+                  className="bg-[#2A2A2A] border-[#3A3A3A]"
+                />
               </div>
 
               <div className="space-y-2">
@@ -137,7 +165,5 @@ export default function AreaManagementPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
-
-

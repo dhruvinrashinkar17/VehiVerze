@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Textarea } from "@vehiverze/ui/textarea"
-import { Label } from "@vehiverze/ui/label"
-import { mockCategories, mockTags } from "@/lib/mock-data/blog"
-import { ArrowLeft, Trash2, Edit, Plus } from 'lucide-react'
+import { useState } from "react";
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Textarea } from "@vehiverze/ui/textarea";
+import { Label } from "@vehiverze/ui/label";
+import { mockCategories, mockTags } from "@/lib/mock-data/blog";
+import { ArrowLeft, Trash2, Edit, Plus } from "lucide-react";
 
 export default function CategoriesAndTags() {
-  const [newCategory, setNewCategory] = useState("")
-  const [newCategoryDesc, setNewCategoryDesc] = useState("")
-  const [newTag, setNewTag] = useState("")
-  const [editingCategory, setEditingCategory] = useState<string | null>(null)
-  const [editingTag, setEditingTag] = useState<string | null>(null)
+  const [newCategory, setNewCategory] = useState("");
+  const [newCategoryDesc, setNewCategoryDesc] = useState("");
+  const [newTag, setNewTag] = useState("");
+  const [_editingCategory, _setEditingCategory] = useState<string | null>(null);
+  const [_editingTag, _setEditingTag] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -31,7 +31,9 @@ export default function CategoriesAndTags() {
             </Link>
             <div>
               <h1 className="section-header">Categories & Tags</h1>
-              <p className="section-subheader">Manage your blog categories and tags</p>
+              <p className="section-subheader">
+                Manage your blog categories and tags
+              </p>
             </div>
           </div>
         </div>
@@ -74,7 +76,9 @@ export default function CategoriesAndTags() {
             {/* Categories List */}
             <Card className="card-elevated">
               <CardHeader>
-                <CardTitle className="text-base">All Categories ({mockCategories.length})</CardTitle>
+                <CardTitle className="text-base">
+                  All Categories ({mockCategories.length})
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {mockCategories.map((category) => (
@@ -84,13 +88,19 @@ export default function CategoriesAndTags() {
                   >
                     <div className="flex-1">
                       <p className="font-medium">{category.name}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{category.postCount} posts</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {category.postCount} posts
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button variant="ghost" size="sm">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" className="hover:text-destructive">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:text-destructive"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -117,7 +127,9 @@ export default function CategoriesAndTags() {
                     className="input-focus mt-2"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">Slug will be auto-generated</p>
+                <p className="text-xs text-muted-foreground">
+                  Slug will be auto-generated
+                </p>
                 <Button className="w-full bg-primary hover:bg-primary/90">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Tag
@@ -128,7 +140,9 @@ export default function CategoriesAndTags() {
             {/* Tags List */}
             <Card className="card-elevated">
               <CardHeader>
-                <CardTitle className="text-base">All Tags ({mockTags.length})</CardTitle>
+                <CardTitle className="text-base">
+                  All Tags ({mockTags.length})
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex flex-wrap gap-2">
@@ -138,7 +152,9 @@ export default function CategoriesAndTags() {
                       className="flex items-center gap-2 px-3 py-2 rounded-full bg-muted hover:bg-muted/80 transition-smooth group"
                     >
                       <span className="text-sm font-medium">{tag.name}</span>
-                      <span className="text-xs text-muted-foreground">({tag.usageCount})</span>
+                      <span className="text-xs text-muted-foreground">
+                        ({tag.usageCount})
+                      </span>
                       <button className="opacity-0 group-hover:opacity-100 transition-smooth ml-1 hover:text-destructive">
                         <Trash2 className="h-3 w-3" />
                       </button>
@@ -151,7 +167,5 @@ export default function CategoriesAndTags() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-

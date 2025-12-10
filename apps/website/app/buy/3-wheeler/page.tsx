@@ -1,31 +1,45 @@
-import type { Metadata } from "next"
-import { NavBar } from "@/components/nav-bar"
-import { Footer } from "@/components/footer"
-import { Breadcrumb } from "@/components/breadcrumb"
-import { Button } from "@vehiverze/ui/button"
-import { Card, CardContent } from "@vehiverze/ui/card"
-import { Badge } from "@vehiverze/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { CheckCircle, Shield, Truck, CreditCard, FileText, Star, Filter } from "lucide-react"
-import { VehicleTypeContent, getVehicleTypeContent } from "@/components/vehicle-type-content"
+import type { Metadata } from "next";
+import { NavBar } from "@/components/nav-bar";
+import { Footer } from "@/components/footer";
+import { Breadcrumb } from "@/components/breadcrumb";
+import { Button } from "@vehiverze/ui/button";
+import { Card, CardContent } from "@vehiverze/ui/card";
+import { Badge } from "@vehiverze/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import {
+  CheckCircle,
+  Shield,
+  Truck,
+  CreditCard,
+  FileText,
+  Star,
+  Filter,
+} from "lucide-react";
+import { VehicleTypeContent } from "@/components/vehicle-type-content";
 
 export const metadata: Metadata = {
-  title: "Buy Used 3 Wheelers Online | Certified Auto Rickshaw & Cargo Autos – Vehiverze",
+  title:
+    "Buy Used 3 Wheelers Online | Certified Auto Rickshaw & Cargo Autos – Vehiverze",
   description:
     "Explore certified used 3-wheelers in India. Buy passenger autos, cargo autos & e-rickshaws from Bajaj, Piaggio, Mahindra & more. EMI, RC, and permit transfer included.",
   keywords:
     "buy used auto rickshaw, second hand 3-wheeler in India, cargo auto for sale, passenger auto verified, pre-owned commercial 3-wheeler, Bajaj auto rickshaw, Piaggio Ape",
   openGraph: {
-    title: "Buy Used 3 Wheelers Online | Certified Auto Rickshaw & Cargo Autos – Vehiverze",
+    title:
+      "Buy Used 3 Wheelers Online | Certified Auto Rickshaw & Cargo Autos – Vehiverze",
     description:
       "Explore certified used 3-wheelers in India. Buy passenger autos, cargo autos & e-rickshaws from Bajaj, Piaggio, Mahindra & more. EMI, RC, and permit transfer included.",
     type: "website",
   },
-}
+};
 
 export default function ThreeWheelerPage() {
-  const content = getVehicleTypeContent("3-wheeler")
-
   const vehicles = [
     {
       id: 1,
@@ -99,7 +113,7 @@ export default function ThreeWheelerPage() {
       verified: true,
       features: ["Diesel", "Heavy Duty", "Commercial Use"],
     },
-  ]
+  ];
 
   return (
     <main className="min-h-screen bg-white">
@@ -120,9 +134,12 @@ export default function ThreeWheelerPage() {
       <section className="bg-gradient-to-r from-green-50 to-emerald-50 py-12">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Buy Certified Pre-Owned 3 Wheelers</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Buy Certified Pre-Owned 3 Wheelers
+            </h1>
             <p className="text-xl text-gray-600 mb-6">
-              India's Trusted Marketplace for Auto Rickshaw & Commercial 3 Wheelers
+              India's Trusted Marketplace for Auto Rickshaw & Commercial 3
+              Wheelers
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-6">
               <Badge variant="outline" className="px-4 py-2">
@@ -144,9 +161,7 @@ export default function ThreeWheelerPage() {
 
       {/* Filters Section */}
       <section className="py-8 bg-gray-50">
-        <div className="container mx-auto px-4">
-          
-        </div>
+        <div className="container mx-auto px-4"></div>
       </section>
 
       {/* Vehicle Listings */}
@@ -166,18 +181,25 @@ export default function ThreeWheelerPage() {
           <div className="max-w-6xl mx-auto">
             {/* About Section */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">About Buying Used 3 Wheelers in India</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                About Buying Used 3 Wheelers in India
+              </h2>
               <div className="prose prose-lg max-w-none text-gray-700">
                 <p className="mb-4">
-                  Looking to buy a second-hand 3 wheeler in India? Vehiverze is your trusted marketplace for certified
-                  pre-owned auto rickshaws, cargo autos, and commercial 3 wheelers. We offer an extensive collection of
-                  verified vehicles from top brands like Bajaj, Piaggio, Mahindra, TVS, and Force Motors. Every vehicle
-                  undergoes specialized commercial vehicle inspection to ensure business readiness.
+                  Looking to buy a second-hand 3 wheeler in India? Vehiverze is
+                  your trusted marketplace for certified pre-owned auto
+                  rickshaws, cargo autos, and commercial 3 wheelers. We offer an
+                  extensive collection of verified vehicles from top brands like
+                  Bajaj, Piaggio, Mahindra, TVS, and Force Motors. Every vehicle
+                  undergoes specialized commercial vehicle inspection to ensure
+                  business readiness.
                 </p>
                 <p>
-                  Whether you're starting a passenger transport business, need a cargo auto for goods delivery, or
-                  looking for an e-rickshaw for eco-friendly transport, Vehiverze has the perfect 3 wheeler for your
-                  commercial needs. With transparent pricing, commercial vehicle financing, and complete permit transfer
+                  Whether you're starting a passenger transport business, need a
+                  cargo auto for goods delivery, or looking for an e-rickshaw
+                  for eco-friendly transport, Vehiverze has the perfect 3
+                  wheeler for your commercial needs. With transparent pricing,
+                  commercial vehicle financing, and complete permit transfer
                   support, starting your business has never been easier.
                 </p>
               </div>
@@ -185,42 +207,70 @@ export default function ThreeWheelerPage() {
 
             {/* Types of 3 Wheelers */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Types of Used 3 Wheelers Available</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Types of Used 3 Wheelers Available
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
                   {
                     title: "Passenger Auto Rickshaw",
-                    description: "CNG/Petrol autos for passenger transport business",
+                    description:
+                      "CNG/Petrol autos for passenger transport business",
                     examples: "Bajaj RE, TVS King, Piaggio Ape City",
                     priceRange: "₹1,50,000 - ₹3,00,000",
-                    features: ["Commercial Permit", "Passenger Seating", "CNG/Petrol"],
+                    features: [
+                      "Commercial Permit",
+                      "Passenger Seating",
+                      "CNG/Petrol",
+                    ],
                   },
                   {
                     title: "Cargo Auto (Goods Carrier)",
-                    description: "Commercial 3-wheelers for goods transportation",
-                    examples: "Mahindra Alfa Load, Bajaj Maxima, Piaggio Ape Xtra",
+                    description:
+                      "Commercial 3-wheelers for goods transportation",
+                    examples:
+                      "Mahindra Alfa Load, Bajaj Maxima, Piaggio Ape Xtra",
                     priceRange: "₹1,20,000 - ₹2,50,000",
-                    features: ["High Payload", "Goods Carrier Permit", "Diesel Engine"],
+                    features: [
+                      "High Payload",
+                      "Goods Carrier Permit",
+                      "Diesel Engine",
+                    ],
                   },
                   {
                     title: "E-Rickshaw",
-                    description: "Electric 3-wheelers for eco-friendly transport",
+                    description:
+                      "Electric 3-wheelers for eco-friendly transport",
                     examples: "Mahindra e-Alfa Mini, TVS King Electric",
                     priceRange: "₹80,000 - ₹1,50,000",
-                    features: ["Electric Motor", "Eco-Friendly", "Low Operating Cost"],
+                    features: [
+                      "Electric Motor",
+                      "Eco-Friendly",
+                      "Low Operating Cost",
+                    ],
                   },
                 ].map((type, index) => (
                   <Card key={index}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{type.title}</h3>
-                      <p className="text-gray-600 mb-3 text-sm">{type.description}</p>
-                      <p className="text-xs text-gray-500 mb-2">Popular: {type.examples}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                        {type.title}
+                      </h3>
+                      <p className="text-gray-600 mb-3 text-sm">
+                        {type.description}
+                      </p>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Popular: {type.examples}
+                      </p>
                       <Badge variant="secondary" className="mb-3">
                         {type.priceRange}
                       </Badge>
                       <div className="flex flex-wrap gap-1">
                         {type.features.map((feature, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
+                          <Badge
+                            key={idx}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {feature}
                           </Badge>
                         ))}
@@ -233,33 +283,39 @@ export default function ThreeWheelerPage() {
 
             {/* Popular Brands */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Popular 3 Wheeler Brands</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Popular 3 Wheeler Brands
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   {
                     brand: "Bajaj",
-                    description: "India's leading 3 wheeler manufacturer with reliable auto rickshaws",
+                    description:
+                      "India's leading 3 wheeler manufacturer with reliable auto rickshaws",
                     popular: "Bajaj RE, Maxima Cargo, Compact RE",
                     priceRange: "₹1,20,000 - ₹2,80,000",
                     specialty: "CNG & Diesel variants available",
                   },
                   {
                     brand: "Piaggio",
-                    description: "Italian brand known for robust cargo and passenger 3 wheelers",
+                    description:
+                      "Italian brand known for robust cargo and passenger 3 wheelers",
                     popular: "Ape City, Ape Xtra LDX, Ape Auto",
                     priceRange: "₹1,30,000 - ₹2,50,000",
                     specialty: "High payload capacity",
                   },
                   {
                     brand: "Mahindra",
-                    description: "Trusted Indian brand with strong commercial vehicle portfolio",
+                    description:
+                      "Trusted Indian brand with strong commercial vehicle portfolio",
                     popular: "Alfa Load, e-Alfa Mini, Jeeto",
                     priceRange: "₹80,000 - ₹2,20,000",
                     specialty: "Electric & diesel options",
                   },
                   {
                     brand: "TVS",
-                    description: "Reliable 3 wheelers with modern features and technology",
+                    description:
+                      "Reliable 3 wheelers with modern features and technology",
                     popular: "TVS King, King Deluxe, King CNG",
                     priceRange: "₹1,40,000 - ₹2,60,000",
                     specialty: "Comfortable passenger seating",
@@ -267,12 +323,20 @@ export default function ThreeWheelerPage() {
                 ].map((brand, index) => (
                   <Card key={index}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{brand.brand}</h3>
-                      <p className="text-gray-600 mb-3 text-sm">{brand.description}</p>
-                      <p className="text-xs text-gray-500 mb-2">Popular Models: {brand.popular}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        {brand.brand}
+                      </h3>
+                      <p className="text-gray-600 mb-3 text-sm">
+                        {brand.description}
+                      </p>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Popular Models: {brand.popular}
+                      </p>
                       <div className="flex justify-between items-center">
                         <Badge variant="outline">{brand.priceRange}</Badge>
-                        <span className="text-xs text-blue-600">{brand.specialty}</span>
+                        <span className="text-xs text-blue-600">
+                          {brand.specialty}
+                        </span>
                       </div>
                     </CardContent>
                   </Card>
@@ -282,7 +346,9 @@ export default function ThreeWheelerPage() {
 
             {/* Buy in Top Cities */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Buy Used 3 Wheelers in Top Cities</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Buy Used 3 Wheelers in Top Cities
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   {
@@ -321,11 +387,17 @@ export default function ThreeWheelerPage() {
                   <Card key={index}>
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-lg font-semibold text-gray-900">{city.city}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {city.city}
+                        </h3>
                         <Badge variant="secondary">{city.count}</Badge>
                       </div>
-                      <p className="text-gray-600 mb-3 text-sm">{city.description}</p>
-                      <p className="text-xs text-gray-500 mb-2">Popular: {city.popular}</p>
+                      <p className="text-gray-600 mb-3 text-sm">
+                        {city.description}
+                      </p>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Popular: {city.popular}
+                      </p>
                       <Badge variant="outline" className="text-xs">
                         {city.permits}
                       </Badge>
@@ -337,7 +409,9 @@ export default function ThreeWheelerPage() {
 
             {/* Why Choose Vehiverze */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Why Choose Vehiverze for Used 3 Wheelers?</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Why Choose Vehiverze for Used 3 Wheelers?
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   {
@@ -379,9 +453,15 @@ export default function ThreeWheelerPage() {
                 ].map((feature, index) => (
                   <Card key={index}>
                     <CardContent className="p-6 text-center">
-                      <div className="flex justify-center mb-4">{feature.icon}</div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                      <p className="text-gray-600 text-sm">{feature.description}</p>
+                      <div className="flex justify-center mb-4">
+                        {feature.icon}
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        {feature.description}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -390,7 +470,9 @@ export default function ThreeWheelerPage() {
 
             {/* Trust Signals */}
             <div className="mb-12 text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Trusted by Commercial Vehicle Buyers</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Trusted by Commercial Vehicle Buyers
+              </h2>
               <div className="flex flex-wrap justify-center gap-6">
                 <Badge variant="outline" className="px-6 py-3 text-sm">
                   🏆 Startup India Registered
@@ -412,11 +494,14 @@ export default function ThreeWheelerPage() {
 
             {/* FAQs */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Frequently Asked Questions
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   {
-                    question: "What is the price of a second-hand 3 wheeler in India?",
+                    question:
+                      "What is the price of a second-hand 3 wheeler in India?",
                     answer:
                       "Used 3 wheeler prices in India start from ₹80,000 for e-rickshaws and can go up to ₹3,00,000 for premium passenger autos. The price depends on the brand, model, year, condition, and type of permit.",
                   },
@@ -448,7 +533,9 @@ export default function ThreeWheelerPage() {
                 ].map((faq, index) => (
                   <Card key={index}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                        {faq.question}
+                      </h3>
                       <p className="text-gray-600 text-sm">{faq.answer}</p>
                     </CardContent>
                   </Card>
@@ -458,7 +545,9 @@ export default function ThreeWheelerPage() {
 
             {/* Internal Links */}
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Explore More</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Explore More
+              </h2>
               <div className="flex flex-wrap justify-center gap-4">
                 <Button variant="outline" asChild>
                   <a href="/sell/3-wheeler">Sell Your 3 Wheeler</a>
@@ -480,7 +569,5 @@ export default function ThreeWheelerPage() {
 
       <Footer />
     </main>
-  )
+  );
 }
-
-

@@ -1,30 +1,36 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { Input } from "@vehiverze/ui/input"
-import { Button } from "@vehiverze/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { vendorsDb } from "@/lib/mock-data/stores"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { Input } from "@vehiverze/ui/input";
+import { Button } from "@vehiverze/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { vendorsDb } from "@/lib/mock-data/stores";
 
 type CreditForm = {
-  customerName: string
-  customerNumber: string
-  deviceName: string
-  deviceType: string
-  imei: string
-  price: string
-  vendorId: string
-  creditAmount: string
-}
+  customerName: string;
+  customerNumber: string;
+  deviceName: string;
+  deviceType: string;
+  imei: string;
+  price: string;
+  vendorId: string;
+  creditAmount: string;
+};
 
 export default function CreditDeductionPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const vendors = vendorsDb.getAll()
+  const _router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const vendors = vendorsDb.getAll();
 
   const [form, setForm] = useState<CreditForm>({
     customerName: "",
@@ -35,16 +41,16 @@ export default function CreditDeductionPage() {
     price: "",
     vendorId: "",
     creditAmount: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      console.log("Credit deduction submitted:", form)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Credit deduction submitted:", form);
 
       // Reset form
       setForm({
@@ -56,20 +62,20 @@ export default function CreditDeductionPage() {
         price: "",
         vendorId: "",
         creditAmount: "",
-      })
+      });
     } catch (error) {
-      console.error("Error submitting form:", error)
+      console.error("Error submitting form:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
 
   return (
     <Card className="card-container max-w-2xl mx-auto">
@@ -118,7 +124,9 @@ export default function CreditDeductionPage() {
             <label className="text-sm text-foreground">Device Type</label>
             <Select
               value={form.deviceType}
-              onValueChange={(value) => setForm((prev) => ({ ...prev, deviceType: value }))}
+              onValueChange={(value) =>
+                setForm((prev) => ({ ...prev, deviceType: value }))
+              }
             >
               <SelectTrigger className="form-select">
                 <SelectValue placeholder="Select device type" />
@@ -159,7 +167,12 @@ export default function CreditDeductionPage() {
 
           <div className="space-y-2">
             <label className="text-sm text-foreground">Vendor</label>
-            <Select value={form.vendorId} onValueChange={(value) => setForm((prev) => ({ ...prev, vendorId: value }))}>
+            <Select
+              value={form.vendorId}
+              onValueChange={(value) =>
+                setForm((prev) => ({ ...prev, vendorId: value }))
+              }
+            >
               <SelectTrigger className="form-select">
                 <SelectValue placeholder="Select vendor" />
               </SelectTrigger>
@@ -192,7 +205,5 @@ export default function CreditDeductionPage() {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
-
-

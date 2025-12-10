@@ -1,56 +1,86 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Label } from "@vehiverze/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { CelebrationAnimation } from "@/components/celebration-animation"
-import Image from "next/image"
+import { useState } from "react";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Label } from "@vehiverze/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { CelebrationAnimation } from "@/components/celebration-animation";
+import Image from "next/image";
 
 export function SellCheckout() {
-  const [paymentMethod, setPaymentMethod] = useState("")
-  const [showCelebration, setShowCelebration] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
+    event.preventDefault();
     // Handle form submission here
-    setShowCelebration(true)
-  }
+    setShowCelebration(true);
+  };
 
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-center mb-8">Complete Your Vehicle Sale</h1>
+        <h1 className="text-4xl font-bold text-center mb-8">
+          Complete Your Vehicle Sale
+        </h1>
 
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <Label htmlFor="full-name">Full Name</Label>
-                <Input id="full-name" placeholder="Enter your full name" required />
+                <Input
+                  id="full-name"
+                  placeholder="Enter your full name"
+                  required
+                />
               </div>
 
               <div>
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="Enter your email" required />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                />
               </div>
 
               <div>
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" type="tel" placeholder="Enter your phone number" required />
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  required
+                />
               </div>
 
               <div>
                 <Label htmlFor="bank-account">Bank Account Number</Label>
-                <Input id="bank-account" placeholder="Enter your bank account number" required />
+                <Input
+                  id="bank-account"
+                  placeholder="Enter your bank account number"
+                  required
+                />
               </div>
 
               <div>
                 <Label htmlFor="ifsc-code">IFSC Code</Label>
-                <Input id="ifsc-code" placeholder="Enter your bank's IFSC code" required />
+                <Input
+                  id="ifsc-code"
+                  placeholder="Enter your bank's IFSC code"
+                  required
+                />
               </div>
 
               <div>
@@ -71,10 +101,15 @@ export function SellCheckout() {
                 <p>Vehicle: 2020 Model ABC</p>
                 <p>Agreed Price: ₹20,000</p>
                 <p>Service Fee: ₹500</p>
-                <p className="text-xl font-semibold mt-2">Total Payout: ₹19,500</p>
+                <p className="text-xl font-semibold mt-2">
+                  Total Payout: ₹19,500
+                </p>
               </div>
 
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
                 Complete Sale
               </Button>
 
@@ -88,7 +123,8 @@ export function SellCheckout() {
                     <div>
                       <h3 className="font-semibold">Vehicle Inspection</h3>
                       <p className="text-gray-600">
-                        Our expert will visit your location to inspect the vehicle and verify all details.
+                        Our expert will visit your location to inspect the
+                        vehicle and verify all details.
                       </p>
                     </div>
                   </div>
@@ -99,7 +135,8 @@ export function SellCheckout() {
                     <div>
                       <h3 className="font-semibold">Price Confirmation</h3>
                       <p className="text-gray-600">
-                        After inspection, we'll confirm the final price based on the vehicle's condition.
+                        After inspection, we'll confirm the final price based on
+                        the vehicle's condition.
                       </p>
                     </div>
                   </div>
@@ -110,7 +147,8 @@ export function SellCheckout() {
                     <div>
                       <h3 className="font-semibold">Documentation</h3>
                       <p className="text-gray-600">
-                        We'll help you with all the paperwork and documentation required for the transfer.
+                        We'll help you with all the paperwork and documentation
+                        required for the transfer.
                       </p>
                     </div>
                   </div>
@@ -121,7 +159,8 @@ export function SellCheckout() {
                     <div>
                       <h3 className="font-semibold">Payment Processing</h3>
                       <p className="text-gray-600">
-                        Once everything is verified, we'll process the payment directly to your bank account.
+                        Once everything is verified, we'll process the payment
+                        directly to your bank account.
                       </p>
                     </div>
                   </div>
@@ -132,10 +171,17 @@ export function SellCheckout() {
 
           <div className="space-y-8">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Your Vehicle Details</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Your Vehicle Details
+              </h2>
               <div className="flex items-center gap-4 mb-6">
                 <div className="relative w-24 h-24 rounded-lg overflow-hidden">
-                  <Image src="/placeholder.svg?height=96&width=96" alt="Vehicle" fill className="object-cover" />
+                  <Image
+                    src="/placeholder.svg?height=96&width=96"
+                    alt="Vehicle"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
                 <div>
                   <h3 className="font-medium">2020 Model ABC</h3>
@@ -161,36 +207,80 @@ export function SellCheckout() {
             </div>
 
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Why Sell with Vehiverze?</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Why Sell with Vehiverze?
+              </h2>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
                   <div className="bg-green-100 p-1 rounded-full mt-1">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="h-4 w-4 text-green-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
-                  <span className="text-gray-700">Best market price guaranteed</span>
+                  <span className="text-gray-700">
+                    Best market price guaranteed
+                  </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="bg-green-100 p-1 rounded-full mt-1">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="h-4 w-4 text-green-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <span className="text-gray-700">Hassle-free paperwork</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="bg-green-100 p-1 rounded-full mt-1">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="h-4 w-4 text-green-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <span className="text-gray-700">Instant payment</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="bg-green-100 p-1 rounded-full mt-1">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="h-4 w-4 text-green-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <span className="text-gray-700">Secure transactions</span>
@@ -200,9 +290,17 @@ export function SellCheckout() {
 
             <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 rounded-lg shadow-lg text-white">
               <h2 className="text-xl font-semibold mb-4">Need Help?</h2>
-              <p className="mb-4">Our support team is available 24/7 to assist you with any questions.</p>
+              <p className="mb-4">
+                Our support team is available 24/7 to assist you with any
+                questions.
+              </p>
               <div className="flex items-center gap-3 mb-2">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -213,7 +311,12 @@ export function SellCheckout() {
                 <span>+91 9876543210</span>
               </div>
               <div className="flex items-center gap-3">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -227,7 +330,6 @@ export function SellCheckout() {
           </div>
         </div>
       </div>
-      ;
       <CelebrationAnimation
         isOpen={showCelebration}
         onClose={() => setShowCelebration(false)}
@@ -237,7 +339,5 @@ export function SellCheckout() {
         actionLink="/dashboard/transactions"
       />
     </section>
-  )
+  );
 }
-
-

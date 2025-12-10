@@ -1,19 +1,30 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { X, Calendar } from "lucide-react"
-import { Button } from "@vehiverze/ui/button"
-import { Calendar as CalendarComponent } from "@vehiverze/ui/calendar"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@vehiverze/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@vehiverze/ui/popover"
-import { cn } from "@vehiverze/shared-utils/cn"
-import { format } from "date-fns"
+import * as React from "react";
+import { Calendar } from "lucide-react";
+import { Button } from "@vehiverze/ui/button";
+import { Calendar as CalendarComponent } from "@vehiverze/ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@vehiverze/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@vehiverze/ui/popover";
+import { cn } from "@vehiverze/shared-utils/cn";
+import { format } from "date-fns";
 
 interface ReschedulePickupModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onReschedule: (date: Date, time: string) => Promise<void>
+  isOpen: boolean;
+  onClose: () => void;
+  onReschedule: (date: Date, time: string) => Promise<void>;
 }
 
 const timeSlots = [
@@ -22,26 +33,30 @@ const timeSlots = [
   "02:00 PM - 04:00 PM",
   "04:00 PM - 06:00 PM",
   "06:00 PM - 08:00 PM",
-]
+];
 
-export function ReschedulePickupModal({ isOpen, onClose, onReschedule }: ReschedulePickupModalProps) {
-  const [date, setDate] = React.useState<Date>()
-  const [time, setTime] = React.useState("")
-  const [loading, setLoading] = React.useState(false)
+export function ReschedulePickupModal({
+  isOpen,
+  onClose,
+  onReschedule,
+}: ReschedulePickupModalProps) {
+  const [date, setDate] = React.useState<Date>();
+  const [time, setTime] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleReschedule = async () => {
-    if (!date || !time) return
+    if (!date || !time) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      await onReschedule(date, time)
-      onClose()
+      await onReschedule(date, time);
+      onClose();
     } catch (error) {
-      console.error("Error rescheduling pickup:", error)
+      console.error("Error rescheduling pickup:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -52,9 +67,7 @@ export function ReschedulePickupModal({ isOpen, onClose, onReschedule }: Resched
             variant="ghost"
             className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100"
             onClick={onClose}
-          >
-            
-          </Button>
+          ></Button>
         </DialogHeader>
         <div className="space-y-6 py-4">
           <div className="space-y-2">
@@ -65,7 +78,7 @@ export function ReschedulePickupModal({ isOpen, onClose, onReschedule }: Resched
                   variant="outline"
                   className={cn(
                     "w-full justify-start text-left font-normal bg-[#2A2A2A] border-[#3A3A3A]",
-                    !date && "text-muted-foreground",
+                    !date && "text-muted-foreground"
                   )}
                 >
                   <Calendar className="mr-2 h-4 w-4" />
@@ -73,7 +86,12 @@ export function ReschedulePickupModal({ isOpen, onClose, onReschedule }: Resched
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <CalendarComponent mode="single" selected={date} onSelect={setDate} initialFocus />
+                <CalendarComponent
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  initialFocus
+                />
               </PopoverContent>
             </Popover>
           </div>
@@ -94,13 +112,15 @@ export function ReschedulePickupModal({ isOpen, onClose, onReschedule }: Resched
             </Select>
           </div>
 
-          <Button className="w-full" disabled={!date || !time || loading} onClick={handleReschedule}>
+          <Button
+            className="w-full"
+            disabled={!date || !time || loading}
+            onClick={handleReschedule}
+          >
             {loading ? "Updating..." : "Update"}
           </Button>
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-
-

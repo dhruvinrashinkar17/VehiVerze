@@ -1,27 +1,29 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { NextResponse } from "next/server";
+import { db, garageBookings } from "@vehiverze/database";
+import { auth } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const session = await auth()
+    const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const data = await req.json()
+    const data = await req.json();
 
-    const booking = await prisma.garageBooking.create({
-      data: {
+    const [booking] = await db
+      .insert(garageBookings)
+      .values({
         ...data,
         userId: session.user.id,
-      },
-    })
+      })
+      .returning();
 
-    return NextResponse.json(booking)
+    return NextResponse.json(booking);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to create garage booking" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to create garage booking" },
+      { status: 500 }
+    );
   }
 }
-
-

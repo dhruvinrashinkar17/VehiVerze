@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { ProductForm } from "@/components/products/product-form"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { ProductForm } from "@/components/products/product-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AddProductPage() {
-  const router = useRouter()
-  const [serviceType, setServiceType] = useState("Buy")
+  const router = useRouter();
+  const [serviceType, setServiceType] = useState("Buy");
 
   const handleSuccess = () => {
-    router.push("/admin/products/manage")
-  }
+    router.push("/admin/products/manage");
+  };
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -27,7 +27,9 @@ export default function AddProductPage() {
                 <div
                   key={type}
                   className={`flex flex-col items-center justify-center p-4 border rounded-lg cursor-pointer hover:border-primary hover:bg-accent transition-colors ${
-                    serviceType === type ? "border-primary bg-accent text-primary font-bold" : ""
+                    serviceType === type
+                      ? "border-primary bg-accent text-primary font-bold"
+                      : ""
                   }`}
                   onClick={() => setServiceType(type)}
                 >
@@ -55,8 +57,16 @@ export default function AddProductPage() {
                     key={category}
                     className="flex items-center p-3 border rounded-lg cursor-pointer hover:border-primary hover:bg-accent"
                   >
-                    <input type="radio" id={category} name="serviceCategory" className="mr-2" />
-                    <label htmlFor={category} className="text-sm cursor-pointer">
+                    <input
+                      type="radio"
+                      id={category}
+                      name="serviceCategory"
+                      className="mr-2"
+                    />
+                    <label
+                      htmlFor={category}
+                      className="text-sm cursor-pointer"
+                    >
                       {category}
                     </label>
                   </div>
@@ -74,7 +84,12 @@ export default function AddProductPage() {
                     key={carType}
                     className="flex items-center p-3 border rounded-lg cursor-pointer hover:border-primary hover:bg-accent"
                   >
-                    <input type="radio" id={carType} name="carType" className="mr-2" />
+                    <input
+                      type="radio"
+                      id={carType}
+                      name="carType"
+                      className="mr-2"
+                    />
                     <label htmlFor={carType} className="text-sm cursor-pointer">
                       {carType}
                     </label>
@@ -91,17 +106,20 @@ export default function AddProductPage() {
                 📋 300-Point Vehicle Inspection Available
               </h3>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                For vehicles being sold, you can perform a comprehensive 300-point inspection to determine the exact
-                condition and get accurate pricing based on the vehicle's current state.
+                For vehicles being sold, you can perform a comprehensive
+                300-point inspection to determine the exact condition and get
+                accurate pricing based on the vehicle&apos;s current state.
               </p>
             </div>
           )}
         </div>
 
-        <ProductForm onSuccess={handleSuccess} serviceType={serviceType} maxImages={serviceType === "Buy" ? 50 : 5} />
+        <ProductForm
+          onSuccess={handleSuccess}
+          serviceType={serviceType}
+          maxImages={serviceType === "Buy" ? 50 : 5}
+        />
       </CardContent>
     </Card>
-  )
+  );
 }
-
-

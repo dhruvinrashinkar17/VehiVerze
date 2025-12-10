@@ -1,16 +1,26 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from "next/server";
+import {
+  db,
+  garageServiceBookings,
+  garagePartners,
+  eq,
+  desc,
+  and,
+  count,
+} from "@vehiverze/database";
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json()
+    const data = await request.json();
 
     // Generate booking ID
-    const bookingId = "VZ-GS-" + Math.random().toString(36).substr(2, 9).toUpperCase()
+    const bookingId =
+      "VZ-GS-" + Math.random().toString(36).substr(2, 9).toUpperCase();
 
     // Create garage booking
-    const booking = await prisma.garageServiceBooking.create({
-      data: {
+    const [booking] = await db
+      .insert(garageServiceBookings)
+      .values({
         bookingId,
         vehicleType: data.vehicleType,
         brand: data.brand,
@@ -33,8 +43,8 @@ export async function POST(request: Request) {
         status: "confirmed",
         // Assign to a garage partner (you can implement logic to assign based on location, availability, etc.)
         garagePartnerId: "default-garage-id",
-      },
-    })
+      })
+      .returning();
 
     // Send confirmation SMS/Email (implement your notification service)
     // await sendBookingConfirmation(booking)
@@ -46,72 +56,89 @@ export async function POST(request: Request) {
         id: booking.id,
         status: booking.status,
       },
-    })
+    });
   } catch (error) {
-    console.error("Booking creation error:", error)
-    return NextResponse.json({ success: false, error: "Failed to create booking" }, { status: 500 })
+    console.error("Booking creation error:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to create booking" },
+      { status: 500 }
+    );
   }
 }
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const bookingId = searchParams.get("bookingId")
-    const mobile = searchParams.get("mobile")
-    const status = searchParams.get("status")
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const limit = Number.parseInt(searchParams.get("limit") || "10")
+    const { searchParams } = new URL(request.url);
+    const bookingIdParam = searchParams.get("bookingId");
+    const mobile = searchParams.get("mobile");
+    const status = searchParams.get("status");
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const limit = Number.parseInt(searchParams.get("limit") || "10");
 
-    const whereClause: any = {}
+    // Build conditions array
+    const conditions = [];
 
-    if (bookingId) {
-      whereClause.bookingId = bookingId
+    if (bookingIdParam) {
+      conditions.push(eq(garageServiceBookings.bookingId, bookingIdParam));
     }
 
     if (mobile) {
-      whereClause.mobile = mobile
+      conditions.push(eq(garageServiceBookings.mobile, mobile));
     }
 
     if (status) {
-      whereClause.status = status
+      conditions.push(eq(garageServiceBookings.status, status));
     }
 
-    const bookings = await prisma.garageServiceBooking.findMany({
-      where: whereClause,
-      include: {
-        garagePartner: {
-          select: {
-            name: true,
-            address: true,
-            phone: true,
-            rating: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-    })
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    const total = await prisma.garageServiceBooking.count({
-      where: whereClause,
-    })
+    // Get bookings with partner info
+    const bookings = await db
+      .select({
+        booking: garageServiceBookings,
+        partner: {
+          name: garagePartners.name,
+          address: garagePartners.address,
+          phone: garagePartners.phone,
+          rating: garagePartners.rating,
+        },
+      })
+      .from(garageServiceBookings)
+      .leftJoin(
+        garagePartners,
+        eq(garageServiceBookings.garagePartnerId, garagePartners.id)
+      )
+      .where(whereClause)
+      .orderBy(desc(garageServiceBookings.createdAt))
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    // Get total count
+    const [{ total }] = await db
+      .select({ total: count() })
+      .from(garageServiceBookings)
+      .where(whereClause);
+
+    // Transform to match expected format
+    const transformedBookings = bookings.map(({ booking, partner }) => ({
+      ...booking,
+      garagePartner: partner,
+    }));
 
     return NextResponse.json({
       success: true,
-      data: bookings,
+      data: transformedBookings,
       pagination: {
         page,
         limit,
         total,
         pages: Math.ceil(total / limit),
       },
-    })
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, error: "Failed to fetch bookings" }, { status: 500 })
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch bookings" },
+      { status: 500 }
+    );
   }
 }
-
-

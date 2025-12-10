@@ -1,6 +1,6 @@
-import { ContactForm } from "@/components/contact-form"
-import { ContactInfo } from "@/components/contact-info"
-import { Mail, MapPin, Phone } from "lucide-react"
+import { ContactForm } from "@/components/contact-form";
+import { ContactInfo } from "@/components/contact-info";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 export default function ContactPage() {
   return (
@@ -8,9 +8,12 @@ export default function ContactPage() {
       {/* Hero Section */}
       <section className="contact-hero py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">Get in Touch</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
+            Get in Touch
+          </h1>
           <p className="text-lg md:text-xl text-muted-foreground text-balance">
-            Have a question or want to work together? We'd love to hear from you.
+            Have a question or want to work together? We&apos;d love to hear
+            from you.
           </p>
         </div>
       </section>
@@ -53,9 +56,13 @@ export default function ContactPage() {
               <div className="mt-8 p-6 rounded-lg bg-primary/5 border border-primary/10">
                 <h3 className="font-semibold mb-2">Looking for support?</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Check out our help center for quick answers to common questions.
+                  Check out our help center for quick answers to common
+                  questions.
                 </p>
-                <a href="#" className="text-sm font-medium text-primary hover:underline">
+                <a
+                  href="#"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
                   Visit Help Center →
                 </a>
               </div>
@@ -64,7 +71,5 @@ export default function ContactPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }
-
-

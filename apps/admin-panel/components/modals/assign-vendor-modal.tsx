@@ -1,36 +1,50 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { X } from "lucide-react"
-import { Button } from "@vehiverze/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@vehiverze/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { vendorsDb } from "@/lib/mock-data/stores"
+import * as React from "react";
+import { Button } from "@vehiverze/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@vehiverze/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { vendorsDb } from "@/lib/mock-data/stores";
 
 interface AssignVendorModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onAssign: (vendorId: string) => Promise<void>
+  isOpen: boolean;
+  onClose: () => void;
+  onAssign: (vendorId: string) => Promise<void>;
 }
 
-export function AssignVendorModal({ isOpen, onClose, onAssign }: AssignVendorModalProps) {
-  const [selectedVendor, setSelectedVendor] = React.useState("")
-  const [loading, setLoading] = React.useState(false)
-  const vendors = vendorsDb.getAll()
+export function AssignVendorModal({
+  isOpen,
+  onClose,
+  onAssign,
+}: AssignVendorModalProps) {
+  const [selectedVendor, setSelectedVendor] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const vendors = vendorsDb.getAll();
 
   const handleAssign = async () => {
-    if (!selectedVendor) return
+    if (!selectedVendor) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      await onAssign(selectedVendor)
-      onClose()
+      await onAssign(selectedVendor);
+      onClose();
     } catch (error) {
-      console.error("Error assigning vendor:", error)
+      console.error("Error assigning vendor:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -41,9 +55,7 @@ export function AssignVendorModal({ isOpen, onClose, onAssign }: AssignVendorMod
             variant="ghost"
             className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100"
             onClick={onClose}
-          >
-            
-          </Button>
+          ></Button>
         </DialogHeader>
         <div className="space-y-6 py-4">
           <Select value={selectedVendor} onValueChange={setSelectedVendor}>
@@ -64,13 +76,15 @@ export function AssignVendorModal({ isOpen, onClose, onAssign }: AssignVendorMod
               )}
             </SelectContent>
           </Select>
-          <Button className="w-full" disabled={!selectedVendor || loading} onClick={handleAssign}>
+          <Button
+            className="w-full"
+            disabled={!selectedVendor || loading}
+            onClick={handleAssign}
+          >
             {loading ? "Assigning..." : "Assign Vendor"}
           </Button>
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-
-

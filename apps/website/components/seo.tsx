@@ -1,15 +1,20 @@
-import Head from "next/head"
-import { getCanonicalUrl, siteConfig } from "@/lib/seo-config"
+import { getCanonicalUrl, siteConfig } from "@/lib/seo-config";
 
 interface SEOProps {
-  title: string
-  description?: string
-  canonical?: string
-  ogType?: string
-  ogImage?: string
-  structuredData?: Record<string, any>[]
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogType?: string;
+  ogImage?: string;
+  structuredData?: Record<string, any>[];
 }
 
+/**
+ * SEO component for App Router.
+ * Note: In App Router, metadata is handled via the `metadata` export in page files.
+ * This component is kept for structured data injection only.
+ * For client components, structured data should be handled differently.
+ */
 export function SEO({
   title,
   description = siteConfig.description,
@@ -18,46 +23,21 @@ export function SEO({
   ogImage = siteConfig.ogImage,
   structuredData = [],
 }: SEOProps) {
-  const fullTitle = `${title} | ${siteConfig.name}`
-  const canonicalUrl = canonical ? getCanonicalUrl(canonical) : undefined
+  // In App Router, metadata is handled by the page's metadata export
+  // This component only handles structured data for client components
+  if (structuredData.length === 0) {
+    return null;
+  }
 
   return (
-    <Head>
-      {/* Basic Meta Tags */}
-      <title>{fullTitle}</title>
-      <meta name="description" content={description} />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-      {/* Canonical URL */}
-      {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-
-      {/* Open Graph / Facebook */}
-      <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={canonicalUrl || siteConfig.url} />
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content={`${siteConfig.url}${ogImage}`} />
-
-      {/* Twitter */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={canonicalUrl || siteConfig.url} />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={`${siteConfig.url}${ogImage}`} />
-
-      {/* Favicon */}
-      <link rel="icon" href="/favicon.ico" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-      <link rel="manifest" href="/site.webmanifest" />
-
-      {/* Structured Data */}
+    <>
       {structuredData.map((data, index) => (
-        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+        />
       ))}
-    </Head>
-  )
+    </>
+  );
 }
-
-

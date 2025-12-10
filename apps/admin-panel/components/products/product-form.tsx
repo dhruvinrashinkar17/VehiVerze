@@ -1,19 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "@vehiverze/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@vehiverze/ui/form"
-import { Input } from "@vehiverze/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { Textarea } from "@vehiverze/ui/textarea"
-import { Badge } from "@vehiverze/ui/badge"
-import { vehiclesDb } from "@/lib/mock-data/vehicle-store"
-import { vehicleBrands, conditionColors } from "@/lib/mock-data/vehicle-types"
-import type { VehicleProduct, VehicleCondition } from "@/lib/mock-data/vehicle-types"
-import { InspectionForm } from "./inspection-form"
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@vehiverze/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@vehiverze/ui/form";
+import { Input } from "@vehiverze/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { Textarea } from "@vehiverze/ui/textarea";
+import { Badge } from "@vehiverze/ui/badge";
+import { vehiclesDb } from "@/lib/mock-data/vehicle-store";
+import { vehicleBrands, conditionColors } from "@/lib/mock-data/vehicle-types";
+import type {
+  VehicleProduct,
+  VehicleCondition,
+} from "@/lib/mock-data/vehicle-types";
+import { InspectionForm } from "./inspection-form";
 
 const formSchema = z.object({
   type: z.enum([
@@ -38,19 +54,24 @@ const formSchema = z.object({
   basePrice: z.number().positive("Price must be positive"),
   description: z.string(),
   status: z.enum(["active", "inactive"]),
-})
+});
 
 interface ProductFormProps {
-  product?: VehicleProduct
-  onSuccess: () => void
-  serviceType?: string
-  maxImages?: number
+  product?: VehicleProduct;
+  onSuccess: () => void;
+  serviceType?: string;
+  maxImages?: number;
 }
 
-export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages = 5 }: ProductFormProps) {
-  const [loading, setLoading] = useState(false)
-  const [showInspection, setShowInspection] = useState(false)
-  const [inspectionData, setInspectionData] = useState<any>(null)
+export function ProductForm({
+  product,
+  onSuccess,
+  serviceType = "Buy",
+  maxImages: _maxImages = 5,
+}: ProductFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [showInspection, setShowInspection] = useState(false);
+  const [inspectionData, setInspectionData] = useState<any>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,41 +94,45 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
           status: "active",
           description: "",
         },
-  })
+  });
 
-  const vehicleType = form.watch("type")
-  const basePrice = form.watch("basePrice")
-  const brands = vehicleBrands[vehicleType]
+  const vehicleType = form.watch("type");
+  const basePrice = form.watch("basePrice");
+  const brands = vehicleBrands[vehicleType];
 
   const handleInspectionComplete = (results: any) => {
-    setInspectionData(results)
-    setShowInspection(false)
-  }
+    setInspectionData(results);
+    setShowInspection(false);
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true)
+    setLoading(true);
     try {
       const vehicleData = {
         ...values,
-        currentPrice: inspectionData ? inspectionData.adjustedPrice : values.basePrice,
-        condition: inspectionData ? inspectionData.condition : ("Good" as VehicleCondition),
+        currentPrice: inspectionData
+          ? inspectionData.adjustedPrice
+          : values.basePrice,
+        condition: inspectionData
+          ? inspectionData.condition
+          : ("Good" as VehicleCondition),
         inspectionScore: inspectionData ? inspectionData.totalScore : 0,
         maxInspectionScore: inspectionData ? inspectionData.maxScore : 300,
         inspectionDate: inspectionData ? new Date().toISOString() : undefined,
         inspectionResults: inspectionData ? inspectionData.results : [],
         images: [],
-      }
+      };
 
       if (product) {
-        await vehiclesDb.update(product.id, vehicleData)
+        await vehiclesDb.update(product.id, vehicleData);
       } else {
-        await vehiclesDb.create(vehicleData)
+        await vehiclesDb.create(vehicleData);
       }
-      onSuccess()
+      onSuccess();
     } catch (error) {
-      console.error("Error saving product:", error)
+      console.error("Error saving product:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -118,7 +143,7 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
         basePrice={basePrice || 0}
         onInspectionComplete={handleInspectionComplete}
       />
-    )
+    );
   }
 
   return (
@@ -131,7 +156,10 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Vehicle Type</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select vehicle type" />
@@ -164,7 +192,10 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Brand</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select brand" />
@@ -203,7 +234,10 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Variant</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select variant" />
@@ -229,7 +263,13 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
               <FormItem>
                 <FormLabel>Year</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} onChange={(e) => field.onChange(Number.parseInt(e.target.value))} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(Number.parseInt(e.target.value))
+                    }
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -242,18 +282,23 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Fuel Type</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select fuel type" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {["Petrol", "Diesel", "CNG", "Electric", "Hybrid"].map((fuel) => (
-                      <SelectItem key={fuel} value={fuel}>
-                        {fuel}
-                      </SelectItem>
-                    ))}
+                    {["Petrol", "Diesel", "CNG", "Electric", "Hybrid"].map(
+                      (fuel) => (
+                        <SelectItem key={fuel} value={fuel}>
+                          {fuel}
+                        </SelectItem>
+                      )
+                    )}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -268,7 +313,13 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
               <FormItem>
                 <FormLabel>Kilometers Driven</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} onChange={(e) => field.onChange(Number.parseInt(e.target.value))} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(Number.parseInt(e.target.value))
+                    }
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -296,7 +347,13 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
               <FormItem>
                 <FormLabel>Base Price (₹)</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} onChange={(e) => field.onChange(Number.parseInt(e.target.value))} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(Number.parseInt(e.target.value))
+                    }
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -309,7 +366,10 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
@@ -346,7 +406,9 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-muted-foreground">Condition</div>
-                <Badge className={conditionColors[inspectionData.condition]}>{inspectionData.condition}</Badge>
+                <Badge className={conditionColors[inspectionData.condition]}>
+                  {inspectionData.condition}
+                </Badge>
               </div>
               <div>
                 <div className="text-sm text-muted-foreground">Score</div>
@@ -356,11 +418,17 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
               </div>
               <div>
                 <div className="text-sm text-muted-foreground">Base Price</div>
-                <div className="font-medium">₹{basePrice?.toLocaleString()}</div>
+                <div className="font-medium">
+                  ₹{basePrice?.toLocaleString()}
+                </div>
               </div>
               <div>
-                <div className="text-sm text-muted-foreground">Adjusted Price</div>
-                <div className="font-medium text-primary">₹{inspectionData.adjustedPrice.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground">
+                  Adjusted Price
+                </div>
+                <div className="font-medium text-primary">
+                  ₹{inspectionData.adjustedPrice.toLocaleString()}
+                </div>
               </div>
             </div>
           </div>
@@ -372,7 +440,12 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
           </Button>
           {/* Only show inspection button for Sell service type */}
           {!product && serviceType === "Sell" && (
-            <Button type="button" variant="secondary" onClick={() => setShowInspection(true)} disabled={!basePrice}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setShowInspection(true)}
+              disabled={!basePrice}
+            >
               Start 300-Point Inspection
             </Button>
           )}
@@ -382,7 +455,5 @@ export function ProductForm({ product, onSuccess, serviceType = "Buy", maxImages
         </div>
       </form>
     </Form>
-  )
+  );
 }
-
-

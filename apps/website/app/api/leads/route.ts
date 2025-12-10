@@ -1,12 +1,13 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from "next/server";
+import { db, leads, desc } from "@vehiverze/database";
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json()
+    const data = await req.json();
 
-    const lead = await prisma.lead.create({
-      data: {
+    const [lead] = await db
+      .insert(leads)
+      .values({
         name: data.name,
         email: data.email,
         phone: data.phone,
@@ -15,29 +16,32 @@ export async function POST(req: Request) {
         model: data.model,
         year: data.year,
         message: data.message,
-      },
-    })
+      })
+      .returning();
 
-    return NextResponse.json(lead)
+    return NextResponse.json(lead);
   } catch (error) {
-    console.error("Failed to create lead:", error)
-    return NextResponse.json({ error: "Failed to create lead" }, { status: 500 })
+    console.error("Failed to create lead:", error);
+    return NextResponse.json(
+      { error: "Failed to create lead" },
+      { status: 500 }
+    );
   }
 }
 
 export async function GET() {
   try {
-    const leads = await prisma.lead.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    })
+    const allLeads = await db
+      .select()
+      .from(leads)
+      .orderBy(desc(leads.createdAt));
 
-    return NextResponse.json(leads)
+    return NextResponse.json(allLeads);
   } catch (error) {
-    console.error("Failed to fetch leads:", error)
-    return NextResponse.json({ error: "Failed to fetch leads" }, { status: 500 })
+    console.error("Failed to fetch leads:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch leads" },
+      { status: 500 }
+    );
   }
 }
-
-

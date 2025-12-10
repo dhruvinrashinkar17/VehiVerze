@@ -1,32 +1,47 @@
-import type { Metadata } from "next"
-import { NavBar } from "@/components/nav-bar"
-import { Footer } from "@/components/footer"
-import { VehicleTypeContent, getVehicleTypeContent } from "@/components/vehicle-type-content"
-import { Breadcrumb } from "@/components/breadcrumb"
-import { Button } from "@vehiverze/ui/button"
-import { Card, CardContent } from "@vehiverze/ui/card"
-import { Badge } from "@vehiverze/ui/badge"
-import { Input } from "@vehiverze/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { CheckCircle, Shield, Truck, CreditCard, FileText, Wrench, Filter, Search } from "lucide-react"
+import type { Metadata } from "next";
+import { NavBar } from "@/components/nav-bar";
+import { Footer } from "@/components/footer";
+import { VehicleTypeContent } from "@/components/vehicle-type-content";
+import { Breadcrumb } from "@/components/breadcrumb";
+import { Button } from "@vehiverze/ui/button";
+import { Card, CardContent } from "@vehiverze/ui/card";
+import { Badge } from "@vehiverze/ui/badge";
+import { Input } from "@vehiverze/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import {
+  CheckCircle,
+  Shield,
+  Truck,
+  CreditCard,
+  FileText,
+  Wrench,
+  Filter,
+  Search,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Buy Used 8+ Wheeler Heavy Trucks Online | Certified Heavy Duty Vehicles – Vehiverze",
+  title:
+    "Buy Used 8+ Wheeler Heavy Trucks Online | Certified Heavy Duty Vehicles – Vehiverze",
   description:
     "Explore certified used 8+ wheeler heavy trucks in India. Buy Tata Prima, Volvo, BharatBenz heavy vehicles with national permits. Heavy vehicle financing, RC transfer & doorstep delivery.",
   keywords:
     "buy used 8-wheeler trucks, certified heavy duty vehicles, pre-owned Tata Prima, second hand trailers, heavy truck marketplace, Volvo trucks, BharatBenz heavy vehicles, Ashok Leyland heavy trucks",
   openGraph: {
-    title: "Buy Used 8+ Wheeler Heavy Trucks Online | Certified Heavy Duty Vehicles – Vehiverze",
+    title:
+      "Buy Used 8+ Wheeler Heavy Trucks Online | Certified Heavy Duty Vehicles – Vehiverze",
     description:
       "Explore certified used 8+ wheeler heavy trucks in India. Buy Tata Prima, Volvo, BharatBenz heavy vehicles with national permits. Heavy vehicle financing, RC transfer & doorstep delivery.",
     type: "website",
   },
-}
+};
 
 export default function MoreThanEightWheelerPage() {
-  const content = getVehicleTypeContent("more-than-8-wheeler")
-
   return (
     <main className="min-h-screen bg-white">
       <NavBar />
@@ -49,7 +64,9 @@ export default function MoreThanEightWheelerPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Buy Certified Pre-Owned 8+ Wheeler Heavy Trucks
             </h1>
-            <p className="text-xl text-gray-600 mb-6">India's Trusted Marketplace for Heavy Duty Vehicles & Trailers</p>
+            <p className="text-xl text-gray-600 mb-6">
+              India's Trusted Marketplace for Heavy Duty Vehicles & Trailers
+            </p>
             <div className="flex flex-wrap justify-center gap-4 mb-6">
               <Badge variant="outline" className="px-4 py-2">
                 🏆 Best Services
@@ -74,11 +91,15 @@ export default function MoreThanEightWheelerPage() {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center gap-2 mb-4">
               <Filter className="h-5 w-5 text-gray-600" />
-              <h2 className="text-lg font-semibold text-gray-900">Filter Your Search</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Filter Your Search
+              </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Brand
+                </label>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Select Brand" />
@@ -94,7 +115,9 @@ export default function MoreThanEightWheelerPage() {
                 </Select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Type
+                </label>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Select Type" />
@@ -108,7 +131,9 @@ export default function MoreThanEightWheelerPage() {
                 </Select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Budget</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Budget
+                </label>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Select Budget" />
@@ -122,7 +147,9 @@ export default function MoreThanEightWheelerPage() {
                 </Select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  City
+                </label>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Select City" />
@@ -138,7 +165,9 @@ export default function MoreThanEightWheelerPage() {
                 </Select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Search
+                </label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input placeholder="Search by model..." className="pl-10" />
@@ -171,18 +200,22 @@ export default function MoreThanEightWheelerPage() {
               </h2>
               <div className="prose prose-lg max-w-none text-gray-700">
                 <p className="mb-4">
-                  Looking to buy a second-hand 8+ wheeler heavy truck in India? Vehiverze is your trusted marketplace
-                  for certified pre-owned heavy commercial vehicles from premium brands like Tata Prima, Volvo,
-                  BharatBenz, Ashok Leyland, Scania, and MAN. We offer an extensive collection of verified heavy trucks
-                  that undergo 150+ point specialized inspection to ensure long-haul operational readiness and maximum
-                  uptime.
+                  Looking to buy a second-hand 8+ wheeler heavy truck in India?
+                  Vehiverze is your trusted marketplace for certified pre-owned
+                  heavy commercial vehicles from premium brands like Tata Prima,
+                  Volvo, BharatBenz, Ashok Leyland, Scania, and MAN. We offer an
+                  extensive collection of verified heavy trucks that undergo
+                  150+ point specialized inspection to ensure long-haul
+                  operational readiness and maximum uptime.
                 </p>
                 <p>
-                  Whether you need a trailer truck for long-distance logistics, a heavy tipper for mining operations, a
-                  container truck for port operations, or a luxury bus for passenger transport, Vehiverze has the
-                  perfect heavy vehicle for your industrial needs. With transparent pricing, specialized heavy vehicle
-                  financing, and complete national permit transfer support, scaling your operations has never been
-                  easier.
+                  Whether you need a trailer truck for long-distance logistics,
+                  a heavy tipper for mining operations, a container truck for
+                  port operations, or a luxury bus for passenger transport,
+                  Vehiverze has the perfect heavy vehicle for your industrial
+                  needs. With transparent pricing, specialized heavy vehicle
+                  financing, and complete national permit transfer support,
+                  scaling your operations has never been easier.
                 </p>
               </div>
             </div>
@@ -196,44 +229,71 @@ export default function MoreThanEightWheelerPage() {
                 {[
                   {
                     title: "Heavy Duty Trucks",
-                    description: "Multi-axle trucks for heavy cargo transport and long-haul operations",
+                    description:
+                      "Multi-axle trucks for heavy cargo transport and long-haul operations",
                     examples: "Tata Prima, Volvo FH, BharatBenz 4928",
                     priceRange: "₹25,00,000 - ₹80,00,000",
                     features: ["High Payload", "Long Distance", "Multi-Axle"],
                   },
                   {
                     title: "Container Trailers",
-                    description: "Long-haul container transportation for logistics and port operations",
+                    description:
+                      "Long-haul container transportation for logistics and port operations",
                     examples: "BharatBenz 4928, Scania R450, Volvo FM",
                     priceRange: "₹30,00,000 - ₹1,00,00,000",
-                    features: ["Container Body", "Port Operations", "International Standards"],
+                    features: [
+                      "Container Body",
+                      "Port Operations",
+                      "International Standards",
+                    ],
                   },
                   {
                     title: "Heavy Tipper Trucks",
-                    description: "Mining and construction tippers for heavy material transport",
-                    examples: "Tata Signa 4923, Volvo FM, Ashok Leyland Captain",
+                    description:
+                      "Mining and construction tippers for heavy material transport",
+                    examples:
+                      "Tata Signa 4923, Volvo FM, Ashok Leyland Captain",
                     priceRange: "₹35,00,000 - ₹1,20,00,000",
-                    features: ["Mining Ready", "Heavy Duty Tipper", "High Capacity"],
+                    features: [
+                      "Mining Ready",
+                      "Heavy Duty Tipper",
+                      "High Capacity",
+                    ],
                   },
                   {
                     title: "Luxury Buses",
-                    description: "Multi-axle passenger buses for long-distance travel",
+                    description:
+                      "Multi-axle passenger buses for long-distance travel",
                     examples: "Volvo 9400, Scania Metrolink, MAN Lion's Coach",
                     priceRange: "₹40,00,000 - ₹2,00,00,000",
-                    features: ["Passenger Comfort", "Long Distance", "Premium Features"],
+                    features: [
+                      "Passenger Comfort",
+                      "Long Distance",
+                      "Premium Features",
+                    ],
                   },
                 ].map((type, index) => (
                   <Card key={index}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{type.title}</h3>
-                      <p className="text-gray-600 mb-3 text-sm">{type.description}</p>
-                      <p className="text-xs text-gray-500 mb-2">Popular: {type.examples}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                        {type.title}
+                      </h3>
+                      <p className="text-gray-600 mb-3 text-sm">
+                        {type.description}
+                      </p>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Popular: {type.examples}
+                      </p>
                       <Badge variant="secondary" className="mb-3">
                         {type.priceRange}
                       </Badge>
                       <div className="flex flex-wrap gap-1">
                         {type.features.map((feature, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
+                          <Badge
+                            key={idx}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {feature}
                           </Badge>
                         ))}
@@ -246,47 +306,58 @@ export default function MoreThanEightWheelerPage() {
 
             {/* Popular Brands */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Popular Heavy Truck Brands</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Popular Heavy Truck Brands
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   {
                     brand: "Tata Motors",
-                    description: "India's leading heavy truck manufacturer with Prima and Signa series",
-                    popular: "Tata Prima 4923, Tata Signa 4923, Tata Prima 5525",
+                    description:
+                      "India's leading heavy truck manufacturer with Prima and Signa series",
+                    popular:
+                      "Tata Prima 4923, Tata Signa 4923, Tata Prima 5525",
                     priceRange: "₹25,00,000 - ₹75,00,000",
-                    specialty: "Proven reliability and extensive service network",
+                    specialty:
+                      "Proven reliability and extensive service network",
                   },
                   {
                     brand: "Volvo Trucks",
-                    description: "Swedish premium heavy trucks known for safety and fuel efficiency",
+                    description:
+                      "Swedish premium heavy trucks known for safety and fuel efficiency",
                     popular: "Volvo FH, Volvo FM, Volvo 9400 Bus",
                     priceRange: "₹45,00,000 - ₹1,20,00,000",
                     specialty: "World-class safety and driver comfort",
                   },
                   {
                     brand: "BharatBenz",
-                    description: "Mercedes-Benz technology adapted for Indian conditions",
-                    popular: "BharatBenz 4928, BharatBenz 5528, BharatBenz 3528",
+                    description:
+                      "Mercedes-Benz technology adapted for Indian conditions",
+                    popular:
+                      "BharatBenz 4928, BharatBenz 5528, BharatBenz 3528",
                     priceRange: "₹28,00,000 - ₹85,00,000",
                     specialty: "German engineering with Indian adaptability",
                   },
                   {
                     brand: "Ashok Leyland",
-                    description: "Leading Indian heavy truck manufacturer with Captain and Boss series",
+                    description:
+                      "Leading Indian heavy truck manufacturer with Captain and Boss series",
                     popular: "Captain 4923, Boss 4923, Viking 5525",
                     priceRange: "₹26,00,000 - ₹70,00,000",
                     specialty: "Powerful engines and robust build quality",
                   },
                   {
                     brand: "Scania",
-                    description: "Swedish premium trucks with advanced technology and efficiency",
+                    description:
+                      "Swedish premium trucks with advanced technology and efficiency",
                     popular: "Scania R450, Scania G410, Scania Metrolink Bus",
                     priceRange: "₹55,00,000 - ₹1,50,00,000",
                     specialty: "Premium quality and advanced technology",
                   },
                   {
                     brand: "MAN Trucks",
-                    description: "German heavy trucks with innovative technology and reliability",
+                    description:
+                      "German heavy trucks with innovative technology and reliability",
                     popular: "MAN TGX, MAN TGS, MAN Lion's Coach",
                     priceRange: "₹50,00,000 - ₹1,40,00,000",
                     specialty: "German precision and innovative solutions",
@@ -294,12 +365,20 @@ export default function MoreThanEightWheelerPage() {
                 ].map((brand, index) => (
                   <Card key={index}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{brand.brand}</h3>
-                      <p className="text-gray-600 mb-3 text-sm">{brand.description}</p>
-                      <p className="text-xs text-gray-500 mb-2">Popular Models: {brand.popular}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        {brand.brand}
+                      </h3>
+                      <p className="text-gray-600 mb-3 text-sm">
+                        {brand.description}
+                      </p>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Popular Models: {brand.popular}
+                      </p>
                       <div className="flex justify-between items-center">
                         <Badge variant="outline">{brand.priceRange}</Badge>
-                        <span className="text-xs text-blue-600">{brand.specialty}</span>
+                        <span className="text-xs text-blue-600">
+                          {brand.specialty}
+                        </span>
                       </div>
                     </CardContent>
                   </Card>
@@ -309,7 +388,9 @@ export default function MoreThanEightWheelerPage() {
 
             {/* Buy in Top Cities */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Buy Used Heavy Trucks in Top Cities</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Buy Used Heavy Trucks in Top Cities
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   {
@@ -364,11 +445,17 @@ export default function MoreThanEightWheelerPage() {
                   <Card key={index}>
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-lg font-semibold text-gray-900">{city.city}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {city.city}
+                        </h3>
                         <Badge variant="secondary">{city.count}</Badge>
                       </div>
-                      <p className="text-gray-600 mb-3 text-sm">{city.description}</p>
-                      <p className="text-xs text-gray-500 mb-2">Popular: {city.popular}</p>
+                      <p className="text-gray-600 mb-3 text-sm">
+                        {city.description}
+                      </p>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Popular: {city.popular}
+                      </p>
                       <Badge variant="outline" className="text-xs">
                         {city.permits}
                       </Badge>
@@ -380,7 +467,9 @@ export default function MoreThanEightWheelerPage() {
 
             {/* Why Choose Vehiverze */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Why Choose Vehiverze for Used Heavy Trucks?</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Why Choose Vehiverze for Used Heavy Trucks?
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   {
@@ -422,9 +511,15 @@ export default function MoreThanEightWheelerPage() {
                 ].map((feature, index) => (
                   <Card key={index}>
                     <CardContent className="p-6 text-center">
-                      <div className="flex justify-center mb-4">{feature.icon}</div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                      <p className="text-gray-600 text-sm">{feature.description}</p>
+                      <div className="flex justify-center mb-4">
+                        {feature.icon}
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        {feature.description}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -433,7 +528,9 @@ export default function MoreThanEightWheelerPage() {
 
             {/* Trust Signals */}
             <div className="mb-12 text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Trusted by Heavy Vehicle Operators</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Trusted by Heavy Vehicle Operators
+              </h2>
               <div className="flex flex-wrap justify-center gap-6">
                 <Badge variant="outline" className="px-6 py-3 text-sm">
                   🏆 Startup India Registered
@@ -455,11 +552,14 @@ export default function MoreThanEightWheelerPage() {
 
             {/* FAQs */}
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Frequently Asked Questions
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   {
-                    question: "What is the price of a second-hand 8+ wheeler heavy truck in India?",
+                    question:
+                      "What is the price of a second-hand 8+ wheeler heavy truck in India?",
                     answer:
                       "Used heavy truck prices in India start from ₹25,00,000 for basic heavy trucks and can go up to ₹2,00,00,000 for premium luxury buses. The price depends on the brand, model, year, condition, kilometers driven, and type of application.",
                   },
@@ -474,7 +574,8 @@ export default function MoreThanEightWheelerPage() {
                       "Yes, Vehiverze offers heavy vehicle loans for used trucks with instant approval. You can get financing up to 85% of the truck value with competitive interest rates starting from 12.99% per annum for heavy commercial vehicles.",
                   },
                   {
-                    question: "Is national permit transfer included in purchase?",
+                    question:
+                      "Is national permit transfer included in purchase?",
                     answer:
                       "Yes, national permit transfer and all documentation are handled by our specialized team. We ensure all permits, fitness certificates, and insurance are transferred within 7 days of purchase.",
                   },
@@ -491,7 +592,9 @@ export default function MoreThanEightWheelerPage() {
                 ].map((faq, index) => (
                   <Card key={index}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                        {faq.question}
+                      </h3>
                       <p className="text-gray-600 text-sm">{faq.answer}</p>
                     </CardContent>
                   </Card>
@@ -501,7 +604,9 @@ export default function MoreThanEightWheelerPage() {
 
             {/* Internal Links */}
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Explore More</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Explore More
+              </h2>
               <div className="flex flex-wrap justify-center gap-4">
                 <Button variant="outline" asChild>
                   <a href="/sell/more-than-8-wheeler">Sell Your Heavy Truck</a>
@@ -523,7 +628,5 @@ export default function MoreThanEightWheelerPage() {
 
       <Footer />
     </main>
-  )
+  );
 }
-
-
