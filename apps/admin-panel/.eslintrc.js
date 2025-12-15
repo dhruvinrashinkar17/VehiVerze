@@ -1,5 +1,3 @@
-module.exports = {
-  extends: ["@vehiverze/eslint-config/nextjs"],
-};
-
-
+// Deprecated: migrated to ESLint v9 flat config.
+// Keep file empty to avoid accidental usage.
+module.exports = {};

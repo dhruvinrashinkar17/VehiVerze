@@ -62,7 +62,7 @@
     "./use-toast": "./src/use-toast.ts"
   },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings 0",
     "type-check": "tsc --noEmit"
   },
   "peerDependencies": {

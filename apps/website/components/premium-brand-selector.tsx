@@ -1,54 +1,63 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { Search, ArrowLeft } from "lucide-react"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Search, ArrowLeft } from "lucide-react";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
 
 interface Brand {
-  name: string
-  logo: string
-  popular?: boolean
+  name: string;
+  logo: string;
+  popular?: boolean;
 }
 
 interface PremiumBrandSelectorProps {
-  brands: Brand[]
-  onSelect: (brand: string) => void
-  onBack?: () => void
-  vehicleType: string
+  brands: Brand[];
+  onSelect: (brand: string) => void;
+  onBack?: () => void;
+  vehicleType: string;
 }
 
-export function PremiumBrandSelector({ brands, onSelect, onBack, vehicleType }: PremiumBrandSelectorProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filteredBrands, setFilteredBrands] = useState<Brand[]>(brands)
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
-  const [isSelecting, setIsSelecting] = useState(false)
+export function PremiumBrandSelector({
+  brands,
+  onSelect,
+  onBack,
+  vehicleType,
+}: PremiumBrandSelectorProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredBrands, setFilteredBrands] = useState<Brand[]>(brands);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [isSelecting, setIsSelecting] = useState(false);
 
   // Filter brands based on search term
   useEffect(() => {
     if (searchTerm) {
-      setFilteredBrands(brands.filter((brand) => brand.name.toLowerCase().includes(searchTerm.toLowerCase())))
+      setFilteredBrands(
+        brands.filter((brand) =>
+          brand.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
     } else {
-      setFilteredBrands(brands)
+      setFilteredBrands(brands);
     }
-  }, [searchTerm, brands])
+  }, [searchTerm, brands]);
 
   // Get popular brands
-  const popularBrands = brands.filter((brand) => brand.popular)
+  const popularBrands = brands.filter((brand) => brand.popular);
 
   // Handle brand selection with animation
   const handleBrandSelect = (brand: string) => {
-    setSelectedBrand(brand)
-    setIsSelecting(true)
+    setSelectedBrand(brand);
+    setIsSelecting(true);
 
     // Delay to show animation
     setTimeout(() => {
-      onSelect(brand)
-      setIsSelecting(false)
-    }, 600)
-  }
+      onSelect(brand);
+      setIsSelecting(false);
+    }, 600);
+  };
 
   // Animation variants
   const containerVariants = {
@@ -59,7 +68,7 @@ export function PremiumBrandSelector({ brands, onSelect, onBack, vehicleType }: 
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -70,25 +79,33 @@ export function PremiumBrandSelector({ brands, onSelect, onBack, vehicleType }: 
         duration: 0.5,
       },
     },
-  }
+  };
 
-  const selectedVariants = {
-    initial: { scale: 1 },
+  const cardVariants = {
+    hidden: itemVariants.hidden,
+    visible: itemVariants.visible,
     selected: {
+      ...itemVariants.visible,
       scale: 1.05,
       boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)",
       transition: { duration: 0.3 },
     },
-  }
+  };
 
   return (
     <div className="space-y-8">
       {onBack && (
         <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={onBack} className="rounded-full w-10 h-10 p-0">
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            className="rounded-full w-10 h-10 p-0"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-2xl font-bold">Select your {vehicleType} brand</h2>
+          <h2 className="text-2xl font-bold">
+            Select your {vehicleType} brand
+          </h2>
         </div>
       )}
 
@@ -115,18 +132,24 @@ export function PremiumBrandSelector({ brands, onSelect, onBack, vehicleType }: 
             {popularBrands.map((brand) => (
               <motion.div
                 key={brand.name}
-                variants={itemVariants}
+                variants={cardVariants}
                 whileHover={{ y: -5 }}
-                animate={selectedBrand === brand.name ? "selected" : "initial"}
-                variants={selectedVariants}
+                animate={selectedBrand === brand.name ? "selected" : "visible"}
                 onClick={() => handleBrandSelect(brand.name)}
                 className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-100"
               >
                 <div className="p-6 flex flex-col items-center">
                   <div className="w-20 h-20 relative mb-4">
-                    <Image src={brand.logo || "/placeholder.svg"} alt={brand.name} fill className="object-contain" />
+                    <Image
+                      src={brand.logo || "/placeholder.svg"}
+                      alt={brand.name}
+                      fill
+                      className="object-contain"
+                    />
                   </div>
-                  <span className="font-medium text-gray-800">{brand.name}</span>
+                  <span className="font-medium text-gray-800">
+                    {brand.name}
+                  </span>
                 </div>
               </motion.div>
             ))}
@@ -135,7 +158,9 @@ export function PremiumBrandSelector({ brands, onSelect, onBack, vehicleType }: 
       )}
 
       <div>
-        <h3 className="text-xl font-semibold mb-6">{searchTerm ? "Search Results" : "All Brands"}</h3>
+        <h3 className="text-xl font-semibold mb-6">
+          {searchTerm ? "Search Results" : "All Brands"}
+        </h3>
         {filteredBrands.length > 0 ? (
           <motion.div
             variants={containerVariants}
@@ -146,30 +171,36 @@ export function PremiumBrandSelector({ brands, onSelect, onBack, vehicleType }: 
             {filteredBrands.map((brand) => (
               <motion.div
                 key={brand.name}
-                variants={itemVariants}
+                variants={cardVariants}
                 whileHover={{ y: -5 }}
-                animate={selectedBrand === brand.name ? "selected" : "initial"}
-                variants={selectedVariants}
+                animate={selectedBrand === brand.name ? "selected" : "visible"}
                 onClick={() => handleBrandSelect(brand.name)}
                 className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-100"
               >
                 <div className="p-6 flex flex-col items-center">
                   <div className="w-16 h-16 relative mb-4">
-                    <Image src={brand.logo || "/placeholder.svg"} alt={brand.name} fill className="object-contain" />
+                    <Image
+                      src={brand.logo || "/placeholder.svg"}
+                      alt={brand.name}
+                      fill
+                      className="object-contain"
+                    />
                   </div>
-                  <span className="font-medium text-gray-800">{brand.name}</span>
+                  <span className="font-medium text-gray-800">
+                    {brand.name}
+                  </span>
                 </div>
               </motion.div>
             ))}
           </motion.div>
         ) : (
           <div className="text-center py-12 bg-gray-50 rounded-xl">
-            <p className="text-gray-500">No brands found matching "{searchTerm}"</p>
+            <p className="text-gray-500">
+              No brands found matching "{searchTerm}"
+            </p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
-
-

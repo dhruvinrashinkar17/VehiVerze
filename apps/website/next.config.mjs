@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -12,9 +9,15 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 365,
     dangerouslyAllowSVG: true,
+    localPatterns: [
+      {
+        pathname: "/**",
+        search: "**",
+      },
+    ],
   },
   compress: true,
   poweredByHeader: false,
-}
+};
 
-export default nextConfig
+export default nextConfig;
