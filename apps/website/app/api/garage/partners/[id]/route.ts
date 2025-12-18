@@ -5,13 +5,14 @@ import { requireStaff, isAuthError } from "@/lib/domain-user";
 // GET is public (customer-facing directory)
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const [partner] = await db
       .select()
       .from(garagePartners)
-      .where(eq(garagePartners.id, params.id));
+      .where(eq(garagePartners.id, id));
 
     if (!partner) {
       return NextResponse.json(
@@ -20,16 +21,12 @@ export async function GET(
       );
     }
 
-    // Get recent bookings for this partner (staff-only data, redacted for public)
-    // Public users only see basic partner info, not bookings
     return NextResponse.json({
       success: true,
-      data: {
-        ...partner,
-        // Bookings are not included for public requests
-      },
+      data: partner,
     });
   } catch (error) {
+    console.error("Failed to fetch garage partner:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch garage partner" },
       { status: 500 }
@@ -40,12 +37,13 @@ export async function GET(
 // PUT is staff-only (modify partner data)
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const auth = await requireStaff();
   if (isAuthError(auth)) return auth;
 
   try {
+    const { id } = await params;
     const data = await request.json();
 
     const [partner] = await db
@@ -69,14 +67,22 @@ export async function PUT(
         rating: data.rating,
         updatedAt: new Date(),
       })
-      .where(eq(garagePartners.id, params.id))
+      .where(eq(garagePartners.id, id))
       .returning();
+
+    if (!partner) {
+      return NextResponse.json(
+        { success: false, error: "Garage partner not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       data: partner,
     });
   } catch (error) {
+    console.error("Failed to update garage partner:", error);
     return NextResponse.json(
       { success: false, error: "Failed to update garage partner" },
       { status: 500 }
@@ -87,19 +93,31 @@ export async function PUT(
 // DELETE is staff-only
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const auth = await requireStaff();
   if (isAuthError(auth)) return auth;
 
   try {
-    await db.delete(garagePartners).where(eq(garagePartners.id, params.id));
+    const { id } = await params;
+    const [deleted] = await db
+      .delete(garagePartners)
+      .where(eq(garagePartners.id, id))
+      .returning();
+
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, error: "Garage partner not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       message: "Garage partner deleted successfully",
     });
   } catch (error) {
+    console.error("Failed to delete garage partner:", error);
     return NextResponse.json(
       { success: false, error: "Failed to delete garage partner" },
       { status: 500 }

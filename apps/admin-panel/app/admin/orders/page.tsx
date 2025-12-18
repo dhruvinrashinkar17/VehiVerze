@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Table,
@@ -19,140 +19,270 @@ import {
   PaginationPrevious,
 } from "@vehiverze/ui/pagination";
 import { Badge } from "@vehiverze/ui/badge";
-import { ordersDb } from "@/lib/mock-data";
-import type { Order } from "@/lib/mock-data";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@vehiverze/ui/tabs";
+import {
+  getGarageBookings,
+  getSellOrders,
+  type GarageBooking,
+  type SellOrder,
+} from "@/lib/api";
+
+type OrderType = "all" | "garage" | "sell";
 
 export default function OrdersPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
+  const [orderType, setOrderType] = useState<OrderType>("all");
   const pageSize = 10;
-  const orders = ordersDb.getAll();
-  const totalPages = Math.ceil(orders.length / pageSize);
-  const currentOrders = orders.slice((page - 1) * pageSize, page * pageSize);
+
+  const [garageBookings, setGarageBookings] = useState<GarageBooking[]>([]);
+  const [sellOrders, setSellOrders] = useState<SellOrder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([getGarageBookings({ limit: 100 }), getSellOrders()])
+      .then(([bookingsRes, orders]) => {
+        setGarageBookings(bookingsRes.data);
+        setSellOrders(orders);
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   const dateFormatter = useMemo(() => {
     return new Intl.DateTimeFormat("en-IN", {
       dateStyle: "medium",
-      timeStyle: "short",
       timeZone: "UTC",
     });
   }, []);
 
-  const getStatusColor = (status: Order["status"]) => {
-    switch (status) {
-      case "Completed":
-        return "status-completed";
-      case "Pending":
-        return "status-pending";
-      case "Assigned to Vendor":
-        return "status-assigned";
-      default:
-        return "status-cancelled";
-    }
-  };
+  // Combine and normalize orders
+  const allOrders = useMemo(() => {
+    const normalizedBookings = garageBookings.map((b) => ({
+      id: b.id,
+      type: "garage" as const,
+      date: new Date(b.createdAt),
+      model: `${b.brand} ${b.model}`,
+      city: b.address.split(",").pop()?.trim() || "-",
+      vehicleType: b.vehicleType,
+      serviceType: b.selectedServices.join(", "),
+      status: b.status,
+      customer: b.customerName,
+      phone: b.mobile,
+    }));
 
-  const getTypeColor = (type: Order["type"]) => {
-    switch (type) {
-      case "2 Wheeler":
+    const normalizedSellOrders = sellOrders.map((s) => ({
+      id: s.id,
+      type: "sell" as const,
+      date: new Date(s.createdAt),
+      model: `${s.brand} ${s.model}`,
+      city: s.location,
+      vehicleType: s.vehicleType,
+      serviceType: "Sell Vehicle",
+      status: s.status,
+      customer: s.sellerName,
+      phone: s.sellerPhone,
+    }));
+
+    let combined = [...normalizedBookings, ...normalizedSellOrders];
+
+    // Filter by type
+    if (orderType === "garage") {
+      combined = combined.filter((o) => o.type === "garage");
+    } else if (orderType === "sell") {
+      combined = combined.filter((o) => o.type === "sell");
+    }
+
+    // Sort by date descending
+    combined.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+    return combined;
+  }, [garageBookings, sellOrders, orderType]);
+
+  const totalPages = Math.ceil(allOrders.length / pageSize);
+  const currentOrders = allOrders.slice((page - 1) * pageSize, page * pageSize);
+
+  const getStatusColor = (status: string) => {
+    const normalizedStatus = status.toLowerCase();
+    switch (normalizedStatus) {
+      case "completed":
+        return "status-completed bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      case "pending":
+        return "status-pending bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+      case "confirmed":
         return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-      case "3 Wheeler":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "4 Wheeler - Cars":
-      case "4 Wheeler - Commercial Cars":
-      case "4 Wheeler - Trucks":
+      case "in_progress":
+      case "in-progress":
         return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
-      case "6 Wheeler":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-      case "8 Wheeler":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      case "Garage Service":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-      case "New Vehicle":
-        return "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-400";
+      case "cancelled":
+        return "status-cancelled bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
     }
   };
 
+  const getTypeColor = (type: "garage" | "sell") => {
+    if (type === "garage") {
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+    }
+    return "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-400";
+  };
+
+  const handleRowClick = (order: (typeof allOrders)[0]) => {
+    if (order.type === "garage") {
+      router.push(`/admin/orders/garage/${order.id}`);
+    } else {
+      router.push(`/admin/orders/sell/${order.id}`);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-muted-foreground">Loading orders...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-red-500">Failed to load orders: {error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      <div className="table-container">
-        <Table>
-          <TableHeader>
-            <TableRow className="table-header">
-              <TableHead>Order Date</TableHead>
-              <TableHead>Model</TableHead>
-              <TableHead>City</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Service</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentOrders.map((order) => (
-              <TableRow
-                key={order.id}
-                className="table-row cursor-pointer"
-                onClick={() => router.push(`/admin/orders/${order.id}`)}
-              >
-                <TableCell className="font-medium">
-                  {dateFormatter.format(new Date(order.date))}
-                </TableCell>
+      <Tabs
+        defaultValue="all"
+        onValueChange={(v) => {
+          setOrderType(v as OrderType);
+          setPage(1);
+        }}
+      >
+        <TabsList>
+          <TabsTrigger value="all">
+            All Orders ({garageBookings.length + sellOrders.length})
+          </TabsTrigger>
+          <TabsTrigger value="garage">
+            Garage Bookings ({garageBookings.length})
+          </TabsTrigger>
+          <TabsTrigger value="sell">
+            Sell Orders ({sellOrders.length})
+          </TabsTrigger>
+        </TabsList>
 
-                <TableCell>{order.model}</TableCell>
-                <TableCell>{order.city}</TableCell>
-                <TableCell>
-                  <Badge className={`badge ${getTypeColor(order.type)}`}>
-                    {order.type}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant="secondary"
-                    className="bg-blue-500/20 text-blue-500"
-                  >
-                    {order.serviceType}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Badge className={`badge ${getStatusColor(order.status)}`}>
-                    {order.status}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+        <TabsContent value={orderType} className="mt-4">
+          {currentOrders.length === 0 ? (
+            <div className="flex items-center justify-center p-8">
+              <div className="text-muted-foreground">No orders found</div>
+            </div>
+          ) : (
+            <>
+              <div className="table-container">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="table-header">
+                      <TableHead>Date</TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Model</TableHead>
+                      <TableHead>City</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Service</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {currentOrders.map((order) => (
+                      <TableRow
+                        key={`${order.type}-${order.id}`}
+                        className="table-row cursor-pointer"
+                        onClick={() => handleRowClick(order)}
+                      >
+                        <TableCell className="font-medium">
+                          {dateFormatter.format(order.date)}
+                        </TableCell>
+                        <TableCell>
+                          <div>{order.customer}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {order.phone}
+                          </div>
+                        </TableCell>
+                        <TableCell>{order.model}</TableCell>
+                        <TableCell>{order.city}</TableCell>
+                        <TableCell>
+                          <Badge
+                            className={`badge ${getTypeColor(order.type)}`}
+                          >
+                            {order.type === "garage"
+                              ? "Garage Service"
+                              : "Sell Vehicle"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            className="bg-blue-500/20 text-blue-500 max-w-[150px] truncate"
+                          >
+                            {order.serviceType}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            className={`badge ${getStatusColor(order.status)}`}
+                          >
+                            {order.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
 
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className={page === 1 ? "pointer-events-none opacity-50" : ""}
-            />
-          </PaginationItem>
-          {[...Array(totalPages)].map((_, i) => (
-            <PaginationItem key={i + 1}>
-              <PaginationLink
-                onClick={() => setPage(i + 1)}
-                isActive={page === i + 1}
-              >
-                {i + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className={
-                page === totalPages ? "pointer-events-none opacity-50" : ""
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+              {totalPages > 1 && (
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => setPage((p) => Math.max(1, p - 1))}
+                        className={
+                          page === 1 ? "pointer-events-none opacity-50" : ""
+                        }
+                      />
+                    </PaginationItem>
+                    {[...Array(Math.min(totalPages, 5))].map((_, i) => (
+                      <PaginationItem key={i + 1}>
+                        <PaginationLink
+                          onClick={() => setPage(i + 1)}
+                          isActive={page === i + 1}
+                        >
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() =>
+                          setPage((p) => Math.min(totalPages, p + 1))
+                        }
+                        className={
+                          page === totalPages
+                            ? "pointer-events-none opacity-50"
+                            : ""
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
+            </>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

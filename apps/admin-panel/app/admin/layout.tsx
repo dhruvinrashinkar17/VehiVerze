@@ -1,14 +1,15 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { Button } from "@vehiverze/ui/button";
-import { Upload, Download } from "lucide-react";
+import { Upload, Download, AlertCircle, Loader2 } from "lucide-react";
 import { useDeviceType } from "@/lib/device-detection";
 import { useRef } from "react";
+import { useAuthContext } from "@/components/auth-provider";
 
 export default function AdminLayout({
   children,
@@ -18,7 +19,23 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const _deviceType = useDeviceType();
   const pathname = usePathname();
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { isStaff, isLoading, roleError, isAuthenticated } = useAuthContext();
+
+  // Redirect to login if not authenticated or not staff
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/login");
+    } else if (!isLoading && isAuthenticated && !isStaff && roleError) {
+      // User is authenticated but not staff - show error, then redirect
+      const timeout = setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoading, isAuthenticated, isStaff, roleError, router]);
 
   const isProductsSection = pathname.startsWith("/admin/products");
 
@@ -68,6 +85,38 @@ export default function AdminLayout({
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Verifying access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if not staff
+  if (roleError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="flex flex-col items-center gap-4 p-8 max-w-md text-center">
+          <div className="p-3 rounded-full bg-destructive/10">
+            <AlertCircle className="h-8 w-8 text-destructive" />
+          </div>
+          <h2 className="text-xl font-semibold text-foreground">
+            Access Denied
+          </h2>
+          <p className="text-muted-foreground">{roleError}</p>
+          <p className="text-sm text-muted-foreground">
+            Redirecting to login...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col sm:flex-row h-screen bg-background overflow-hidden">

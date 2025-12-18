@@ -95,17 +95,52 @@ Use: `todo` · `in-progress` · `blocked` · `done` · `removed`
   - Seed faker mock data in `apps/admin-panel/lib/mock-data.ts`
 
 ### Public website
-- (P1, todo) Garage services booking flow uses real DB-backed catalog and partner assignment.
-- (P1, todo) Sell vehicle flow persists a sell order and schedules inspection.
-- (P1, todo) Customer can view their own booking/order status after login.
+- (P1, done) Garage services booking flow uses real DB-backed catalog and partner assignment.
+  - **Note:** Service catalog remains hardcoded (no DB table), but booking submission now works correctly.
+  - Fixed `apps/website/app/garage-services/checkout/CheckoutClient.tsx`:
+    - Was using `setTimeout` with `localStorage` to simulate booking (broken)
+    - Now calls `POST /api/garage/bookings` with all vehicle and booking data
+    - Clears localStorage on success and redirects to success page with booking ID
+    - Added loading states and error handling with toast notifications
+  - Partner assignment is manual (staff assigns via admin panel after booking is created)
+- (P1, done) Sell vehicle flow persists a sell order and schedules inspection.
+  - Fixed `apps/website/components/sell-final-checkout.tsx`:
+    - Was using `setTimeout` with `localStorage` to simulate submission (broken)
+    - Now calls `POST /api/sell-orders` with all vehicle data from sessionStorage
+    - Includes: vehicleType, brand, model, variant, year, kilometers, condition, location
+    - Includes: sellerName, sellerEmail, sellerPhone, sellerAddress
+    - Includes: inspectionDate, inspectionTime, inspectionAddress, estimatedPriceMin/Max
+    - Added loading states, error handling, and condition-based price estimation
+    - Clears sessionStorage on success and shows celebration before redirect
+- (P1, done) Customer can view their own booking/order status after login.
+  - Created customer-facing API routes:
+    - `GET /api/garage/bookings/mine` — returns bookings matching user's phone
+    - `GET /api/sell-orders/mine` — returns sell orders matching user's phone
+  - Customer dashboard at `apps/website/app/dashboard/page.tsx`:
+    - Shows quick stats (total bookings, orders, active bookings, pending orders)
+    - Lists garage service bookings with status badges
+    - Lists sell orders with inspection dates and price estimates
+    - Auth-gated (redirects to login if not authenticated)
 
 ### Admin (private)
-- (P1, todo) Staff login (private admin) with proper server-validated sessions.
-- (P1, todo) Admin views and updates:
-  - lead status
-  - sell order status
-  - garage partner verification
-  - booking status (confirmed → in progress → completed/cancelled)
+- (P1, done) Staff login (private admin) with proper server-validated sessions.
+  - Better Auth client in `apps/admin-panel/lib/auth-client.ts` connects to website's auth API
+  - Auth hook with role checking in `apps/admin-panel/hooks/use-auth.tsx`
+  - AuthProvider context in `apps/admin-panel/components/auth-provider.tsx`
+  - Route protection middleware in `apps/admin-panel/middleware.ts`
+  - OTP login page with role verification in `apps/admin-panel/app/login/page.tsx`
+  - Admin layout checks role client-side with loading/error states
+  - User role verification via `GET /api/auth/me` endpoint
+- (P1, done) Admin views and updates:
+  - lead status — `GET/PATCH /api/leads/[id]` (staff-only)
+  - sell order status — `GET/PATCH /api/sell-orders/[id]` (staff-only)
+  - garage partner verification — `GET/PUT /api/garage/partners/[id]` (staff-only)
+  - booking status (confirmed → in progress → completed/cancelled) — `GET/PUT /api/garage/bookings/[id]` (staff-only)
+- (P1, done) Admin panel pages now fetch from real API instead of mock data:
+  - `apps/admin-panel/lib/api.ts` — API client with typed functions
+  - `apps/admin-panel/app/admin/leads/page.tsx` — fetches from `/api/leads`
+  - `apps/admin-panel/app/admin/vendors/page.tsx` — fetches from `/api/garage/partners`
+  - `apps/admin-panel/app/admin/orders/page.tsx` — fetches from `/api/garage/bookings` + `/api/sell-orders` with tabs
 
 ---
 

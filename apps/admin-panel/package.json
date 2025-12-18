@@ -13,8 +13,10 @@
   "dependencies": {
     "@faker-js/faker": "latest",
     "@hookform/resolvers": "^3.9.1",
+    "@vehiverze/database": "workspace:*",
     "@vehiverze/shared-utils": "workspace:*",
     "@vehiverze/ui": "workspace:*",
+    "better-auth": "^1.2.8",
     "@vercel/analytics": "1.3.1",
     "autoprefixer": "^10.4.20",
     "date-fns": "^4.1.0",
