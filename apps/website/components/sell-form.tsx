@@ -1,27 +1,28 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { Button } from "@vehiverze/ui/button"
+import Image from "next/image";
+import { Button } from "@vehiverze/ui/button";
 
 const carBrands = [
-  { name: "Suzuki", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Hyundai", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Honda", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Tata", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Ford", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Volkswagen", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Mahindra", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Kia", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "BMW", logo: "/placeholder.svg?height=50&width=100" },
-  { name: "Mercedes", logo: "/placeholder.svg?height=50&width=100" },
-]
+  { name: "Suzuki", logo: "/placeholder.svg" },
+  { name: "Hyundai", logo: "/placeholder.svg" },
+  { name: "Honda", logo: "/placeholder.svg" },
+  { name: "Tata", logo: "/placeholder.svg" },
+  { name: "Ford", logo: "/placeholder.svg" },
+  { name: "Volkswagen", logo: "/placeholder.svg" },
+  { name: "Mahindra", logo: "/placeholder.svg" },
+  { name: "Kia", logo: "/placeholder.svg" },
+  { name: "BMW", logo: "/placeholder.svg" },
+  { name: "Mercedes", logo: "/placeholder.svg" },
+];
 
 export function SellForm({ onSubmit }: { onSubmit: (data: any) => void }) {
   return (
     <div className="space-y-8">
       <div className="text-center space-y-4">
         <h1 className="text-5xl font-bold">
-          Sell your car <span className="text-[#4ADE80]">at the best price</span>
+          Sell your car{" "}
+          <span className="text-[#4ADE80]">at the best price</span>
         </h1>
         <p className="text-xl text-gray-400">2x Faster Process</p>
       </div>
@@ -66,7 +67,5 @@ export function SellForm({ onSubmit }: { onSubmit: (data: any) => void }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-

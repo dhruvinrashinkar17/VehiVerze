@@ -1,5 +1,7 @@
 import { faker } from "@faker-js/faker";
 
+faker.seed(42);
+
 export type OrderStatus =
   | "Assigned to Vendor"
   | "Cancelled by Vehiverze"

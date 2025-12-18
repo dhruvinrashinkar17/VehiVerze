@@ -1,49 +1,40 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Checkbox } from "@vehiverze/ui/checkbox"
-import { PhoneIcon as WhatsappIcon } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Checkbox } from "@vehiverze/ui/checkbox";
+import { PhoneIcon as WhatsappIcon } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function VerificationForm() {
-  const [phone, setPhone] = useState("")
-  const [whatsappUpdates, setWhatsappUpdates] = useState(true)
-  const [showOTP, setShowOTP] = useState(false)
-  const [otp, setOTP] = useState("")
-  const router = useRouter()
+  const [phone, setPhone] = useState("");
+  const [whatsappUpdates, setWhatsappUpdates] = useState(true);
+  const [showOTP, setShowOTP] = useState(false);
+  const [otp, setOTP] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+
+    const phoneNumber = phone.startsWith("+") ? phone : `+91${phone}`;
 
     if (!showOTP) {
-      // Send OTP
-      const res = await fetch("/api/auth/otp/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
-      })
-
-      if (res.ok) {
-        setShowOTP(true)
-      }
+      await (await import("@/lib/auth-client")).authClient.phoneNumber.sendOtp({
+        phoneNumber,
+      });
+      setShowOTP(true);
     } else {
-      // Verify OTP
-      const res = await fetch("/api/auth/otp/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code: otp }),
-      })
-
-      if (res.ok) {
-        router.push("/evaluation")
-      }
+      await (await import("@/lib/auth-client")).authClient.phoneNumber.verify({
+        phoneNumber,
+        code: otp,
+      });
+      router.push("/evaluation");
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -52,7 +43,9 @@ export function VerificationForm() {
           {showOTP ? "Enter verification code" : "Enter your phone number"}
         </h2>
         <p className="text-gray-500">
-          {showOTP ? "We've sent a code to your phone" : "We will save the offer for you"}
+          {showOTP
+            ? "We've sent a code to your phone"
+            : "We will save the offer for you"}
         </p>
       </div>
 
@@ -67,14 +60,18 @@ export function VerificationForm() {
                 className="pl-16"
                 placeholder="9870947889"
               />
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">+91</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                +91
+              </span>
             </div>
 
             <div className="flex items-center gap-3">
               <Checkbox
                 id="whatsapp"
                 checked={whatsappUpdates}
-                onCheckedChange={(checked) => setWhatsappUpdates(checked as boolean)}
+                onCheckedChange={(checked) =>
+                  setWhatsappUpdates(checked as boolean)
+                }
               />
               <div className="flex items-center gap-2">
                 <WhatsappIcon className="w-5 h-5 text-green-500" />
@@ -95,7 +92,10 @@ export function VerificationForm() {
           />
         )}
 
-        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600">
+        <Button
+          type="submit"
+          className="w-full bg-orange-500 hover:bg-orange-600"
+        >
           {showOTP ? "Verify Code" : "Get Car Price"}
         </Button>
       </form>
@@ -119,7 +119,5 @@ export function VerificationForm() {
         We respect your privacy and your information is secure with us
       </p>
     </div>
-  )
+  );
 }
-
-

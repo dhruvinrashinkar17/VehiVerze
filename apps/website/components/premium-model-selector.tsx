@@ -35,44 +35,44 @@ export function PremiumModelSelector({
     "4-wheeler": [
       {
         name: "Baleno",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
       {
         name: "Swift",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
       {
         name: "Wagon R 1.0",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
       {
         name: "Alto 800",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
     ],
     "2-wheeler": [
       {
         name: "Splendor",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
       {
         name: "Activa",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
       {
         name: "Pulsar",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
       {
         name: "Classic 350",
-        image: "/placeholder.svg?height=100&width=200",
+        image: "/placeholder.svg",
         popular: true,
       },
     ],
@@ -80,24 +80,24 @@ export function PremiumModelSelector({
 
   const otherModels = {
     "4-wheeler": [
-      { name: "Alto K10", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Brezza", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Celerio", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Ciaz", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Dzire", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Eeco", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Fronx", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Grand Vitara", image: "/placeholder.svg?height=100&width=200" },
+      { name: "Alto K10", image: "/placeholder.svg" },
+      { name: "Brezza", image: "/placeholder.svg" },
+      { name: "Celerio", image: "/placeholder.svg" },
+      { name: "Ciaz", image: "/placeholder.svg" },
+      { name: "Dzire", image: "/placeholder.svg" },
+      { name: "Eeco", image: "/placeholder.svg" },
+      { name: "Fronx", image: "/placeholder.svg" },
+      { name: "Grand Vitara", image: "/placeholder.svg" },
     ],
     "2-wheeler": [
-      { name: "Passion", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Shine", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Unicorn", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Access", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Jupiter", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Apache", image: "/placeholder.svg?height=100&width=200" },
-      { name: "Bullet", image: "/placeholder.svg?height=100&width=200" },
-      { name: "FZ", image: "/placeholder.svg?height=100&width=200" },
+      { name: "Passion", image: "/placeholder.svg" },
+      { name: "Shine", image: "/placeholder.svg" },
+      { name: "Unicorn", image: "/placeholder.svg" },
+      { name: "Access", image: "/placeholder.svg" },
+      { name: "Jupiter", image: "/placeholder.svg" },
+      { name: "Apache", image: "/placeholder.svg" },
+      { name: "Bullet", image: "/placeholder.svg" },
+      { name: "FZ", image: "/placeholder.svg" },
     ],
   };
 

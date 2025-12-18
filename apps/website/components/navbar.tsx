@@ -1,49 +1,52 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@vehiverze/ui/button"
-import { User, Menu, X, ChevronDown, LogOut } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { CitySelector } from "@/components/city-selector"
-import { useAuth } from "@/hooks/use-auth"
+import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@vehiverze/ui/button";
+import { User, Menu, X, ChevronDown, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CitySelector } from "@/components/city-selector";
+import { useAuth } from "@/hooks/use-auth";
 
 export function NavBar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const router = useRouter()
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const { user, isAuthenticated, isLoading, logout } = useAuth()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
 
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null)
-        setIsProfileOpen(false)
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setActiveDropdown(null);
+        setIsProfileOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
+    setIsMenuOpen(!isMenuOpen);
 
     // Toggle body scroll
     if (!isMenuOpen) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ""
+      document.body.style.overflow = "";
     }
-  }
+  };
 
   const toggleDropdown = (dropdown: string) => {
-    setActiveDropdown(activeDropdown === dropdown ? null : dropdown)
-  }
+    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
+  };
 
   const vehicleCategories = [
     { name: "2-Wheelers", path: "/buy/2-wheeler" },
@@ -51,7 +54,7 @@ export function NavBar() {
     { name: "4-Wheelers", path: "/buy/4-wheeler" },
     { name: "6-Wheelers", path: "/buy/6-wheeler" },
     { name: "More than 8-Wheelers", path: "/buy/more-than-8-wheeler" },
-  ]
+  ];
 
   const sellCategories = [
     { name: "2-Wheelers", path: "/sell/2-wheeler" },
@@ -59,7 +62,7 @@ export function NavBar() {
     { name: "4-Wheelers", path: "/sell/4-wheeler" },
     { name: "6-Wheelers", path: "/sell/6-wheeler" },
     { name: "More than 8-Wheelers", path: "/sell/8-wheeler" },
-  ]
+  ];
 
   const garageServices = [
     { name: "Periodic Services", path: "/garage-services/periodic" },
@@ -71,14 +74,14 @@ export function NavBar() {
     { name: "Car Spa & Cleaning", path: "/garage-services/car-spa" },
     { name: "Car Inspections", path: "/garage-services/inspections" },
     { name: "Windshields & Lights", path: "/garage-services/windshields" },
-  ]
+  ];
 
   const newCarCategories = [
     { name: "Sedan", path: "/buy/new-cars/sedan" },
     { name: "Hatchback", path: "/buy/new-cars/hatchback" },
     { name: "SUV", path: "/buy/new-cars/suv" },
     { name: "Luxury", path: "/buy/new-cars/luxury" },
-  ]
+  ];
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-40">
@@ -95,7 +98,10 @@ export function NavBar() {
           </div>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden md:flex items-center space-x-6" ref={dropdownRef}>
+          <nav
+            className="hidden md:flex items-center space-x-6"
+            ref={dropdownRef}
+          >
             {/* New Cars Dropdown */}
             <div className="relative">
               <button
@@ -112,7 +118,9 @@ export function NavBar() {
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">CAR TYPES</h3>
+                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">
+                      CAR TYPES
+                    </h3>
                     <div className="mt-2">
                       {newCarCategories.map((category, index) => (
                         <Link
@@ -146,7 +154,9 @@ export function NavBar() {
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">VEHICLE CATEGORIES</h3>
+                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">
+                      VEHICLE CATEGORIES
+                    </h3>
                     <div className="mt-2">
                       {vehicleCategories.map((category, index) => (
                         <Link
@@ -180,7 +190,9 @@ export function NavBar() {
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">VEHICLE CATEGORIES</h3>
+                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">
+                      VEHICLE CATEGORIES
+                    </h3>
                     <div className="mt-2">
                       {sellCategories.map((category, index) => (
                         <Link
@@ -214,7 +226,9 @@ export function NavBar() {
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">SERVICE CATEGORIES</h3>
+                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 border-b">
+                      SERVICE CATEGORIES
+                    </h3>
                     <div className="mt-2">
                       {garageServices.map((service, index) => (
                         <Link
@@ -232,13 +246,22 @@ export function NavBar() {
               )}
             </div>
 
-            <Link href="/scrap" className="text-gray-700 font-medium hover:text-blue-600">
+            <Link
+              href="/scrap"
+              className="text-gray-700 font-medium hover:text-blue-600"
+            >
               Scrap Vehicle
             </Link>
-            <Link href="/track-orders" className="text-gray-700 font-medium hover:text-blue-600">
+            <Link
+              href="/track-orders"
+              className="text-gray-700 font-medium hover:text-blue-600"
+            >
               Track Order
             </Link>
-            <Link href="/blog" className="text-gray-700 font-medium hover:text-blue-600">
+            <Link
+              href="/blog"
+              className="text-gray-700 font-medium hover:text-blue-600"
+            >
               Blog
             </Link>
             {isLoading ? (
@@ -252,14 +275,18 @@ export function NavBar() {
                   <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    {user.name}
+                  </span>
                   <ChevronDown className="h-4 w-4" />
                 </button>
 
                 {isProfileOpen && (
                   <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                     <div className="p-3 border-b">
-                      <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {user.name}
+                      </p>
                       <p className="text-xs text-gray-500">{user.phone}</p>
                     </div>
                     <div className="p-2">
@@ -275,14 +302,17 @@ export function NavBar() {
                       >
                         My Orders
                       </Link>
-                      <Link href="/profile" className="block px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded">
+                      <Link
+                        href="/profile"
+                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded"
+                      >
                         Profile
                       </Link>
                       <button
-                        onClick={() => {
-                          logout()
-                          setIsProfileOpen(false)
-                          router.push("/")
+                        onClick={async () => {
+                          await logout();
+                          setIsProfileOpen(false);
+                          router.push("/");
                         }}
                         className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded flex items-center gap-2"
                       >
@@ -312,9 +342,16 @@ export function NavBar() {
                 {user.name.charAt(0).toUpperCase()}
               </div>
             ) : (
-              <User className="h-5 w-5 mr-4 text-gray-600 cursor-pointer" onClick={() => router.push("/login")} />
+              <User
+                className="h-5 w-5 mr-4 text-gray-600 cursor-pointer"
+                onClick={() => router.push("/login")}
+              />
             )}
-            <button className="mobile-menu-button" onClick={toggleMenu} aria-label="Toggle menu">
+            <button
+              className="mobile-menu-button"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+            >
               <Menu className="h-5 w-5 text-gray-600" />
             </button>
           </div>
@@ -327,7 +364,10 @@ export function NavBar() {
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-semibold">Menu</h2>
-          <button onClick={toggleMenu} className="p-2 rounded-md hover:bg-gray-100">
+          <button
+            onClick={toggleMenu}
+            className="p-2 rounded-md hover:bg-gray-100"
+          >
             <X className="h-6 w-6" />
           </button>
         </div>
@@ -446,19 +486,31 @@ export function NavBar() {
           </div>
 
           <div className="px-4 py-2">
-            <Link href="/scrap" className="block text-gray-700 font-medium" onClick={toggleMenu}>
+            <Link
+              href="/scrap"
+              className="block text-gray-700 font-medium"
+              onClick={toggleMenu}
+            >
               Scrap Vehicle
             </Link>
           </div>
 
           <div className="px-4 py-2">
-            <Link href="/track-orders" className="block text-gray-700 font-medium" onClick={toggleMenu}>
+            <Link
+              href="/track-orders"
+              className="block text-gray-700 font-medium"
+              onClick={toggleMenu}
+            >
               Track Order
             </Link>
           </div>
 
           <div className="px-4 py-2">
-            <Link href="/blog" className="block text-gray-700 font-medium" onClick={toggleMenu}>
+            <Link
+              href="/blog"
+              className="block text-gray-700 font-medium"
+              onClick={toggleMenu}
+            >
               Blog
             </Link>
           </div>
@@ -467,7 +519,10 @@ export function NavBar() {
             <div className="px-4 py-4 border-b bg-blue-50">
               <p className="font-semibold text-gray-900">{user.name}</p>
               <p className="text-sm text-gray-600">{user.phone}</p>
-              <Link href="/dashboard" className="text-sm text-blue-600 hover:underline mt-2 block">
+              <Link
+                href="/dashboard"
+                className="text-sm text-blue-600 hover:underline mt-2 block"
+              >
                 Go to Dashboard
               </Link>
             </div>
@@ -484,9 +539,12 @@ export function NavBar() {
       </div>
 
       {/* Overlay */}
-      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={toggleMenu}></div>}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={toggleMenu}
+        ></div>
+      )}
     </header>
-  )
+  );
 }
-
-

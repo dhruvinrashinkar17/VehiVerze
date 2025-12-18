@@ -8,6 +8,13 @@
       "when": 1765367966784,
       "tag": "0000_redundant_komodo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1765780000000,
+      "tag": "0001_better_auth",
+      "breakpoints": true
     }
   ]
 }

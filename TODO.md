@@ -47,18 +47,24 @@ Use: `todo` · `in-progress` · `blocked` · `done` · `removed`
 ## Milestone 0 — Stop Data Leaks & Fix Auth (P0)
 
 ### Authentication & sessions
-- (P0, todo) Replace forgeable cookie session with a signed session.
-  - Current: unsigned JSON stored in cookie: `apps/website/lib/auth.ts`
-- (P0, todo) Remove localStorage as the “truth” for auth.
-  - Current: `apps/website/hooks/use-auth.tsx`
-- (P0, todo) Implement Twilio OTP end-to-end:
-  - send OTP via SMS (Twilio)
-  - verify OTP and create session
-  - enforce expiry and attempt limits
-- (P0, todo) Do not return OTP code in API responses.
+- (P0, done) Replace forgeable cookie session with a signed session.
+  - Migrated website auth to Better Auth: `apps/website/lib/auth.ts` + `apps/website/app/api/auth/[...all]/route.ts`
+  - Added auth tables/migration: `packages/database/src/schema.ts` + `packages/database/drizzle/0001_better_auth.sql`
+- (P0, done) Remove localStorage as the “truth” for auth.
+  - `apps/website/hooks/use-auth.tsx` now uses Better Auth session (`useSession`) instead.
+- (P0, in-progress) Implement Twilio OTP end-to-end:
+  - Current: Better Auth phone OTP wired; `sendOTP` logs in dev only (needs SMS provider integration).
+  - Still needed: rate limiting, attempt limits, production SMS provider.
+  - Build fix: Turbopack alias for `better-auth/client/plugins` in `apps/website/next.config.mjs`
+- (P0, done) Do not return OTP code in API responses.
+  - Deprecated legacy endpoints now return `410 Gone`: `apps/website/app/api/auth/otp/send/route.ts` + `apps/website/app/api/auth/otp/verify/route.ts`
+- (P0, todo) Set `BETTER_AUTH_SECRET` in production env.
 
 ### Authorization (who can do what)
-- (P0, todo) Lock down all “lists everything” and “mutate anything” APIs.
+- (P0, in-progress) Lock down all “lists everything” and “mutate anything” APIs.
+  - Updated mutating routes to use Better Auth sessions: `apps/website/app/api/vehicles/route.ts`, `apps/website/app/api/garage/book/route.ts`, `apps/website/app/api/insurance/health/route.ts`
+  - Added domain user mapping so inserts use domain `user.id` FKs: `apps/website/lib/domain-user.ts`
+  - Still needed: audit and protect all admin/staff-only list and mutate routes.
   - Leads and sell orders must not be publicly listable.
   - Garage partners/bookings/payments/notifications stats must be staff-only.
 
@@ -71,6 +77,11 @@ Use: `todo` · `in-progress` · `blocked` · `done` · `removed`
 ---
 
 ## Milestone 1 — Core Flows (P1)
+
+### Admin panel stability
+- (P1, done) Fix orders hydration mismatch (SSR/client date formatting).
+  - Use deterministic formatter (UTC) in `apps/admin-panel/app/admin/orders/page.tsx`
+  - Seed faker mock data in `apps/admin-panel/lib/mock-data.ts`
 
 ### Public website
 - (P1, todo) Garage services booking flow uses real DB-backed catalog and partner assignment.
