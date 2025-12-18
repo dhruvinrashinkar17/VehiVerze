@@ -1,7 +1,12 @@
 import { db, users, eq } from "@vehiverze/database";
+import { NextResponse } from "next/server";
+import { getSession } from "./auth";
+
+export type UserRole = "user" | "staff" | "admin";
 
 export interface DomainUser {
   id: string;
+  role: UserRole;
 }
 
 type BetterAuthUserLike = {
@@ -83,7 +88,7 @@ export async function getOrCreateDomainUser(
 
   for (const phone of phoneCandidates) {
     const [existing] = await db
-      .select({ id: users.id })
+      .select({ id: users.id, role: users.role })
       .from(users)
       .where(eq(users.phone, phone));
 
@@ -93,22 +98,96 @@ export async function getOrCreateDomainUser(
         .set(buildUpdateValues(session))
         .where(eq(users.id, existing.id));
 
-      return { id: existing.id };
+      return { id: existing.id, role: existing.role as UserRole };
     }
   }
 
   const email = getNonTempEmail(session);
   const name = session.user?.name ?? null;
+  const phone = phoneCandidates[0];
+
+  if (!phone) return null;
 
   const [created] = await db
     .insert(users)
     .values({
-      phone: phoneCandidates[0],
+      phone,
       phoneVerified: new Date(),
-      ...(email ? { email } : {}),
-      ...(name ? { name } : {}),
+      email: email ?? null,
+      name: name ?? null,
     })
-    .returning({ id: users.id });
+    .returning({ id: users.id, role: users.role });
 
-  return created ? { id: created.id } : null;
+  return created ? { id: created.id, role: created.role as UserRole } : null;
+}
+
+// ============================================
+// AUTH HELPERS FOR ROUTE PROTECTION
+// ============================================
+
+export interface AuthResult {
+  session: NonNullable<Awaited<ReturnType<typeof getSession>>>;
+  domainUser: DomainUser;
+}
+
+export type AuthError = {
+  error: string;
+  status: 401 | 403;
+};
+
+/**
+ * Require authenticated user (any role)
+ */
+export async function requireAuth(): Promise<AuthResult | NextResponse> {
+  const session = await getSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const domainUser = await getOrCreateDomainUser(session);
+  if (!domainUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  return { session, domainUser };
+}
+
+/**
+ * Require staff or admin role
+ */
+export async function requireStaff(): Promise<AuthResult | NextResponse> {
+  const result = await requireAuth();
+  if (result instanceof NextResponse) return result;
+
+  if (
+    result.domainUser.role !== "staff" &&
+    result.domainUser.role !== "admin"
+  ) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  return result;
+}
+
+/**
+ * Require admin role
+ */
+export async function requireAdmin(): Promise<AuthResult | NextResponse> {
+  const result = await requireAuth();
+  if (result instanceof NextResponse) return result;
+
+  if (result.domainUser.role !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  return result;
+}
+
+/**
+ * Check if result is an error response
+ */
+export function isAuthError(
+  result: AuthResult | NextResponse
+): result is NextResponse {
+  return result instanceof NextResponse;
 }

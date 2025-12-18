@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db, sellOrders, desc } from "@vehiverze/database";
+import { requireStaff, isAuthError } from "@/lib/domain-user";
 
+// POST is public (sell flow submission)
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -48,7 +50,11 @@ export async function POST(req: Request) {
   }
 }
 
+// GET is staff-only (exposes seller PII)
 export async function GET() {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const orders = await db
       .select()

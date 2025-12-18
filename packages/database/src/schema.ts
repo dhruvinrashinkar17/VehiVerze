@@ -26,6 +26,7 @@ export const users = pgTable("user", {
   emailVerified: timestamp("email_verified", { mode: "date" }),
   phoneVerified: timestamp("phone_verified", { mode: "date" }),
   image: text("image"),
+  role: text("role").default("user").notNull(), // user, staff, admin
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
 });
@@ -253,9 +254,9 @@ export const garageServiceBookings = pgTable(
     totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(),
     finalAmount: decimal("final_amount", { precision: 10, scale: 2 }),
     status: text("status").default("confirmed").notNull(), // confirmed, in_progress, completed, cancelled
-    garagePartnerId: text("garage_partner_id")
-      .notNull()
-      .references(() => garagePartners.id),
+    garagePartnerId: text("garage_partner_id").references(
+      () => garagePartners.id
+    ), // nullable for manual staff assignment
     estimatedCompletionTime: timestamp("estimated_completion_time", {
       mode: "date",
     }),

@@ -1,14 +1,10 @@
 import { NextResponse } from "next/server";
-import {
-  db,
-  garagePartners,
-  garageServiceBookings,
-  eq,
-  desc,
-} from "@vehiverze/database";
+import { db, garagePartners, eq } from "@vehiverze/database";
+import { requireStaff, isAuthError } from "@/lib/domain-user";
 
+// GET is public (customer-facing directory)
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -24,27 +20,13 @@ export async function GET(
       );
     }
 
-    // Get recent bookings for this partner
-    const bookings = await db
-      .select({
-        id: garageServiceBookings.id,
-        bookingId: garageServiceBookings.bookingId,
-        status: garageServiceBookings.status,
-        bookingDate: garageServiceBookings.bookingDate,
-        customerName: garageServiceBookings.customerName,
-        vehicleType: garageServiceBookings.vehicleType,
-        totalAmount: garageServiceBookings.totalAmount,
-      })
-      .from(garageServiceBookings)
-      .where(eq(garageServiceBookings.garagePartnerId, params.id))
-      .orderBy(desc(garageServiceBookings.createdAt))
-      .limit(10);
-
+    // Get recent bookings for this partner (staff-only data, redacted for public)
+    // Public users only see basic partner info, not bookings
     return NextResponse.json({
       success: true,
       data: {
         ...partner,
-        bookings,
+        // Bookings are not included for public requests
       },
     });
   } catch (error) {
@@ -55,10 +37,14 @@ export async function GET(
   }
 }
 
+// PUT is staff-only (modify partner data)
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const data = await request.json();
 
@@ -98,10 +84,14 @@ export async function PUT(
   }
 }
 
+// DELETE is staff-only
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: { id: string } }
 ) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     await db.delete(garagePartners).where(eq(garagePartners.id, params.id));
 

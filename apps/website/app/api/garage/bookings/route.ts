@@ -8,16 +8,21 @@ import {
   and,
   count,
 } from "@vehiverze/database";
+import { requireAuth, requireStaff, isAuthError } from "@/lib/domain-user";
 
+// POST requires auth (user creates booking)
 export async function POST(request: Request) {
+  const auth = await requireAuth();
+  if (isAuthError(auth)) return auth;
+
   try {
     const data = await request.json();
 
     // Generate booking ID
     const bookingId =
-      "VZ-GS-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+      "VZ-GS-" + Math.random().toString(36).substring(2, 11).toUpperCase();
 
-    // Create garage booking
+    // Create garage booking with null garagePartnerId for manual staff assignment
     const [booking] = await db
       .insert(garageServiceBookings)
       .values({
@@ -41,13 +46,16 @@ export async function POST(request: Request) {
         paymentMethod: data.paymentMethod,
         totalAmount: data.totalAmount,
         status: "confirmed",
-        // Assign to a garage partner (you can implement logic to assign based on location, availability, etc.)
-        garagePartnerId: "default-garage-id",
+        garagePartnerId: null, // Will be assigned by staff
       })
       .returning();
 
-    // Send confirmation SMS/Email (implement your notification service)
-    // await sendBookingConfirmation(booking)
+    if (!booking) {
+      return NextResponse.json(
+        { success: false, error: "Failed to create booking" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -66,7 +74,11 @@ export async function POST(request: Request) {
   }
 }
 
+// GET is staff-only (lists all bookings with PII)
 export async function GET(request: Request) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const { searchParams } = new URL(request.url);
     const bookingIdParam = searchParams.get("bookingId");
@@ -90,10 +102,8 @@ export async function GET(request: Request) {
       conditions.push(eq(garageServiceBookings.status, status));
     }
 
-    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-
     // Get bookings with partner info
-    const bookings = await db
+    const bookingsQuery = db
       .select({
         booking: garageServiceBookings,
         partner: {
@@ -108,16 +118,26 @@ export async function GET(request: Request) {
         garagePartners,
         eq(garageServiceBookings.garagePartnerId, garagePartners.id)
       )
-      .where(whereClause)
       .orderBy(desc(garageServiceBookings.createdAt))
       .limit(limit)
       .offset((page - 1) * limit);
 
-    // Get total count
-    const [{ total }] = await db
+    const countQuery = db
       .select({ total: count() })
-      .from(garageServiceBookings)
-      .where(whereClause);
+      .from(garageServiceBookings);
+
+    // Apply where clause only if conditions exist
+    const bookings =
+      conditions.length > 0
+        ? await bookingsQuery.where(and(...conditions))
+        : await bookingsQuery;
+
+    const countResult =
+      conditions.length > 0
+        ? await countQuery.where(and(...conditions))
+        : await countQuery;
+
+    const total = countResult[0]?.total ?? 0;
 
     // Transform to match expected format
     const transformedBookings = bookings.map(({ booking, partner }) => ({

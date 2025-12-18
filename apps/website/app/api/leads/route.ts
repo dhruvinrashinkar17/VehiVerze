@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db, leads, desc } from "@vehiverze/database";
+import { requireStaff, isAuthError } from "@/lib/domain-user";
 
+// POST is public (lead capture form)
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -29,7 +31,11 @@ export async function POST(req: Request) {
   }
 }
 
+// GET is staff-only (exposes PII)
 export async function GET() {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const allLeads = await db
       .select()

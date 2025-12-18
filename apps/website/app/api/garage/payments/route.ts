@@ -8,8 +8,13 @@ import {
   and,
   count,
 } from "@vehiverze/database";
+import { requireStaff, isAuthError } from "@/lib/domain-user";
 
+// POST is staff-only (create payment records)
 export async function POST(request: Request) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const data = await request.json();
 
@@ -50,7 +55,11 @@ export async function POST(request: Request) {
   }
 }
 
+// GET is staff-only (exposes financial records)
 export async function GET(request: Request) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const { searchParams } = new URL(request.url);
     const bookingId = searchParams.get("bookingId");
@@ -69,9 +78,7 @@ export async function GET(request: Request) {
       conditions.push(eq(payments.status, status));
     }
 
-    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-
-    const paymentsList = await db
+    const paymentsQuery = db
       .select({
         payment: payments,
         booking: {
@@ -86,15 +93,24 @@ export async function GET(request: Request) {
         garageServiceBookings,
         eq(payments.bookingId, garageServiceBookings.id)
       )
-      .where(whereClause)
       .orderBy(desc(payments.createdAt))
       .limit(limit)
       .offset((page - 1) * limit);
 
-    const [{ total }] = await db
-      .select({ total: count() })
-      .from(payments)
-      .where(whereClause);
+    const countQuery = db.select({ total: count() }).from(payments);
+
+    // Apply where clause only if conditions exist
+    const paymentsList =
+      conditions.length > 0
+        ? await paymentsQuery.where(and(...conditions))
+        : await paymentsQuery;
+
+    const countResult =
+      conditions.length > 0
+        ? await countQuery.where(and(...conditions))
+        : await countQuery;
+
+    const total = countResult[0]?.total ?? 0;
 
     // Transform to match expected format
     const transformedPayments = paymentsList.map(({ payment, booking }) => ({

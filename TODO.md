@@ -50,29 +50,40 @@ Use: `todo` · `in-progress` · `blocked` · `done` · `removed`
 - (P0, done) Replace forgeable cookie session with a signed session.
   - Migrated website auth to Better Auth: `apps/website/lib/auth.ts` + `apps/website/app/api/auth/[...all]/route.ts`
   - Added auth tables/migration: `packages/database/src/schema.ts` + `packages/database/drizzle/0001_better_auth.sql`
-- (P0, done) Remove localStorage as the “truth” for auth.
+- (P0, done) Remove localStorage as the "truth" for auth.
   - `apps/website/hooks/use-auth.tsx` now uses Better Auth session (`useSession`) instead.
-- (P0, in-progress) Implement Twilio OTP end-to-end:
-  - Current: Better Auth phone OTP wired; `sendOTP` logs in dev only (needs SMS provider integration).
-  - Still needed: rate limiting, attempt limits, production SMS provider.
-  - Build fix: Turbopack alias for `better-auth/client/plugins` in `apps/website/next.config.mjs`
+- (P0, done) Implement Twilio OTP end-to-end:
+  - Twilio SMS integration in `apps/website/lib/auth.ts`
+  - Rate limiting configured: 10 req/min general, 3 OTP req/min
+  - Dev mode logs OTP to console; production sends via Twilio
+  - Required env vars: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`
 - (P0, done) Do not return OTP code in API responses.
   - Deprecated legacy endpoints now return `410 Gone`: `apps/website/app/api/auth/otp/send/route.ts` + `apps/website/app/api/auth/otp/verify/route.ts`
 - (P0, todo) Set `BETTER_AUTH_SECRET` in production env.
 
 ### Authorization (who can do what)
-- (P0, in-progress) Lock down all “lists everything” and “mutate anything” APIs.
-  - Updated mutating routes to use Better Auth sessions: `apps/website/app/api/vehicles/route.ts`, `apps/website/app/api/garage/book/route.ts`, `apps/website/app/api/insurance/health/route.ts`
-  - Added domain user mapping so inserts use domain `user.id` FKs: `apps/website/lib/domain-user.ts`
-  - Still needed: audit and protect all admin/staff-only list and mutate routes.
-  - Leads and sell orders must not be publicly listable.
-  - Garage partners/bookings/payments/notifications stats must be staff-only.
+- (P0, done) Lock down all "lists everything" and "mutate anything" APIs.
+  - Added `role` field to domain `user` table: `packages/database/drizzle/0002_user_role_and_nullable_partner.sql`
+  - Created auth helpers in `apps/website/lib/domain-user.ts`: `requireAuth()`, `requireStaff()`, `requireAdmin()`
+  - Protected routes:
+    - `GET /api/leads` — staff-only
+    - `GET /api/sell-orders` — staff-only
+    - `GET/PATCH /api/sell-orders/[id]` — staff-only
+    - `PUT/DELETE /api/garage/partners/[id]` — staff-only
+    - `GET /api/garage/bookings` — staff-only
+    - `GET/PUT/DELETE /api/garage/bookings/[id]` — staff-only
+    - `GET/POST /api/garage/payments` — staff-only
+    - `GET/POST /api/garage/notifications` — staff-only
+    - `GET /api/garage/dashboard/stats` — staff-only
+  - Public routes remain: lead submission, sell order submission, partner registration, partner listing
 
 ### Correctness (runtime breakers)
-- (P0, todo) Fix Drizzle `.where(undefined)` patterns.
-  - Example: `apps/website/app/api/garage/partners/route.ts`
-- (P0, todo) Fix garage booking creation referencing a non-existent partner id.
-  - Current insert uses `garagePartnerId: "default-garage-id"`.
+- (P0, done) Fix Drizzle `.where(undefined)` patterns.
+  - Fixed in: `garage/partners`, `garage/bookings`, `garage/payments`, `garage/notifications`
+  - Now uses conditional query building to avoid passing undefined to `.where()`
+- (P0, done) Fix garage booking creation referencing a non-existent partner id.
+  - Made `garagePartnerId` nullable in schema for manual staff assignment
+  - Migration: `packages/database/drizzle/0002_user_role_and_nullable_partner.sql`
 
 ---
 
@@ -127,7 +138,8 @@ Use: `todo` · `in-progress` · `blocked` · `done` · `removed`
 
 ## Milestone 4 — Safety & Operations (P2)
 
-- (P2, todo) Add rate limiting to public routes (OTP, leads, bookings).
+- (P2, done) Add rate limiting to public routes (OTP, leads, bookings).
+  - Better Auth rate limiting configured in `apps/website/lib/auth.ts`
 - (P2, todo) Add basic audit logging for admin actions.
 - (P2, todo) Add error reporting and monitoring.
 - (P2, todo) Add security headers and a safe content policy.

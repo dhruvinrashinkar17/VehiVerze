@@ -10,6 +10,7 @@ import {
 } from "@vehiverze/database";
 import { arrayContains } from "drizzle-orm";
 
+// POST is public (partner registration)
 export async function POST(request: Request) {
   try {
     const data = await request.json();
@@ -48,6 +49,7 @@ export async function POST(request: Request) {
   }
 }
 
+// GET is public (customer-facing directory)
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -74,20 +76,27 @@ export async function GET(request: Request) {
       conditions.push(eq(garagePartners.isActive, isActive === "true"));
     }
 
-    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-
-    const partners = await db
+    const partnersQuery = db
       .select()
       .from(garagePartners)
-      .where(whereClause)
       .orderBy(desc(garagePartners.rating), desc(garagePartners.createdAt))
       .limit(limit)
       .offset((page - 1) * limit);
 
-    const [{ total }] = await db
-      .select({ total: count() })
-      .from(garagePartners)
-      .where(whereClause);
+    const countQuery = db.select({ total: count() }).from(garagePartners);
+
+    // Apply where clause only if conditions exist
+    const partners =
+      conditions.length > 0
+        ? await partnersQuery.where(and(...conditions))
+        : await partnersQuery;
+
+    const countResult =
+      conditions.length > 0
+        ? await countQuery.where(and(...conditions))
+        : await countQuery;
+
+    const total = countResult[0]?.total ?? 0;
 
     return NextResponse.json({
       success: true,

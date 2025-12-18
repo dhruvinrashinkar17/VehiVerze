@@ -5,11 +5,16 @@ import {
   garagePartners,
   eq,
 } from "@vehiverze/database";
+import { requireStaff, isAuthError } from "@/lib/domain-user";
 
+// GET is staff-only (exposes booking PII)
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: { id: string } }
 ) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const [result] = await db
       .select({
@@ -51,10 +56,14 @@ export async function GET(
   }
 }
 
+// PUT is staff-only (update booking status, assign partner)
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const data = await request.json();
 
@@ -76,9 +85,6 @@ export async function PUT(
       .where(eq(garageServiceBookings.id, params.id))
       .returning();
 
-    // Send status update notification
-    // await sendStatusUpdateNotification(booking)
-
     return NextResponse.json({
       success: true,
       data: booking,
@@ -91,10 +97,14 @@ export async function PUT(
   }
 }
 
+// DELETE is staff-only (cancel booking)
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: { id: string } }
 ) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const [booking] = await db
       .select()
@@ -108,24 +118,6 @@ export async function DELETE(
       );
     }
 
-    // Check if booking can be cancelled (e.g., not within 2 hours of service time)
-    const bookingDateTime = new Date(
-      `${booking.bookingDate.toISOString().split("T")[0]}T${getTimeSlotStartTime(booking.timeSlot)}`
-    );
-    const now = new Date();
-    const timeDiff = bookingDateTime.getTime() - now.getTime();
-    const hoursDiff = timeDiff / (1000 * 3600);
-
-    if (hoursDiff < 2) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Cannot cancel booking within 2 hours of service time",
-        },
-        { status: 400 }
-      );
-    }
-
     await db
       .update(garageServiceBookings)
       .set({
@@ -133,9 +125,6 @@ export async function DELETE(
         cancelledAt: new Date(),
       })
       .where(eq(garageServiceBookings.id, params.id));
-
-    // Send cancellation notification
-    // await sendCancellationNotification(booking)
 
     return NextResponse.json({
       success: true,
@@ -147,14 +136,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-}
-
-function getTimeSlotStartTime(timeSlot: string): string {
-  const timeSlotMap: { [key: string]: string } = {
-    "9-11": "09:00:00",
-    "11-1": "11:00:00",
-    "2-4": "14:00:00",
-    "4-6": "16:00:00",
-  };
-  return timeSlotMap[timeSlot] || "09:00:00";
 }

@@ -9,8 +9,13 @@ import {
   sum,
   sqlExpr,
 } from "@vehiverze/database";
+import { requireStaff, isAuthError } from "@/lib/domain-user";
 
+// GET is staff-only (exposes business stats)
 export async function GET(request: Request) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const { searchParams } = new URL(request.url);
     const partnerId = searchParams.get("partnerId");
@@ -30,25 +35,29 @@ export async function GET(request: Request) {
     const whereClause = and(...baseConditions);
 
     // Get booking statistics
-    const [{ totalBookings }] = await db
+    const totalBookingsResult = await db
       .select({ totalBookings: count() })
       .from(garageServiceBookings)
       .where(whereClause);
+    const totalBookings = totalBookingsResult[0]?.totalBookings ?? 0;
 
-    const [{ confirmedBookings }] = await db
+    const confirmedResult = await db
       .select({ confirmedBookings: count() })
       .from(garageServiceBookings)
       .where(and(whereClause, eq(garageServiceBookings.status, "confirmed")));
+    const confirmedBookings = confirmedResult[0]?.confirmedBookings ?? 0;
 
-    const [{ completedBookings }] = await db
+    const completedResult = await db
       .select({ completedBookings: count() })
       .from(garageServiceBookings)
       .where(and(whereClause, eq(garageServiceBookings.status, "completed")));
+    const completedBookings = completedResult[0]?.completedBookings ?? 0;
 
-    const [{ cancelledBookings }] = await db
+    const cancelledResult = await db
       .select({ cancelledBookings: count() })
       .from(garageServiceBookings)
       .where(and(whereClause, eq(garageServiceBookings.status, "cancelled")));
+    const cancelledBookings = cancelledResult[0]?.cancelledBookings ?? 0;
 
     // Get revenue statistics
     const [revenueData] = await db

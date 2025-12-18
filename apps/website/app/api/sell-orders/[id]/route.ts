@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import { db, sellOrders, eq } from "@vehiverze/database";
+import { requireStaff, isAuthError } from "@/lib/domain-user";
 
+// GET is staff-only (exposes seller PII)
 export async function GET(
-  req: Request,
+  _req: Request,
   { params }: { params: { id: string } }
 ) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const [order] = await db
       .select()
@@ -25,10 +30,14 @@ export async function GET(
   }
 }
 
+// PATCH is staff-only (updates order status/prices)
 export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }
 ) {
+  const auth = await requireStaff();
+  if (isAuthError(auth)) return auth;
+
   try {
     const data = await req.json();
 
