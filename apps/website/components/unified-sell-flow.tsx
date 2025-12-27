@@ -222,7 +222,9 @@ export function UnifiedSellFlow({
   };
 
   const PriceEstimateSection = () => {
-    const [selectedCondition, setSelectedCondition] = useState("excellent");
+    const [selectedCondition, setSelectedCondition] = useState<
+      "fair" | "good" | "veryGood" | "excellent"
+    >("excellent");
     const [animatePrice, setAnimatePrice] = useState(false);
 
     // Price ranges for different conditions
@@ -282,7 +284,11 @@ export function UnifiedSellFlow({
             {conditionOptions.map((option) => (
               <div key={option.value} className="w-1/4 text-center">
                 <button
-                  onClick={() => setSelectedCondition(option.value)}
+                  onClick={() =>
+                    setSelectedCondition(
+                      option.value as "fair" | "good" | "veryGood" | "excellent"
+                    )
+                  }
                   className={`w-full py-2 transition-all duration-300 ${selectedCondition === option.value ? "border-b-2 border-orange-500 font-bold" : "hover:text-gray-400"}`}
                 >
                   {option.label}
@@ -508,14 +514,10 @@ export function UnifiedSellFlow({
           <h2 className="text-2xl font-bold text-center">
             Select Manufacturing Year
           </h2>
-          <YearSelector onSelect={handleYearSelect} />
-          <Button
-            onClick={() => setStep("model")}
-            variant="outline"
-            className="mt-4"
-          >
-            Back
-          </Button>
+          <YearSelector
+            onSelect={handleYearSelect}
+            onBack={() => setStep("model")}
+          />
         </div>
       )}
 
@@ -523,30 +525,19 @@ export function UnifiedSellFlow({
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-center">Select Variant</h2>
           <VariantSelector
-            model={formData.model}
             onSelect={handleVariantSelect}
+            onBack={() => setStep("year")}
           />
-          <Button
-            onClick={() => setStep("year")}
-            variant="outline"
-            className="mt-4"
-          >
-            Back
-          </Button>
         </div>
       )}
 
       {step === "fuel" && (
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-center">Select Fuel Type</h2>
-          <FuelTypeSelector onSelect={handleFuelTypeSelect} />
-          <Button
-            onClick={() => setStep("variant")}
-            variant="outline"
-            className="mt-4"
-          >
-            Back
-          </Button>
+          <FuelTypeSelector
+            onSelect={handleFuelTypeSelect}
+            onBack={() => setStep("variant")}
+          />
         </div>
       )}
 
@@ -555,21 +546,17 @@ export function UnifiedSellFlow({
           <h2 className="text-2xl font-bold text-center">
             Enter Kilometers Driven
           </h2>
-          <KilometersSelector onSelect={handleKilometersSelect} />
-          <Button
-            onClick={() => setStep("fuel")}
-            variant="outline"
-            className="mt-4"
-          >
-            Back
-          </Button>
+          <KilometersSelector
+            onSelect={handleKilometersSelect}
+            onBack={() => setStep("fuel")}
+          />
         </div>
       )}
 
       {step === "city" && (
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-center">Select Your City</h2>
-          <CitySelector onSelect={handleCitySelect} />
+          <CitySelector onCitySelect={handleCitySelect} />
           <Button
             onClick={() =>
               setStep(
@@ -589,14 +576,10 @@ export function UnifiedSellFlow({
           <h2 className="text-2xl font-bold text-center">
             When are you planning to sell?
           </h2>
-          <SellingTimelineSelector onSelect={handleTimelineSelect} />
-          <Button
-            onClick={() => setStep("city")}
-            variant="outline"
-            className="mt-4"
-          >
-            Back
-          </Button>
+          <SellingTimelineSelector
+            onSelect={handleTimelineSelect}
+            onBack={() => setStep("city")}
+          />
         </div>
       )}
 

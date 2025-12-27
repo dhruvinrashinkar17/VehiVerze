@@ -1,17 +1,23 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { Checkbox } from "@vehiverze/ui/checkbox"
-import { Slider } from "@vehiverze/ui/slider"
-import { Tabs, TabsList, TabsTrigger } from "@vehiverze/ui/tabs"
-import { ChevronDown, ChevronUp, Filter, Heart, Search, X } from "lucide-react"
-import { Badge } from "@vehiverze/ui/badge"
-import { Card, CardContent } from "@vehiverze/ui/card"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { Checkbox } from "@vehiverze/ui/checkbox";
+import { Slider } from "@vehiverze/ui/slider";
+import { Tabs, TabsList, TabsTrigger } from "@vehiverze/ui/tabs";
+import { ChevronDown, ChevronUp, Filter, Heart, Search, X } from "lucide-react";
+import { Badge } from "@vehiverze/ui/badge";
+import { Card, CardContent } from "@vehiverze/ui/card";
 
 // Sample vehicle data
 const vehicles = [
@@ -295,7 +301,7 @@ const vehicles = [
     bodyType: "Luxury Bus",
     rto: "DL1R",
   },
-]
+];
 
 // Filter options
 const brands = [
@@ -312,7 +318,7 @@ const brands = [
   "Eicher",
   "Volvo",
   "Force",
-]
+];
 const models = [
   "Swift",
   "Baleno",
@@ -328,9 +334,23 @@ const models = [
   "Prima",
   "Starbus",
   "Ecomet",
-]
-const kmRanges = ["0-10,000", "10,000-30,000", "30,000-50,000", "50,000-70,000", "70,000-100,000", "Above 100,000"]
-const fuelTypes = ["Petrol", "Diesel", "CNG", "Electric", "Hybrid", "Petrol+CNG"]
+];
+const kmRanges = [
+  "0-10,000",
+  "10,000-30,000",
+  "30,000-50,000",
+  "50,000-70,000",
+  "70,000-100,000",
+  "Above 100,000",
+];
+const fuelTypes = [
+  "Petrol",
+  "Diesel",
+  "CNG",
+  "Electric",
+  "Hybrid",
+  "Petrol+CNG",
+];
 const bodyTypes = [
   "Hatchback",
   "Sedan",
@@ -343,9 +363,15 @@ const bodyTypes = [
   "Bus",
   "Heavy Truck",
   "Luxury Bus",
-]
-const transmissions = ["Manual", "Automatic", "AMT", "CVT", "DCT"]
-const carCategories = ["Budget", "Premium", "Luxury", "Ultra Luxury", "Commercial"]
+];
+const transmissions = ["Manual", "Automatic", "AMT", "CVT", "DCT"];
+const carCategories = [
+  "Budget",
+  "Premium",
+  "Luxury",
+  "Ultra Luxury",
+  "Commercial",
+];
 const colors = [
   "White",
   "Black",
@@ -359,7 +385,7 @@ const colors = [
   "Purple",
   "Brown",
   "Beige",
-]
+];
 const features = [
   "Sunroof",
   "Cruise Control",
@@ -369,21 +395,56 @@ const features = [
   "Reverse Camera",
   "Bluetooth",
   "Alloy Wheels",
-]
-const seats = ["2", "4", "5", "6", "7", "8+"]
-const rtos = ["DL", "HR", "UP", "MH", "KA", "TN", "AP", "TS"]
-const owners = ["1st", "2nd", "3rd", "4th+"]
-const years = Array.from({ length: 2024 - 2010 + 1 }, (_, i) => (2024 - i).toString())
-const locations = ["Delhi", "Gurgaon", "Noida", "Faridabad", "Ghaziabad", "Mumbai", "Bangalore", "Chennai", "Hyderabad"]
-const availabilities = ["Immediate", "Within 1 Week", "Within 2 Weeks", "Within 1 Month"]
+];
+const seats = ["2", "4", "5", "6", "7", "8+"];
+const rtos = ["DL", "HR", "UP", "MH", "KA", "TN", "AP", "TS"];
+const owners = ["1st", "2nd", "3rd", "4th+"];
+const years = Array.from({ length: 2024 - 2010 + 1 }, (_, i) =>
+  (2024 - i).toString()
+);
+const locations = [
+  "Delhi",
+  "Gurgaon",
+  "Noida",
+  "Faridabad",
+  "Ghaziabad",
+  "Mumbai",
+  "Bangalore",
+  "Chennai",
+  "Hyderabad",
+];
+const availabilities = [
+  "Immediate",
+  "Within 1 Week",
+  "Within 2 Weeks",
+  "Within 1 Month",
+];
+
+interface SelectedFilters {
+  brands: string[];
+  models: string[];
+  kmRanges: string[];
+  fuelTypes: string[];
+  bodyTypes: string[];
+  transmissions: string[];
+  carCategories: string[];
+  colors: string[];
+  features: string[];
+  seats: string[];
+  rtos: string[];
+  owners: string[];
+  years: string[];
+  locations: string[];
+  availabilities: string[];
+}
 
 export function BuyPage() {
-  const router = useRouter()
-  const [activeVehicleType, setActiveVehicleType] = useState("4 Wheeler")
-  const [activeCategory, setActiveCategory] = useState("Cars")
-  const [showFilters, setShowFilters] = useState(false)
-  const [priceRange, setPriceRange] = useState([0, 10000000])
-  const [selectedFilters, setSelectedFilters] = useState({
+  const router = useRouter();
+  const [activeVehicleType, setActiveVehicleType] = useState("4 Wheeler");
+  const [activeCategory, setActiveCategory] = useState("Cars");
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 10000000]);
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
     brands: [],
     models: [],
     kmRanges: [],
@@ -399,85 +460,125 @@ export function BuyPage() {
     years: [],
     locations: [],
     availabilities: [],
-  })
+  });
 
   // Get categories based on vehicle type
   const getCategoriesForType = (type: string) => {
     switch (type) {
       case "4 Wheeler":
-        return ["Cars", "Commercial Cars", "Trucks"]
+        return ["Cars", "Commercial Cars", "Trucks"];
       case "6 Wheeler":
       case "More than 8 Wheeler":
-        return ["Trucks", "Bus"]
+        return ["Trucks", "Bus"];
       default:
-        return ["All"]
+        return ["All"];
     }
-  }
+  };
 
   // Filter vehicles based on selected filters
   const filteredVehicles = vehicles.filter((vehicle) => {
     // Filter by vehicle type and category
-    if (vehicle.type !== activeVehicleType) return false
-    if (activeCategory !== "All" && vehicle.category !== activeCategory) return false
+    if (vehicle.type !== activeVehicleType) return false;
+    if (activeCategory !== "All" && vehicle.category !== activeCategory)
+      return false;
 
     // Filter by price range
-    if (vehicle.price < priceRange[0] || vehicle.price > priceRange[1]) return false
+    if (vehicle.price < priceRange[0]! || vehicle.price > priceRange[1]!)
+      return false;
 
     // Apply other filters if they are selected
-    if (selectedFilters.brands.length > 0 && !selectedFilters.brands.some((brand) => vehicle.name.includes(brand)))
-      return false
-    if (selectedFilters.models.length > 0 && !selectedFilters.models.some((model) => vehicle.name.includes(model)))
-      return false
-    if (selectedFilters.fuelTypes.length > 0 && !selectedFilters.fuelTypes.includes(vehicle.fuel)) return false
-    if (selectedFilters.transmissions.length > 0 && !selectedFilters.transmissions.includes(vehicle.transmission))
-      return false
-    if (selectedFilters.colors.length > 0 && !selectedFilters.colors.includes(vehicle.color)) return false
-    if (selectedFilters.bodyTypes.length > 0 && !selectedFilters.bodyTypes.includes(vehicle.bodyType)) return false
-    if (selectedFilters.years.length > 0 && !selectedFilters.years.includes(vehicle.year.toString())) return false
-    if (selectedFilters.owners.length > 0 && !selectedFilters.owners.includes(vehicle.owner)) return false
-    if (selectedFilters.rtos.length > 0 && !selectedFilters.rtos.some((rto) => vehicle.rto.startsWith(rto)))
-      return false
+    if (
+      selectedFilters.brands.length > 0 &&
+      !selectedFilters.brands.some((brand) => vehicle.name.includes(brand))
+    )
+      return false;
+    if (
+      selectedFilters.models.length > 0 &&
+      !selectedFilters.models.some((model) => vehicle.name.includes(model))
+    )
+      return false;
+    if (
+      selectedFilters.fuelTypes.length > 0 &&
+      !selectedFilters.fuelTypes.includes(vehicle.fuel)
+    )
+      return false;
+    if (
+      selectedFilters.transmissions.length > 0 &&
+      !selectedFilters.transmissions.includes(vehicle.transmission)
+    )
+      return false;
+    if (
+      selectedFilters.colors.length > 0 &&
+      !selectedFilters.colors.includes(vehicle.color)
+    )
+      return false;
+    if (
+      selectedFilters.bodyTypes.length > 0 &&
+      !selectedFilters.bodyTypes.includes(vehicle.bodyType)
+    )
+      return false;
+    if (
+      selectedFilters.years.length > 0 &&
+      !selectedFilters.years.includes(vehicle.year.toString())
+    )
+      return false;
+    if (
+      selectedFilters.owners.length > 0 &&
+      !selectedFilters.owners.includes(vehicle.owner)
+    )
+      return false;
+    if (
+      selectedFilters.rtos.length > 0 &&
+      !selectedFilters.rtos.some((rto) => vehicle.rto.startsWith(rto))
+    )
+      return false;
     if (
       selectedFilters.locations.length > 0 &&
-      !selectedFilters.locations.some((location) => vehicle.location.includes(location))
+      !selectedFilters.locations.some((location) =>
+        vehicle.location.includes(location)
+      )
     )
-      return false
+      return false;
 
     // KM ranges need special handling
     if (selectedFilters.kmRanges.length > 0) {
       const kmMatch = selectedFilters.kmRanges.some((range) => {
-        if (range === "0-10,000") return vehicle.km <= 10000
-        if (range === "10,000-30,000") return vehicle.km > 10000 && vehicle.km <= 30000
-        if (range === "30,000-50,000") return vehicle.km > 30000 && vehicle.km <= 50000
-        if (range === "50,000-70,000") return vehicle.km > 50000 && vehicle.km <= 70000
-        if (range === "70,000-100,000") return vehicle.km > 70000 && vehicle.km <= 100000
-        if (range === "Above 100,000") return vehicle.km > 100000
-        return false
-      })
-      if (!kmMatch) return false
+        if (range === "0-10,000") return vehicle.km <= 10000;
+        if (range === "10,000-30,000")
+          return vehicle.km > 10000 && vehicle.km <= 30000;
+        if (range === "30,000-50,000")
+          return vehicle.km > 30000 && vehicle.km <= 50000;
+        if (range === "50,000-70,000")
+          return vehicle.km > 50000 && vehicle.km <= 70000;
+        if (range === "70,000-100,000")
+          return vehicle.km > 70000 && vehicle.km <= 100000;
+        if (range === "Above 100,000") return vehicle.km > 100000;
+        return false;
+      });
+      if (!kmMatch) return false;
     }
 
-    return true
-  })
+    return true;
+  });
 
   // Toggle filter selection
   const toggleFilter = (filterType: string, value: string) => {
     setSelectedFilters((prev) => {
-      const currentFilters = [...prev[filterType as keyof typeof prev]]
-      const index = currentFilters.indexOf(value)
+      const currentFilters = [...prev[filterType as keyof typeof prev]];
+      const index = currentFilters.indexOf(value);
 
       if (index === -1) {
-        currentFilters.push(value)
+        currentFilters.push(value);
       } else {
-        currentFilters.splice(index, 1)
+        currentFilters.splice(index, 1);
       }
 
       return {
         ...prev,
         [filterType]: currentFilters,
-      }
-    })
-  }
+      };
+    });
+  };
 
   // Clear all filters
   const clearAllFilters = () => {
@@ -497,18 +598,20 @@ export function BuyPage() {
       years: [],
       locations: [],
       availabilities: [],
-    })
-    setPriceRange([0, 10000000])
-  }
+    });
+    setPriceRange([0, 10000000]);
+  };
 
   // Handle buy button click
   const handleBuy = (vehicleId: number) => {
-    const vehicle = vehicles.find((v) => v.id === vehicleId)
+    const vehicle = vehicles.find((v) => v.id === vehicleId);
     if (vehicle) {
-      const wheelCount = vehicle.type.includes("More than") ? "more-than-8" : vehicle.type.split(" ")[0]
-      router.push(`/checkout/${wheelCount}-wheeler?vehicleId=${vehicleId}`)
+      const wheelCount = vehicle.type.includes("More than")
+        ? "more-than-8"
+        : vehicle.type.split(" ")[0];
+      router.push(`/checkout/${wheelCount}-wheeler?vehicleId=${vehicleId}`);
     }
-  }
+  };
 
   // Format price to Indian format
   const formatPrice = (price: number) => {
@@ -518,19 +621,22 @@ export function BuyPage() {
       currency: "INR",
     })
       .format(price)
-      .replace(/\.00/g, "")
-  }
+      .replace(/\.00/g, "");
+  };
 
   // Format price to lakh format
   const formatPriceToLakh = (price: number) => {
-    const lakh = price / 100000
-    return `₹${lakh.toFixed(2)} Lakh`
-  }
+    const lakh = price / 100000;
+    return `₹${lakh.toFixed(2)} Lakh`;
+  };
 
   // Get active filters count
   const getActiveFiltersCount = () => {
-    return Object.values(selectedFilters).reduce((count, filters) => count + filters.length, 0)
-  }
+    return Object.values(selectedFilters).reduce(
+      (count, filters) => count + filters.length,
+      0
+    );
+  };
 
   return (
     <section className="py-8">
@@ -543,8 +649,8 @@ export function BuyPage() {
             defaultValue="4 Wheeler"
             className="w-full"
             onValueChange={(value) => {
-              setActiveVehicleType(value)
-              setActiveCategory(getCategoriesForType(value)[0])
+              setActiveVehicleType(value);
+              setActiveCategory(getCategoriesForType(value)[0]!);
             }}
           >
             <TabsList className="grid grid-cols-4 w-full">
@@ -565,7 +671,9 @@ export function BuyPage() {
           >
             <TabsList
               className="grid w-full"
-              style={{ gridTemplateColumns: `repeat(${getCategoriesForType(activeVehicleType).length}, 1fr)` }}
+              style={{
+                gridTemplateColumns: `repeat(${getCategoriesForType(activeVehicleType).length}, 1fr)`,
+              }}
             >
               {getCategoriesForType(activeVehicleType).map((category) => (
                 <TabsTrigger key={category} value={category}>
@@ -580,11 +688,19 @@ export function BuyPage() {
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <div className="relative w-full md:w-auto flex-grow">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input type="text" placeholder="Search by brand, model, or keyword" className="pl-10" />
+            <Input
+              type="text"
+              placeholder="Search by brand, model, or keyword"
+              className="pl-10"
+            />
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <Button variant="outline" className="flex items-center gap-2" onClick={() => setShowFilters(!showFilters)}>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => setShowFilters(!showFilters)}
+            >
               <Filter size={18} />
               <span>Filters</span>
               {getActiveFiltersCount() > 0 && (
@@ -592,7 +708,11 @@ export function BuyPage() {
                   {getActiveFiltersCount()}
                 </Badge>
               )}
-              {showFilters ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              {showFilters ? (
+                <ChevronUp size={18} />
+              ) : (
+                <ChevronDown size={18} />
+              )}
             </Button>
 
             <Select defaultValue="relevance">
@@ -614,12 +734,20 @@ export function BuyPage() {
         {getActiveFiltersCount() > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {Object.entries(selectedFilters).map(([filterType, values]) =>
-              values.map((value) => (
-                <Badge key={`${filterType}-${value}`} variant="outline" className="flex items-center gap-1">
+              values.map((value: string) => (
+                <Badge
+                  key={`${filterType}-${value}`}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
                   {value}
-                  <X size={14} className="cursor-pointer" onClick={() => toggleFilter(filterType, value)} />
+                  <X
+                    size={14}
+                    className="cursor-pointer"
+                    onClick={() => toggleFilter(filterType, value)}
+                  />
                 </Badge>
-              )),
+              ))
             )}
             <Button variant="ghost" size="sm" onClick={clearAllFilters}>
               Clear All
@@ -651,8 +779,8 @@ export function BuyPage() {
                     className="my-4"
                   />
                   <div className="flex justify-between text-sm">
-                    <span>{formatPrice(priceRange[0])}</span>
-                    <span>{formatPrice(priceRange[1])}</span>
+                    <span>{formatPrice(priceRange[0]!)}</span>
+                    <span>{formatPrice(priceRange[1]!)}</span>
                   </div>
                 </div>
               </div>
@@ -667,11 +795,14 @@ export function BuyPage() {
                         id={`brand-${brand}`}
                         checked={selectedFilters.brands.includes(brand)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("brands", brand)
-                          else toggleFilter("brands", brand)
+                          if (checked) toggleFilter("brands", brand);
+                          else toggleFilter("brands", brand);
                         }}
                       />
-                      <label htmlFor={`brand-${brand}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`brand-${brand}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {brand}
                       </label>
                     </div>
@@ -689,11 +820,14 @@ export function BuyPage() {
                         id={`model-${model}`}
                         checked={selectedFilters.models.includes(model)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("models", model)
-                          else toggleFilter("models", model)
+                          if (checked) toggleFilter("models", model);
+                          else toggleFilter("models", model);
                         }}
                       />
-                      <label htmlFor={`model-${model}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`model-${model}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {model}
                       </label>
                     </div>
@@ -711,11 +845,14 @@ export function BuyPage() {
                         id={`km-${range}`}
                         checked={selectedFilters.kmRanges.includes(range)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("kmRanges", range)
-                          else toggleFilter("kmRanges", range)
+                          if (checked) toggleFilter("kmRanges", range);
+                          else toggleFilter("kmRanges", range);
                         }}
                       />
-                      <label htmlFor={`km-${range}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`km-${range}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {range}
                       </label>
                     </div>
@@ -733,11 +870,14 @@ export function BuyPage() {
                         id={`fuel-${fuel}`}
                         checked={selectedFilters.fuelTypes.includes(fuel)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("fuelTypes", fuel)
-                          else toggleFilter("fuelTypes", fuel)
+                          if (checked) toggleFilter("fuelTypes", fuel);
+                          else toggleFilter("fuelTypes", fuel);
                         }}
                       />
-                      <label htmlFor={`fuel-${fuel}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`fuel-${fuel}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {fuel}
                       </label>
                     </div>
@@ -755,11 +895,14 @@ export function BuyPage() {
                         id={`body-${type}`}
                         checked={selectedFilters.bodyTypes.includes(type)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("bodyTypes", type)
-                          else toggleFilter("bodyTypes", type)
+                          if (checked) toggleFilter("bodyTypes", type);
+                          else toggleFilter("bodyTypes", type);
                         }}
                       />
-                      <label htmlFor={`body-${type}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`body-${type}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {type}
                       </label>
                     </div>
@@ -772,16 +915,25 @@ export function BuyPage() {
                 <h3 className="font-medium mb-2">Transmission</h3>
                 <div className="space-y-2">
                   {transmissions.map((transmission) => (
-                    <div key={transmission} className="flex items-center space-x-2">
+                    <div
+                      key={transmission}
+                      className="flex items-center space-x-2"
+                    >
                       <Checkbox
                         id={`transmission-${transmission}`}
-                        checked={selectedFilters.transmissions.includes(transmission)}
+                        checked={selectedFilters.transmissions.includes(
+                          transmission
+                        )}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("transmissions", transmission)
-                          else toggleFilter("transmissions", transmission)
+                          if (checked)
+                            toggleFilter("transmissions", transmission);
+                          else toggleFilter("transmissions", transmission);
                         }}
                       />
-                      <label htmlFor={`transmission-${transmission}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`transmission-${transmission}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {transmission}
                       </label>
                     </div>
@@ -797,13 +949,18 @@ export function BuyPage() {
                     <div key={category} className="flex items-center space-x-2">
                       <Checkbox
                         id={`category-${category}`}
-                        checked={selectedFilters.carCategories.includes(category)}
+                        checked={selectedFilters.carCategories.includes(
+                          category
+                        )}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("carCategories", category)
-                          else toggleFilter("carCategories", category)
+                          if (checked) toggleFilter("carCategories", category);
+                          else toggleFilter("carCategories", category);
                         }}
                       />
-                      <label htmlFor={`category-${category}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`category-${category}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {category}
                       </label>
                     </div>
@@ -816,7 +973,7 @@ export function BuyPage() {
                 <h3 className="font-medium mb-2">Color</h3>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {colors.map((color) => {
-                    const colorClass = getColorClass(color)
+                    const colorClass = getColorClass(color);
                     return (
                       <div
                         key={color}
@@ -824,7 +981,7 @@ export function BuyPage() {
                         onClick={() => toggleFilter("colors", color)}
                         title={color}
                       />
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -839,11 +996,14 @@ export function BuyPage() {
                         id={`year-${year}`}
                         checked={selectedFilters.years.includes(year)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("years", year)
-                          else toggleFilter("years", year)
+                          if (checked) toggleFilter("years", year);
+                          else toggleFilter("years", year);
                         }}
                       />
-                      <label htmlFor={`year-${year}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`year-${year}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {year}
                       </label>
                     </div>
@@ -861,11 +1021,14 @@ export function BuyPage() {
                         id={`owner-${owner}`}
                         checked={selectedFilters.owners.includes(owner)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("owners", owner)
-                          else toggleFilter("owners", owner)
+                          if (checked) toggleFilter("owners", owner);
+                          else toggleFilter("owners", owner);
                         }}
                       />
-                      <label htmlFor={`owner-${owner}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`owner-${owner}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {owner}
                       </label>
                     </div>
@@ -883,11 +1046,14 @@ export function BuyPage() {
                         id={`rto-${rto}`}
                         checked={selectedFilters.rtos.includes(rto)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("rtos", rto)
-                          else toggleFilter("rtos", rto)
+                          if (checked) toggleFilter("rtos", rto);
+                          else toggleFilter("rtos", rto);
                         }}
                       />
-                      <label htmlFor={`rto-${rto}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`rto-${rto}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {rto}
                       </label>
                     </div>
@@ -905,11 +1071,14 @@ export function BuyPage() {
                         id={`location-${location}`}
                         checked={selectedFilters.locations.includes(location)}
                         onCheckedChange={(checked) => {
-                          if (checked) toggleFilter("locations", location)
-                          else toggleFilter("locations", location)
+                          if (checked) toggleFilter("locations", location);
+                          else toggleFilter("locations", location);
                         }}
                       />
-                      <label htmlFor={`location-${location}`} className="text-sm cursor-pointer">
+                      <label
+                        htmlFor={`location-${location}`}
+                        className="text-sm cursor-pointer"
+                      >
                         {location}
                       </label>
                     </div>
@@ -923,16 +1092,27 @@ export function BuyPage() {
           <div className={`${showFilters ? "lg:col-span-3" : "lg:col-span-4"}`}>
             {filteredVehicles.length === 0 ? (
               <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <h3 className="text-xl font-medium text-gray-600">No vehicles found</h3>
-                <p className="mt-2 text-gray-500">Try adjusting your filters to see more results</p>
-                <Button variant="outline" className="mt-4" onClick={clearAllFilters}>
+                <h3 className="text-xl font-medium text-gray-600">
+                  No vehicles found
+                </h3>
+                <p className="mt-2 text-gray-500">
+                  Try adjusting your filters to see more results
+                </p>
+                <Button
+                  variant="outline"
+                  className="mt-4"
+                  onClick={clearAllFilters}
+                >
                   Clear All Filters
                 </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredVehicles.map((vehicle) => (
-                  <Card key={vehicle.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <Card
+                    key={vehicle.id}
+                    className="overflow-hidden hover:shadow-lg transition-shadow"
+                  >
                     <div className="relative">
                       <Image
                         src={vehicle.image || "/placeholder.svg"}
@@ -945,24 +1125,38 @@ export function BuyPage() {
                         <Heart className="w-5 h-5 text-gray-600 hover:text-red-500" />
                       </button>
                       {vehicle.tags.includes("Assured") && (
-                        <Badge className="absolute bottom-2 left-2 bg-purple-600">Assured</Badge>
+                        <Badge className="absolute bottom-2 left-2 bg-purple-600">
+                          Assured
+                        </Badge>
                       )}
                       {vehicle.tags.includes("Budget") && (
-                        <Badge className="absolute bottom-2 left-2 bg-blue-600">Budget</Badge>
+                        <Badge className="absolute bottom-2 left-2 bg-blue-600">
+                          Budget
+                        </Badge>
                       )}
                       {vehicle.tags.includes("MAX") && (
-                        <Badge className="absolute bottom-2 left-2 bg-red-600">MAX</Badge>
+                        <Badge className="absolute bottom-2 left-2 bg-red-600">
+                          MAX
+                        </Badge>
                       )}
                       {vehicle.tags.includes("Commercial") && (
-                        <Badge className="absolute bottom-2 left-2 bg-green-600">Commercial</Badge>
+                        <Badge className="absolute bottom-2 left-2 bg-green-600">
+                          Commercial
+                        </Badge>
                       )}
                     </div>
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-lg font-semibold">{vehicle.name}</h3>
+                        <h3 className="text-lg font-semibold">
+                          {vehicle.name}
+                        </h3>
                         <div className="text-right">
-                          <p className="text-lg font-bold">{formatPriceToLakh(vehicle.price)}</p>
-                          <p className="text-sm text-gray-500">EMI ₹{vehicle.emi}/m*</p>
+                          <p className="text-lg font-bold">
+                            {formatPriceToLakh(vehicle.price)}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            EMI ₹{vehicle.emi}/m*
+                          </p>
                         </div>
                       </div>
 
@@ -973,15 +1167,26 @@ export function BuyPage() {
                         <span>{vehicle.rto}</span>
                       </div>
 
-                      <p className="text-sm text-gray-500 mb-3 truncate">{vehicle.location}</p>
+                      <p className="text-sm text-gray-500 mb-3 truncate">
+                        {vehicle.location}
+                      </p>
 
-                      {vehicle.tags.some((tag) => tag.includes("reasons") || tag.includes("reason")) && (
+                      {vehicle.tags.some(
+                        (tag) =>
+                          tag.includes("reasons") || tag.includes("reason")
+                      ) && (
                         <p className="text-xs text-green-600 mb-3">
-                          {vehicle.tags.find((tag) => tag.includes("reasons") || tag.includes("reason"))}
+                          {vehicle.tags.find(
+                            (tag) =>
+                              tag.includes("reasons") || tag.includes("reason")
+                          )}
                         </p>
                       )}
 
-                      <Button onClick={() => handleBuy(vehicle.id)} className="w-full">
+                      <Button
+                        onClick={() => handleBuy(vehicle.id)}
+                        className="w-full"
+                      >
                         Buy Now
                       </Button>
                     </CardContent>
@@ -993,7 +1198,7 @@ export function BuyPage() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 // Helper function to get Tailwind color class based on color name
@@ -1011,9 +1216,7 @@ function getColorClass(color: string) {
     Purple: "bg-purple-500",
     Brown: "bg-amber-800",
     Beige: "bg-amber-100 border border-gray-200",
-  }
+  };
 
-  return colorMap[color] || "bg-gray-200"
+  return colorMap[color] || "bg-gray-200";
 }
-
-

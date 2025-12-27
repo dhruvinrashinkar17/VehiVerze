@@ -1,36 +1,40 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
 
 export function OtpVerification({ phoneNumber = "09876543210" }) {
-  const router = useRouter()
-  const [otp, setOtp] = useState("")
-  const [isVerifying, setIsVerifying] = useState(false)
+  const router = useRouter();
+  const [otp, setOtp] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  const handleVerify = (e) => {
-    e.preventDefault()
-    setIsVerifying(true)
+  const handleVerify = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsVerifying(true);
 
     // Simulate verification
     setTimeout(() => {
-      setIsVerifying(false)
-      router.push("/sell/confirmation") // Navigate to confirmation page
-    }, 1500)
-  }
+      setIsVerifying(false);
+      router.push("/sell/confirmation"); // Navigate to confirmation page
+    }, 1500);
+  };
 
   const handleResendOtp = () => {
     // Resend OTP logic
-    alert("New OTP sent!")
-  }
+    alert("New OTP sent!");
+  };
 
   return (
     <div className="max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6">Verify Your Phone Number</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">
+        Verify Your Phone Number
+      </h2>
 
-      <p className="text-gray-500 mb-6 text-center">We've sent a verification code to {phoneNumber}</p>
+      <p className="text-gray-500 mb-6 text-center">
+        We've sent a verification code to {phoneNumber}
+      </p>
 
       <form onSubmit={handleVerify} className="space-y-6">
         <Input
@@ -42,7 +46,11 @@ export function OtpVerification({ phoneNumber = "09876543210" }) {
         />
 
         <div className="text-center">
-          <button type="button" onClick={handleResendOtp} className="text-blue-600 hover:underline">
+          <button
+            type="button"
+            onClick={handleResendOtp}
+            className="text-blue-600 hover:underline"
+          >
             Resend OTP
           </button>
         </div>
@@ -61,7 +69,5 @@ export function OtpVerification({ phoneNumber = "09876543210" }) {
         </div>
       </form>
     </div>
-  )
+  );
 }
-
-

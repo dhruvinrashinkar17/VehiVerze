@@ -272,7 +272,7 @@ export function generateOrder(): Order {
     customer: {
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      phone: faker.phone.number("+91 ##########"),
+      phone: faker.string.numeric(10),
       address: faker.location.streetAddress(),
       pincode: faker.location.zipCode("######"),
       city,

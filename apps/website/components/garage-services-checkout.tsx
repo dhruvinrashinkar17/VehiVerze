@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Label } from "@vehiverze/ui/label"
-import { Textarea } from "@vehiverze/ui/textarea"
-import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group"
-import { Separator } from "@vehiverze/ui/separator"
-import { Checkbox } from "@vehiverze/ui/checkbox"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Label } from "@vehiverze/ui/label";
+import { Textarea } from "@vehiverze/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group";
+import { Separator } from "@vehiverze/ui/separator";
+import { Checkbox } from "@vehiverze/ui/checkbox";
 import {
   Car,
   MapPin,
@@ -22,22 +22,22 @@ import {
   Shield,
   Info,
   Loader2,
-} from "lucide-react"
-import { CelebrationAnimation } from "@/components/celebration-animation"
-import { GarageServicesBreadcrumb } from "@/components/garage-services-breadcrumb"
-import { format } from "date-fns"
-import { toast } from "sonner"
+} from "lucide-react";
+import { CelebrationAnimation } from "@/components/celebration-animation";
+import { GarageServicesBreadcrumb } from "@/components/garage-services-breadcrumb";
+import { format } from "date-fns";
+import { toast } from "sonner";
 
 export function GarageServicesCheckout() {
-  const router = useRouter()
-  const [step, setStep] = useState(1)
-  const [paymentMethod, setPaymentMethod] = useState("credit-card")
-  const [showCelebration, setShowCelebration] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [step, setStep] = useState(1);
+  const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [bookingData, setBookingData] = useState<any>(null)
-  const [vehicleData, setVehicleData] = useState<any>(null)
-  const [servicesData, setServicesData] = useState<any[]>([])
+  const [bookingData, setBookingData] = useState<any>(null);
+  const [vehicleData, setVehicleData] = useState<any>(null);
+  const [servicesData, setServicesData] = useState<any[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState({
     firstName: "",
@@ -45,7 +45,7 @@ export function GarageServicesCheckout() {
     email: "",
     phone: "",
     vehicleNumber: "",
-  })
+  });
 
   const [deliveryInfo, setDeliveryInfo] = useState({
     address: "",
@@ -53,59 +53,60 @@ export function GarageServicesCheckout() {
     pincode: "",
     landmark: "",
     saveAddress: false,
-  })
+  });
 
   useEffect(() => {
-    const storedBooking = localStorage.getItem("bookingDetails")
-    const storedVehicle = localStorage.getItem("vehicleDetails")
-    const storedServices = localStorage.getItem("selectedServices")
+    const storedBooking = localStorage.getItem("bookingDetails");
+    const storedVehicle = localStorage.getItem("vehicleDetails");
+    const storedServices = localStorage.getItem("selectedServices");
 
     if (storedBooking) {
-      const parsed = JSON.parse(storedBooking)
-      setBookingData(parsed)
+      const parsed = JSON.parse(storedBooking);
+      setBookingData(parsed);
       setPersonalInfo({
         firstName: parsed.customerDetails.name.split(" ")[0] || "",
-        lastName: parsed.customerDetails.name.split(" ").slice(1).join(" ") || "",
+        lastName:
+          parsed.customerDetails.name.split(" ").slice(1).join(" ") || "",
         email: parsed.customerDetails.email || "",
         phone: parsed.customerDetails.phone || "",
         vehicleNumber: "",
-      })
+      });
       setDeliveryInfo({
         address: parsed.customerDetails.address || "",
         city: "",
         pincode: "",
         landmark: "",
         saveAddress: false,
-      })
+      });
     }
 
-    if (storedVehicle) setVehicleData(JSON.parse(storedVehicle))
-    if (storedServices) setServicesData(JSON.parse(storedServices))
-  }, [])
+    if (storedVehicle) setVehicleData(JSON.parse(storedVehicle));
+    if (storedServices) setServicesData(JSON.parse(storedServices));
+  }, []);
 
   const handleNextStep = async () => {
     if (step < 3) {
-      setStep(step + 1)
+      setStep(step + 1);
     } else {
-      await handleSubmitBooking()
+      await handleSubmitBooking();
     }
-  }
+  };
 
   const handlePrevStep = () => {
     if (step > 1) {
-      setStep(step - 1)
+      setStep(step - 1);
     } else {
-      router.push("/garage-services/flow")
+      router.push("/garage-services/flow");
     }
-  }
+  };
 
   const handleSubmitBooking = async () => {
     if (!bookingData || !vehicleData || !personalInfo.phone) {
-      toast.error("Please fill in all required fields")
-      return
+      toast.error("Please fill in all required fields");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const response = await fetch("/api/garage/bookings", {
         method: "POST",
@@ -118,57 +119,69 @@ export function GarageServicesCheckout() {
           variant: vehicleData.variant,
           transmission: vehicleData.transmission,
           registrationNumber: vehicleData.registrationNumber,
-          selectedServices: servicesData.map((s) => ({ id: s.id, name: s.name, price: s.price })),
+          selectedServices: servicesData.map((s) => ({
+            id: s.id,
+            name: s.name,
+            price: s.price,
+          })),
           bookingDate: bookingData.scheduleDate,
           timeSlot: bookingData.timeSlot,
           pickupDrop: bookingData.pickupDrop,
           additionalNotes: bookingData.notes,
-          customerName: `${personalInfo.firstName} ${personalInfo.lastName}`.trim(),
+          customerName:
+            `${personalInfo.firstName} ${personalInfo.lastName}`.trim(),
           mobile: personalInfo.phone,
           email: personalInfo.email,
           address: deliveryInfo.address,
           paymentMethod,
           totalAmount: calculateTotal(),
         }),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (result.success) {
-        toast.success("Booking confirmed successfully!")
-        setShowCelebration(true)
+        toast.success("Booking confirmed successfully!");
+        setShowCelebration(true);
 
-        localStorage.removeItem("bookingDetails")
-        localStorage.removeItem("vehicleDetails")
-        localStorage.removeItem("selectedServices")
+        localStorage.removeItem("bookingDetails");
+        localStorage.removeItem("vehicleDetails");
+        localStorage.removeItem("selectedServices");
 
         setTimeout(() => {
-          router.push(`/garage-services/booking-success?bookingId=${result.data.bookingId}`)
-        }, 3000)
+          router.push(
+            `/garage-services/booking-success?bookingId=${result.data.bookingId}`
+          );
+        }, 3000);
       } else {
-        toast.error(result.error || "Failed to create booking")
+        toast.error(result.error || "Failed to create booking");
       }
     } catch (error) {
-      console.error("Booking error:", error)
-      toast.error("Error creating booking. Please try again.")
+      console.error("Booking error:", error);
+      toast.error("Error creating booking. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const calculateTotal = () => {
-    const servicesTotal = servicesData.reduce((sum, service) => sum + service.price, 0)
-    const pickupDropFee = bookingData?.pickupDrop ? 199 : 0
-    return servicesTotal + pickupDropFee
-  }
+    const servicesTotal = servicesData.reduce(
+      (sum, service) => sum + service.price,
+      0
+    );
+    const pickupDropFee = bookingData?.pickupDrop ? 199 : 0;
+    return servicesTotal + pickupDropFee;
+  };
 
   const isPersonalInfoValid = () => {
-    return personalInfo.firstName && personalInfo.lastName && personalInfo.phone
-  }
+    return (
+      personalInfo.firstName && personalInfo.lastName && personalInfo.phone
+    );
+  };
 
   const isDeliveryInfoValid = () => {
-    return deliveryInfo.address && deliveryInfo.city && deliveryInfo.pincode
-  }
+    return deliveryInfo.address && deliveryInfo.city && deliveryInfo.pincode;
+  };
 
   if (!bookingData || !vehicleData) {
     return (
@@ -178,12 +191,21 @@ export function GarageServicesCheckout() {
           <p>Loading checkout details...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {showCelebration && <CelebrationAnimation />}
+      {showCelebration && (
+        <CelebrationAnimation
+          isOpen={showCelebration}
+          onClose={() => setShowCelebration(false)}
+          title="Booking Confirmed!"
+          message="Your garage service has been booked successfully."
+          actionText="View Booking"
+          actionLink="/garage-services/booking-success"
+        />
+      )}
 
       {/* Header with Steps */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
@@ -204,39 +226,53 @@ export function GarageServicesCheckout() {
             <div className="flex flex-col items-center">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  step >= 1 ? "bg-white text-blue-600" : "bg-blue-700 text-blue-300"
+                  step >= 1
+                    ? "bg-white text-blue-600"
+                    : "bg-blue-700 text-blue-300"
                 }`}
               >
-                <Check className={`h-5 w-5 ${step > 1 ? "opacity-100" : "opacity-0"}`} />
+                <Check
+                  className={`h-5 w-5 ${step > 1 ? "opacity-100" : "opacity-0"}`}
+                />
                 {step <= 1 && <span>1</span>}
               </div>
               <span className="mt-2 text-sm">Personal Info</span>
             </div>
 
             <div className="w-full max-w-[80px] flex items-center justify-center">
-              <div className={`h-1 w-full ${step >= 2 ? "bg-white" : "bg-blue-700"}`}></div>
+              <div
+                className={`h-1 w-full ${step >= 2 ? "bg-white" : "bg-blue-700"}`}
+              ></div>
             </div>
 
             <div className="flex flex-col items-center">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  step >= 2 ? "bg-white text-blue-600" : "bg-blue-700 text-blue-300"
+                  step >= 2
+                    ? "bg-white text-blue-600"
+                    : "bg-blue-700 text-blue-300"
                 }`}
               >
-                <Check className={`h-5 w-5 ${step > 2 ? "opacity-100" : "opacity-0"}`} />
+                <Check
+                  className={`h-5 w-5 ${step > 2 ? "opacity-100" : "opacity-0"}`}
+                />
                 {step <= 2 && <span>2</span>}
               </div>
               <span className="mt-2 text-sm">Delivery</span>
             </div>
 
             <div className="w-full max-w-[80px] flex items-center justify-center">
-              <div className={`h-1 w-full ${step >= 3 ? "bg-white" : "bg-blue-700"}`}></div>
+              <div
+                className={`h-1 w-full ${step >= 3 ? "bg-white" : "bg-blue-700"}`}
+              ></div>
             </div>
 
             <div className="flex flex-col items-center">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  step >= 3 ? "bg-white text-blue-600" : "bg-blue-700 text-blue-300"
+                  step >= 3
+                    ? "bg-white text-blue-600"
+                    : "bg-blue-700 text-blue-300"
                 }`}
               >
                 <span>3</span>
@@ -274,7 +310,12 @@ export function GarageServicesCheckout() {
                         id="first-name"
                         placeholder="Enter your first name"
                         value={personalInfo.firstName}
-                        onChange={(e) => setPersonalInfo({ ...personalInfo, firstName: e.target.value })}
+                        onChange={(e) =>
+                          setPersonalInfo({
+                            ...personalInfo,
+                            firstName: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -283,7 +324,12 @@ export function GarageServicesCheckout() {
                         id="last-name"
                         placeholder="Enter your last name"
                         value={personalInfo.lastName}
-                        onChange={(e) => setPersonalInfo({ ...personalInfo, lastName: e.target.value })}
+                        onChange={(e) =>
+                          setPersonalInfo({
+                            ...personalInfo,
+                            lastName: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -295,7 +341,12 @@ export function GarageServicesCheckout() {
                       type="email"
                       placeholder="Enter your email address"
                       value={personalInfo.email}
-                      onChange={(e) => setPersonalInfo({ ...personalInfo, email: e.target.value })}
+                      onChange={(e) =>
+                        setPersonalInfo({
+                          ...personalInfo,
+                          email: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
@@ -305,12 +356,19 @@ export function GarageServicesCheckout() {
                       id="phone"
                       placeholder="Enter your phone number"
                       value={personalInfo.phone}
-                      onChange={(e) => setPersonalInfo({ ...personalInfo, phone: e.target.value })}
+                      onChange={(e) =>
+                        setPersonalInfo({
+                          ...personalInfo,
+                          phone: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="vehicle-number">Vehicle Registration Number</Label>
+                    <Label htmlFor="vehicle-number">
+                      Vehicle Registration Number
+                    </Label>
                     <Input
                       id="vehicle-number"
                       placeholder="Enter your vehicle number"
@@ -344,7 +402,12 @@ export function GarageServicesCheckout() {
                       placeholder="Enter your full address"
                       className="resize-none"
                       value={deliveryInfo.address}
-                      onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })}
+                      onChange={(e) =>
+                        setDeliveryInfo({
+                          ...deliveryInfo,
+                          address: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
@@ -355,7 +418,12 @@ export function GarageServicesCheckout() {
                         id="city"
                         placeholder="Enter city"
                         value={deliveryInfo.city}
-                        onChange={(e) => setDeliveryInfo({ ...deliveryInfo, city: e.target.value })}
+                        onChange={(e) =>
+                          setDeliveryInfo({
+                            ...deliveryInfo,
+                            city: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -364,7 +432,12 @@ export function GarageServicesCheckout() {
                         id="pincode"
                         placeholder="Enter pincode"
                         value={deliveryInfo.pincode}
-                        onChange={(e) => setDeliveryInfo({ ...deliveryInfo, pincode: e.target.value })}
+                        onChange={(e) =>
+                          setDeliveryInfo({
+                            ...deliveryInfo,
+                            pincode: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -375,7 +448,12 @@ export function GarageServicesCheckout() {
                       id="landmark"
                       placeholder="Enter a nearby landmark"
                       value={deliveryInfo.landmark}
-                      onChange={(e) => setDeliveryInfo({ ...deliveryInfo, landmark: e.target.value })}
+                      onChange={(e) =>
+                        setDeliveryInfo({
+                          ...deliveryInfo,
+                          landmark: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
@@ -384,10 +462,16 @@ export function GarageServicesCheckout() {
                       id="save-address"
                       checked={deliveryInfo.saveAddress}
                       onCheckedChange={(checked) =>
-                        setDeliveryInfo({ ...deliveryInfo, saveAddress: checked as boolean })
+                        setDeliveryInfo({
+                          ...deliveryInfo,
+                          saveAddress: checked as boolean,
+                        })
                       }
                     />
-                    <label htmlFor="save-address" className="text-sm font-medium cursor-pointer">
+                    <label
+                      htmlFor="save-address"
+                      className="text-sm font-medium cursor-pointer"
+                    >
                       Save this address for future bookings
                     </label>
                   </div>
@@ -415,14 +499,23 @@ export function GarageServicesCheckout() {
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h2 className="text-xl font-bold mb-6">Payment Method</h2>
 
-                <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-4">
+                <RadioGroup
+                  value={paymentMethod}
+                  onValueChange={setPaymentMethod}
+                  className="space-y-4"
+                >
                   <div
                     className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer ${
-                      paymentMethod === "credit-card" ? "border-blue-600 bg-blue-50" : "border-gray-200"
+                      paymentMethod === "credit-card"
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200"
                     } hover:border-blue-300`}
                   >
                     <RadioGroupItem value="credit-card" id="credit-card" />
-                    <Label htmlFor="credit-card" className="flex items-center cursor-pointer flex-1">
+                    <Label
+                      htmlFor="credit-card"
+                      className="flex items-center cursor-pointer flex-1"
+                    >
                       <CreditCard className="h-5 w-5 mr-2 text-blue-600" />
                       Credit / Debit Card
                     </Label>
@@ -430,11 +523,16 @@ export function GarageServicesCheckout() {
 
                   <div
                     className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer ${
-                      paymentMethod === "upi" ? "border-blue-600 bg-blue-50" : "border-gray-200"
+                      paymentMethod === "upi"
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200"
                     } hover:border-blue-300`}
                   >
                     <RadioGroupItem value="upi" id="upi" />
-                    <Label htmlFor="upi" className="flex items-center cursor-pointer flex-1">
+                    <Label
+                      htmlFor="upi"
+                      className="flex items-center cursor-pointer flex-1"
+                    >
                       <Wallet className="h-5 w-5 mr-2 text-blue-600" />
                       UPI Payment
                     </Label>
@@ -442,11 +540,16 @@ export function GarageServicesCheckout() {
 
                   <div
                     className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer ${
-                      paymentMethod === "cash" ? "border-blue-600 bg-blue-50" : "border-gray-200"
+                      paymentMethod === "cash"
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200"
                     } hover:border-blue-300`}
                   >
                     <RadioGroupItem value="cash" id="cash" />
-                    <Label htmlFor="cash" className="flex items-center cursor-pointer flex-1">
+                    <Label
+                      htmlFor="cash"
+                      className="flex items-center cursor-pointer flex-1"
+                    >
                       <Wallet className="h-5 w-5 mr-2 text-blue-600" />
                       Pay at Service
                     </Label>
@@ -456,13 +559,18 @@ export function GarageServicesCheckout() {
                 <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start">
                   <Info className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-yellow-700">
-                    By proceeding with the payment, you agree to our terms and conditions. Your service will be
-                    scheduled as per your selected date and time slot.
+                    By proceeding with the payment, you agree to our terms and
+                    conditions. Your service will be scheduled as per your
+                    selected date and time slot.
                   </p>
                 </div>
 
                 <div className="flex space-x-4 mt-6">
-                  <Button variant="outline" onClick={handlePrevStep} disabled={isLoading}>
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevStep}
+                    disabled={isLoading}
+                  >
                     <ChevronLeft className="mr-2 h-4 w-4" />
                     Back
                   </Button>
@@ -527,7 +635,10 @@ export function GarageServicesCheckout() {
                     </div>
                     <div>
                       <h4 className="font-medium text-sm">
-                        {format(new Date(bookingData.scheduleDate), "EEE, MMM dd, yyyy")}
+                        {format(
+                          new Date(bookingData.scheduleDate),
+                          "EEE, MMM dd, yyyy"
+                        )}
                       </h4>
                       <p className="text-sm text-gray-500">Service date</p>
                     </div>
@@ -540,7 +651,9 @@ export function GarageServicesCheckout() {
                       <Clock className="h-3 w-3 text-blue-600" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-sm">{bookingData.timeSlot}</h4>
+                      <h4 className="font-medium text-sm">
+                        {bookingData.timeSlot}
+                      </h4>
                       <p className="text-sm text-gray-500">Service time slot</p>
                     </div>
                   </div>
@@ -552,7 +665,9 @@ export function GarageServicesCheckout() {
                       <MapPin className="h-3 w-3 text-blue-600" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-sm">Doorstep Pickup & Drop</h4>
+                      <h4 className="font-medium text-sm">
+                        Doorstep Pickup & Drop
+                      </h4>
                       <p className="text-sm text-gray-500">Service type</p>
                     </div>
                   </div>
@@ -564,7 +679,9 @@ export function GarageServicesCheckout() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600 text-sm">Services Total</span>
-                  <span className="font-medium">₹{servicesData.reduce((sum, s) => sum + s.price, 0)}</span>
+                  <span className="font-medium">
+                    ₹{servicesData.reduce((sum, s) => sum + s.price, 0)}
+                  </span>
                 </div>
                 {bookingData.pickupDrop && (
                   <div className="flex justify-between">
@@ -584,7 +701,9 @@ export function GarageServicesCheckout() {
               <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start">
                 <Shield className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-green-800">Service Warranty</p>
+                  <p className="text-sm font-medium text-green-800">
+                    Service Warranty
+                  </p>
                   <p className="text-xs text-green-700 mt-1">
                     1000 Kms or 1 Month warranty on all services and repairs
                   </p>
@@ -595,7 +714,5 @@ export function GarageServicesCheckout() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-

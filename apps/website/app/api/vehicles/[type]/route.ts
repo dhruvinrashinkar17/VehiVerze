@@ -3,9 +3,11 @@ import { db, vehicles, inspections, eq } from "@vehiverze/database";
 
 export async function GET(
   req: Request,
-  { params }: { params: { type: string } }
+  { params }: { params: Promise<{ type: string }> }
 ) {
   try {
+    const { type } = await params;
+
     // Get vehicles with their inspections
     const vehiclesList = await db
       .select({
@@ -14,7 +16,7 @@ export async function GET(
       })
       .from(vehicles)
       .leftJoin(inspections, eq(vehicles.id, inspections.vehicleId))
-      .where(eq(vehicles.type, params.type));
+      .where(eq(vehicles.type, type));
 
     // Transform to match expected format
     const result = vehiclesList.map(({ vehicle, inspection }) => ({

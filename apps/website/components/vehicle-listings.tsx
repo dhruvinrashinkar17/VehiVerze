@@ -1,22 +1,64 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import { Button } from "@vehiverze/ui/button"
-import { Label } from "@vehiverze/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { Input } from "@vehiverze/ui/input"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Button } from "@vehiverze/ui/button";
+import { Label } from "@vehiverze/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { Input } from "@vehiverze/ui/input";
 
 // Preserve the original vehicle data
 const vehicles = [
-  { id: 1, name: "2023 Model XYZ", type: "2 Wheeler", price: 25000, image: "/placeholder.svg" },
-  { id: 2, name: "2022 Scooter ABC", type: "2 Wheeler", price: 20000, image: "/placeholder.svg" },
-  { id: 3, name: "2021 Auto Rickshaw DEF", type: "3 Wheeler", price: 50000, image: "/placeholder.svg" },
-  { id: 4, name: "2020 Sedan GHI", type: "4 Wheeler", price: 500000, image: "/placeholder.svg" },
-  { id: 5, name: "2022 Truck JKL", type: "6 Wheeler", price: 800000, image: "/placeholder.svg" },
-  { id: 6, name: "2023 Heavy Truck MNO", type: "8 Wheeler", price: 1500000, image: "/placeholder.svg" },
-]
+  {
+    id: 1,
+    name: "2023 Model XYZ",
+    type: "2 Wheeler",
+    price: 25000,
+    image: "/placeholder.svg",
+  },
+  {
+    id: 2,
+    name: "2022 Scooter ABC",
+    type: "2 Wheeler",
+    price: 20000,
+    image: "/placeholder.svg",
+  },
+  {
+    id: 3,
+    name: "2021 Auto Rickshaw DEF",
+    type: "3 Wheeler",
+    price: 50000,
+    image: "/placeholder.svg",
+  },
+  {
+    id: 4,
+    name: "2020 Sedan GHI",
+    type: "4 Wheeler",
+    price: 500000,
+    image: "/placeholder.svg",
+  },
+  {
+    id: 5,
+    name: "2022 Truck JKL",
+    type: "6 Wheeler",
+    price: 800000,
+    image: "/placeholder.svg",
+  },
+  {
+    id: 6,
+    name: "2023 Heavy Truck MNO",
+    type: "8 Wheeler",
+    price: 1500000,
+    image: "/placeholder.svg",
+  },
+];
 
 export function VehicleListings() {
   // Preserve React state for interactive filtering
@@ -24,8 +66,8 @@ export function VehicleListings() {
     type: "",
     minPrice: "",
     maxPrice: "",
-  })
-  const router = useRouter()
+  });
+  const router = useRouter();
 
   // Preserve the filtering logic
   const filteredVehicles = vehicles.filter((vehicle) => {
@@ -33,17 +75,17 @@ export function VehicleListings() {
       (filters.type === "" || vehicle.type === filters.type) &&
       (filters.minPrice === "" || vehicle.price >= Number(filters.minPrice)) &&
       (filters.maxPrice === "" || vehicle.price <= Number(filters.maxPrice))
-    )
-  })
+    );
+  });
 
   // Preserve the navigation logic
   const handleBuy = (vehicleId: number) => {
-    const vehicle = vehicles.find((v) => v.id === vehicleId)
+    const vehicle = vehicles.find((v) => v.id === vehicleId);
     if (vehicle) {
-      const wheelCount = Number.parseInt(vehicle.type.split(" ")[0])
-      router.push(`/checkout/${wheelCount}-wheeler`)
+      const wheelCount = Number.parseInt(vehicle.type.split(" ")[0]!);
+      router.push(`/checkout/${wheelCount}-wheeler`);
     }
-  }
+  };
 
   return (
     <>
@@ -59,7 +101,9 @@ export function VehicleListings() {
         <div className="filters-section">
           <div className="filter-group">
             <Label htmlFor="vehicle-type">Vehicle Type</Label>
-            <Select onValueChange={(value) => setFilters({ ...filters, type: value })}>
+            <Select
+              onValueChange={(value) => setFilters({ ...filters, type: value })}
+            >
               <SelectTrigger id="vehicle-type">
                 <SelectValue placeholder="Select vehicle type" />
               </SelectTrigger>
@@ -81,7 +125,9 @@ export function VehicleListings() {
               type="number"
               placeholder="Enter min price"
               value={filters.minPrice}
-              onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
+              onChange={(e) =>
+                setFilters({ ...filters, minPrice: e.target.value })
+              }
             />
           </div>
 
@@ -92,7 +138,9 @@ export function VehicleListings() {
               type="number"
               placeholder="Enter max price"
               value={filters.maxPrice}
-              onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
+              onChange={(e) =>
+                setFilters({ ...filters, maxPrice: e.target.value })
+              }
             />
           </div>
         </div>
@@ -113,8 +161,13 @@ export function VehicleListings() {
               <div className="vehicle-details">
                 <h3 className="vehicle-title">{vehicle.name}</h3>
                 <p className="vehicle-type">Type: {vehicle.type}</p>
-                <p className="vehicle-price">Price: ₹{vehicle.price.toLocaleString()}</p>
-                <Button onClick={() => handleBuy(vehicle.id)} className="buy-button">
+                <p className="vehicle-price">
+                  Price: ₹{vehicle.price.toLocaleString()}
+                </p>
+                <Button
+                  onClick={() => handleBuy(vehicle.id)}
+                  className="buy-button"
+                >
                   Buy Now
                 </Button>
               </div>
@@ -208,7 +261,5 @@ export function VehicleListings() {
         /* Button styling is handled by the Button component */
       `}</style>
     </>
-  )
+  );
 }
-
-

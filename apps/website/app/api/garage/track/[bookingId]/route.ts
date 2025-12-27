@@ -9,9 +9,11 @@ import {
 
 export async function GET(
   request: Request,
-  { params }: { params: { bookingId: string } }
+  { params }: { params: Promise<{ bookingId: string }> }
 ) {
   try {
+    const { bookingId } = await params;
+
     // Get booking with partner info
     const [result] = await db
       .select({
@@ -28,7 +30,7 @@ export async function GET(
         garagePartners,
         eq(garageServiceBookings.garagePartnerId, garagePartners.id)
       )
-      .where(eq(garageServiceBookings.bookingId, params.bookingId));
+      .where(eq(garageServiceBookings.bookingId, bookingId));
 
     if (!result) {
       return NextResponse.json(
@@ -49,11 +51,7 @@ export async function GET(
       .where(eq(payments.bookingId, result.booking.id));
 
     // Generate timeline based on booking status
-    const timeline = generateServiceTimeline({
-      ...result.booking,
-      garagePartner: result.partner,
-      payments: bookingPayments,
-    });
+    const timeline = generateServiceTimeline(result.booking);
 
     return NextResponse.json({
       success: true,
@@ -120,7 +118,7 @@ function generateServiceTimeline(booking: BookingForTimeline) {
       title: "Booking Cancelled",
       description: "Your booking has been cancelled",
       status: "cancelled",
-      timestamp: booking.cancelledAt,
+      timestamp: booking.cancelledAt ?? booking.updatedAt,
     });
   }
 

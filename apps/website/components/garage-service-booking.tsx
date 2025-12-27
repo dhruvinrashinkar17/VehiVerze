@@ -1,20 +1,32 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@vehiverze/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { Input } from "@vehiverze/ui/input"
-import { Label } from "@vehiverze/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@vehiverze/ui/select"
-import { Checkbox } from "@vehiverze/ui/checkbox"
-import { Textarea } from "@vehiverze/ui/textarea"
-import { Badge } from "@vehiverze/ui/badge"
-import { Progress } from "@vehiverze/ui/progress"
-import { Calendar } from "@vehiverze/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@vehiverze/ui/popover"
-import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group"
+import { useState } from "react";
+import { Button } from "@vehiverze/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@vehiverze/ui/card";
+import { Input } from "@vehiverze/ui/input";
+import { Label } from "@vehiverze/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@vehiverze/ui/select";
+import { Checkbox } from "@vehiverze/ui/checkbox";
+import { Textarea } from "@vehiverze/ui/textarea";
+import { Badge } from "@vehiverze/ui/badge";
+import { Progress } from "@vehiverze/ui/progress";
+import { Calendar } from "@vehiverze/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@vehiverze/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group";
 import {
   ArrowLeft,
   ArrowRight,
@@ -27,46 +39,52 @@ import {
   Smartphone,
   Wallet,
   Shield,
-} from "lucide-react"
-import { format } from "date-fns"
-import { cn } from "@vehiverze/shared-utils/cn"
-import { useCityStore } from "@/lib/city-store"
+} from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@vehiverze/shared-utils/cn";
+import { useCityStore } from "@/lib/city-store";
 
 interface VehicleDetails {
-  type: string
-  brand: string
-  model: string
-  year: string
-  variant: string
-  transmission: string
-  registrationNumber: string
+  type: string;
+  brand: string;
+  model: string;
+  year: string;
+  variant: string;
+  transmission: string;
+  registrationNumber: string;
 }
 
 interface ServiceItem {
-  id: string
-  name: string
-  price: number
-  duration: string
-  description: string
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  description: string;
 }
 
 interface BookingData {
-  vehicleDetails: VehicleDetails
-  selectedServices: ServiceItem[]
-  scheduleDate: Date | undefined
-  timeSlot: string
-  pickupDrop: boolean
-  notes: string
+  vehicleDetails: VehicleDetails;
+  selectedServices: ServiceItem[];
+  scheduleDate: Date | undefined;
+  timeSlot: string;
+  pickupDrop: boolean;
+  notes: string;
   customerDetails: {
-    name: string
-    phone: string
-    email: string
-    address: string
-  }
-  paymentMethod: string
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+  };
+  paymentMethod: string;
 }
 
-const vehicleTypes = ["2-Wheeler", "3-Wheeler", "4-Wheeler", "6-Wheeler", "8+ Wheeler"]
+const vehicleTypes = [
+  "2-Wheeler",
+  "3-Wheeler",
+  "4-Wheeler",
+  "6-Wheeler",
+  "8+ Wheeler",
+];
 
 const vehicleData = {
   "2-Wheeler": {
@@ -118,7 +136,7 @@ const vehicleData = {
       BharatBenz: ["1617", "2523", "3528"],
     },
   },
-}
+};
 
 const servicesByVehicleType = {
   "2-Wheeler": [
@@ -143,7 +161,13 @@ const servicesByVehicleType = {
       duration: "20 mins",
       description: "Chain cleaning and lubrication",
     },
-    { id: "2w-tire", name: "Tire Change", price: 99, duration: "30 mins", description: "Tire replacement service" },
+    {
+      id: "2w-tire",
+      name: "Tire Change",
+      price: 99,
+      duration: "30 mins",
+      description: "Tire replacement service",
+    },
     {
       id: "2w-general",
       name: "General Service",
@@ -321,12 +345,17 @@ const servicesByVehicleType = {
       description: "Complete fleet maintenance package",
     },
   ],
-}
+};
 
-const timeSlots = ["9:00 AM - 11:00 AM", "11:00 AM - 1:00 PM", "2:00 PM - 4:00 PM", "4:00 PM - 6:00 PM"]
+const timeSlots = [
+  "9:00 AM - 11:00 AM",
+  "11:00 AM - 1:00 PM",
+  "2:00 PM - 4:00 PM",
+  "4:00 PM - 6:00 PM",
+];
 
 export function GarageServiceBooking() {
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(1);
   const [bookingData, setBookingData] = useState<BookingData>({
     vehicleDetails: {
       type: "",
@@ -349,23 +378,23 @@ export function GarageServiceBooking() {
       address: "",
     },
     paymentMethod: "",
-  })
+  });
 
-  const { selectedCity } = useCityStore()
-  const totalSteps = 4
-  const progress = (currentStep / totalSteps) * 100
+  const { selectedCity } = useCityStore();
+  const totalSteps = 4;
+  const progress = (currentStep / totalSteps) * 100;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep + 1);
     }
-  }
+  };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+      setCurrentStep(currentStep - 1);
     }
-  }
+  };
 
   const updateVehicleDetails = (field: keyof VehicleDetails, value: string) => {
     setBookingData((prev) => ({
@@ -374,12 +403,23 @@ export function GarageServiceBooking() {
         ...prev.vehicleDetails,
         [field]: value,
         // Reset dependent fields
-        ...(field === "type" && { brand: "", model: "", year: "", variant: "", transmission: "" }),
-        ...(field === "brand" && { model: "", year: "", variant: "", transmission: "" }),
+        ...(field === "type" && {
+          brand: "",
+          model: "",
+          year: "",
+          variant: "",
+          transmission: "",
+        }),
+        ...(field === "brand" && {
+          model: "",
+          year: "",
+          variant: "",
+          transmission: "",
+        }),
         ...(field === "model" && { year: "", variant: "", transmission: "" }),
       },
-    }))
-  }
+    }));
+  };
 
   const toggleService = (service: ServiceItem) => {
     setBookingData((prev) => ({
@@ -387,29 +427,53 @@ export function GarageServiceBooking() {
       selectedServices: prev.selectedServices.find((s) => s.id === service.id)
         ? prev.selectedServices.filter((s) => s.id !== service.id)
         : [...prev.selectedServices, service],
-    }))
-  }
+    }));
+  };
 
   const calculateTotal = () => {
-    const servicesTotal = bookingData.selectedServices.reduce((sum, service) => sum + service.price, 0)
-    const pickupDropFee = bookingData.pickupDrop ? 199 : 0
-    return servicesTotal + pickupDropFee
-  }
+    const servicesTotal = bookingData.selectedServices.reduce(
+      (sum, service) => sum + service.price,
+      0
+    );
+    const pickupDropFee = bookingData.pickupDrop ? 199 : 0;
+    return servicesTotal + pickupDropFee;
+  };
 
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <VehicleDetailsStep bookingData={bookingData} updateVehicleDetails={updateVehicleDetails} />
+        return (
+          <VehicleDetailsStep
+            bookingData={bookingData}
+            updateVehicleDetails={updateVehicleDetails}
+          />
+        );
       case 2:
-        return <ServiceSelectionStep bookingData={bookingData} toggleService={toggleService} />
+        return (
+          <ServiceSelectionStep
+            bookingData={bookingData}
+            toggleService={toggleService}
+          />
+        );
       case 3:
-        return <ScheduleStep bookingData={bookingData} setBookingData={setBookingData} />
+        return (
+          <ScheduleStep
+            bookingData={bookingData}
+            setBookingData={setBookingData}
+          />
+        );
       case 4:
-        return <ReviewPaymentStep bookingData={bookingData} setBookingData={setBookingData} total={calculateTotal()} />
+        return (
+          <ReviewPaymentStep
+            bookingData={bookingData}
+            setBookingData={setBookingData}
+            total={calculateTotal()}
+          />
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const canProceed = () => {
     switch (currentStep) {
@@ -419,17 +483,21 @@ export function GarageServiceBooking() {
           bookingData.vehicleDetails.brand &&
           bookingData.vehicleDetails.model &&
           bookingData.vehicleDetails.registrationNumber
-        )
+        );
       case 2:
-        return bookingData.selectedServices.length > 0
+        return bookingData.selectedServices.length > 0;
       case 3:
-        return bookingData.scheduleDate && bookingData.timeSlot
+        return bookingData.scheduleDate && bookingData.timeSlot;
       case 4:
-        return bookingData.customerDetails.name && bookingData.customerDetails.phone && bookingData.paymentMethod
+        return (
+          bookingData.customerDetails.name &&
+          bookingData.customerDetails.phone &&
+          bookingData.paymentMethod
+        );
       default:
-        return false
+        return false;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -437,7 +505,9 @@ export function GarageServiceBooking() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Book Garage Service</h1>
-          <p className="text-gray-600">Professional vehicle service in {selectedCity}</p>
+          <p className="text-gray-600">
+            Professional vehicle service in {selectedCity}
+          </p>
         </div>
 
         {/* Progress Bar */}
@@ -446,16 +516,50 @@ export function GarageServiceBooking() {
             <span className="text-sm font-medium">
               Step {currentStep} of {totalSteps}
             </span>
-            <span className="text-sm text-gray-500">{Math.round(progress)}% Complete</span>
+            <span className="text-sm text-gray-500">
+              {Math.round(progress)}% Complete
+            </span>
           </div>
           <Progress value={progress} className="h-2 [&>div]:bg-[#2b4ba9]" />
 
           {/* Step Labels */}
           <div className="flex justify-between mt-4 text-xs">
-            <span className={currentStep >= 1 ? "text-[#2b4ba9] font-medium" : "text-gray-400"}>Vehicle Details</span>
-            <span className={currentStep >= 2 ? "text-[#2b4ba9] font-medium" : "text-gray-400"}>Service Selection</span>
-            <span className={currentStep >= 3 ? "text-[#2b4ba9] font-medium" : "text-gray-400"}>Schedule</span>
-            <span className={currentStep >= 4 ? "text-[#2b4ba9] font-medium" : "text-gray-400"}>Review & Payment</span>
+            <span
+              className={
+                currentStep >= 1
+                  ? "text-[#2b4ba9] font-medium"
+                  : "text-gray-400"
+              }
+            >
+              Vehicle Details
+            </span>
+            <span
+              className={
+                currentStep >= 2
+                  ? "text-[#2b4ba9] font-medium"
+                  : "text-gray-400"
+              }
+            >
+              Service Selection
+            </span>
+            <span
+              className={
+                currentStep >= 3
+                  ? "text-[#2b4ba9] font-medium"
+                  : "text-gray-400"
+              }
+            >
+              Schedule
+            </span>
+            <span
+              className={
+                currentStep >= 4
+                  ? "text-[#2b4ba9] font-medium"
+                  : "text-gray-400"
+              }
+            >
+              Review & Payment
+            </span>
           </div>
         </div>
 
@@ -464,13 +568,21 @@ export function GarageServiceBooking() {
 
         {/* Navigation */}
         <div className="flex justify-between text-black">
-          <Button variant="outline" onClick={handlePrevious} disabled={currentStep === 1}>
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentStep === 1}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Previous
           </Button>
 
           {currentStep < totalSteps ? (
-            <Button onClick={handleNext} disabled={!canProceed()} className="bg-[#2b4ba9] hover:bg-[#1e3a8a]">
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className="bg-[#2b4ba9] hover:bg-[#1e3a8a]"
+            >
               Next
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -478,8 +590,8 @@ export function GarageServiceBooking() {
             <Button
               onClick={() => {
                 // Handle booking submission
-                console.log("Booking submitted:", bookingData)
-                window.location.href = "/garage-services/booking-success"
+                console.log("Booking submitted:", bookingData);
+                window.location.href = "/garage-services/booking-success";
               }}
               disabled={!canProceed()}
               className="bg-green-600 hover:bg-green-700"
@@ -491,7 +603,7 @@ export function GarageServiceBooking() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Step Components
@@ -499,17 +611,19 @@ function VehicleDetailsStep({
   bookingData,
   updateVehicleDetails,
 }: {
-  bookingData: BookingData
-  updateVehicleDetails: (field: keyof VehicleDetails, value: string) => void
+  bookingData: BookingData;
+  updateVehicleDetails: (field: keyof VehicleDetails, value: string) => void;
 }) {
   const availableBrands = bookingData.vehicleDetails.type
-    ? vehicleData[bookingData.vehicleDetails.type as keyof typeof vehicleData]?.brands || []
-    : []
+    ? vehicleData[bookingData.vehicleDetails.type as keyof typeof vehicleData]
+        ?.brands || []
+    : [];
   const availableModels = bookingData.vehicleDetails.brand
-    ? vehicleData[bookingData.vehicleDetails.type as keyof typeof vehicleData]?.models[
-        bookingData.vehicleDetails.brand
-      ] || []
-    : []
+    ? (
+        vehicleData[bookingData.vehicleDetails.type as keyof typeof vehicleData]
+          ?.models as Record<string, string[]>
+      )?.[bookingData.vehicleDetails.brand] || []
+    : [];
 
   return (
     <CardContent className="p-6">
@@ -518,7 +632,9 @@ function VehicleDetailsStep({
           <Car className="h-5 w-5" />
           Vehicle Details
         </CardTitle>
-        <CardDescription>Tell us about your vehicle to provide accurate service recommendations</CardDescription>
+        <CardDescription>
+          Tell us about your vehicle to provide accurate service recommendations
+        </CardDescription>
       </CardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -613,7 +729,9 @@ function VehicleDetailsStep({
           <Label htmlFor="transmission">Transmission</Label>
           <Select
             value={bookingData.vehicleDetails.transmission}
-            onValueChange={(value) => updateVehicleDetails("transmission", value)}
+            onValueChange={(value) =>
+              updateVehicleDetails("transmission", value)
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="Select transmission" />
@@ -627,31 +745,43 @@ function VehicleDetailsStep({
         </div>
 
         <div className="md:col-span-2 space-y-2">
-          <Label htmlFor="registrationNumber">Vehicle Registration Number *</Label>
+          <Label htmlFor="registrationNumber">
+            Vehicle Registration Number *
+          </Label>
           <Input
             placeholder="e.g., DL01AB1234"
             value={bookingData.vehicleDetails.registrationNumber}
-            onChange={(e) => updateVehicleDetails("registrationNumber", e.target.value.toUpperCase())}
+            onChange={(e) =>
+              updateVehicleDetails(
+                "registrationNumber",
+                e.target.value.toUpperCase()
+              )
+            }
             className="uppercase"
           />
         </div>
       </div>
     </CardContent>
-  )
+  );
 }
 
 function ServiceSelectionStep({
   bookingData,
   toggleService,
 }: {
-  bookingData: BookingData
-  toggleService: (service: ServiceItem) => void
+  bookingData: BookingData;
+  toggleService: (service: ServiceItem) => void;
 }) {
   const availableServices = bookingData.vehicleDetails.type
-    ? servicesByVehicleType[bookingData.vehicleDetails.type as keyof typeof servicesByVehicleType] || []
-    : []
+    ? servicesByVehicleType[
+        bookingData.vehicleDetails.type as keyof typeof servicesByVehicleType
+      ] || []
+    : [];
 
-  const selectedTotal = bookingData.selectedServices.reduce((sum, service) => sum + service.price, 0)
+  const selectedTotal = bookingData.selectedServices.reduce(
+    (sum, service) => sum + service.price,
+    0
+  );
 
   return (
     <CardContent className="p-6">
@@ -660,25 +790,38 @@ function ServiceSelectionStep({
           <Wrench className="h-5 w-5" />
           Service Selection
         </CardTitle>
-        <CardDescription>Choose the services you need for your {bookingData.vehicleDetails.type}</CardDescription>
+        <CardDescription>
+          Choose the services you need for your{" "}
+          {bookingData.vehicleDetails.type}
+        </CardDescription>
       </CardHeader>
 
       <div className="space-y-4">
         {availableServices.map((service) => (
-          <div key={service.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+          <div
+            key={service.id}
+            className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-start space-x-3">
               <Checkbox
                 id={service.id}
-                checked={bookingData.selectedServices.some((s) => s.id === service.id)}
+                checked={bookingData.selectedServices.some(
+                  (s) => s.id === service.id
+                )}
                 onCheckedChange={() => toggleService(service)}
               />
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <div className="text-card">
-                    <Label htmlFor={service.id} className="text-base font-medium cursor-pointer">
+                    <Label
+                      htmlFor={service.id}
+                      className="text-base font-medium cursor-pointer"
+                    >
                       {service.name}
                     </Label>
-                    <p className="text-sm text-gray-600 mt-1">{service.description}</p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {service.description}
+                    </p>
                     <div className="flex items-center gap-4 mt-2">
                       <Badge variant="secondary" className="text-xs">
                         <Clock className="h-3 w-3 mr-1" />
@@ -687,7 +830,9 @@ function ServiceSelectionStep({
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-[#2b4ba9]">₹{service.price}</div>
+                    <div className="text-lg font-bold text-[#2b4ba9]">
+                      ₹{service.price}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -699,21 +844,23 @@ function ServiceSelectionStep({
           <div className="border-t pt-4 mt-6">
             <div className="flex justify-between items-center">
               <span className="font-medium">Selected Services Total:</span>
-              <span className="text-xl font-bold text-[#2b4ba9]">₹{selectedTotal}</span>
+              <span className="text-xl font-bold text-[#2b4ba9]">
+                ₹{selectedTotal}
+              </span>
             </div>
           </div>
         )}
       </div>
     </CardContent>
-  )
+  );
 }
 
 function ScheduleStep({
   bookingData,
   setBookingData,
 }: {
-  bookingData: BookingData
-  setBookingData: React.Dispatch<React.SetStateAction<BookingData>>
+  bookingData: BookingData;
+  setBookingData: React.Dispatch<React.SetStateAction<BookingData>>;
 }) {
   return (
     <CardContent className="p-6">
@@ -722,7 +869,9 @@ function ScheduleStep({
           <CalendarIcon className="h-5 w-5" />
           Schedule Service
         </CardTitle>
-        <CardDescription>Choose your preferred date and time for the service</CardDescription>
+        <CardDescription>
+          Choose your preferred date and time for the service
+        </CardDescription>
       </CardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -735,11 +884,13 @@ function ScheduleStep({
                   variant="outline"
                   className={cn(
                     "w-full justify-start text-left font-normal mt-2",
-                    !bookingData.scheduleDate && "text-muted-foreground",
+                    !bookingData.scheduleDate && "text-muted-foreground"
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {bookingData.scheduleDate ? format(bookingData.scheduleDate, "PPP") : "Pick a date"}
+                  {bookingData.scheduleDate
+                    ? format(bookingData.scheduleDate, "PPP")
+                    : "Pick a date"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -747,14 +898,14 @@ function ScheduleStep({
                   mode="single"
                   selected={bookingData.scheduleDate}
                   onSelect={(date) => {
-                    setBookingData((prev) => ({ ...prev, scheduleDate: date }))
+                    setBookingData((prev) => ({ ...prev, scheduleDate: date }));
                   }}
                   disabled={(date) => {
-                    const today = new Date()
-                    today.setHours(0, 0, 0, 0)
-                    const maxDate = new Date(today)
-                    maxDate.setDate(maxDate.getDate() + 7)
-                    return date < today || date > maxDate
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const maxDate = new Date(today);
+                    maxDate.setDate(maxDate.getDate() + 7);
+                    return date < today || date > maxDate;
                   }}
                   initialFocus
                 />
@@ -766,7 +917,9 @@ function ScheduleStep({
             <Label className="text-base font-medium">Select Time Slot</Label>
             <RadioGroup
               value={bookingData.timeSlot}
-              onValueChange={(value) => setBookingData((prev) => ({ ...prev, timeSlot: value }))}
+              onValueChange={(value) =>
+                setBookingData((prev) => ({ ...prev, timeSlot: value }))
+              }
               className="mt-2"
             >
               {timeSlots.map((slot) => (
@@ -786,7 +939,12 @@ function ScheduleStep({
             <Checkbox
               id="pickupDrop"
               checked={bookingData.pickupDrop}
-              onCheckedChange={(checked) => setBookingData((prev) => ({ ...prev, pickupDrop: checked as boolean }))}
+              onCheckedChange={(checked) =>
+                setBookingData((prev) => ({
+                  ...prev,
+                  pickupDrop: checked as boolean,
+                }))
+              }
             />
             <Label htmlFor="pickupDrop" className="cursor-pointer">
               Pickup & Drop Service (+₹199)
@@ -799,14 +957,16 @@ function ScheduleStep({
               id="notes"
               placeholder="Any specific requirements or issues with your vehicle..."
               value={bookingData.notes}
-              onChange={(e) => setBookingData((prev) => ({ ...prev, notes: e.target.value }))}
+              onChange={(e) =>
+                setBookingData((prev) => ({ ...prev, notes: e.target.value }))
+              }
               rows={4}
             />
           </div>
         </div>
       </div>
     </CardContent>
-  )
+  );
 }
 
 function ReviewPaymentStep({
@@ -814,9 +974,9 @@ function ReviewPaymentStep({
   setBookingData,
   total,
 }: {
-  bookingData: BookingData
-  setBookingData: React.Dispatch<React.SetStateAction<BookingData>>
-  total: number
+  bookingData: BookingData;
+  setBookingData: React.Dispatch<React.SetStateAction<BookingData>>;
+  total: number;
 }) {
   return (
     <CardContent className="p-6">
@@ -825,7 +985,9 @@ function ReviewPaymentStep({
           <CreditCard className="h-5 w-5" />
           Review & Payment
         </CardTitle>
-        <CardDescription>Review your booking details and complete payment</CardDescription>
+        <CardDescription>
+          Review your booking details and complete payment
+        </CardDescription>
       </CardHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -835,14 +997,17 @@ function ReviewPaymentStep({
             <h3 className="font-semibold mb-3">Vehicle Details</h3>
             <div className="bg-gray-50 p-4 rounded-lg space-y-2">
               <p>
-                <span className="font-medium">Type:</span> {bookingData.vehicleDetails.type}
+                <span className="font-medium">Type:</span>{" "}
+                {bookingData.vehicleDetails.type}
               </p>
               <p>
-                <span className="font-medium">Vehicle:</span> {bookingData.vehicleDetails.brand}{" "}
+                <span className="font-medium">Vehicle:</span>{" "}
+                {bookingData.vehicleDetails.brand}{" "}
                 {bookingData.vehicleDetails.model}
               </p>
               <p>
-                <span className="font-medium">Registration:</span> {bookingData.vehicleDetails.registrationNumber}
+                <span className="font-medium">Registration:</span>{" "}
+                {bookingData.vehicleDetails.registrationNumber}
               </p>
             </div>
           </div>
@@ -851,7 +1016,10 @@ function ReviewPaymentStep({
             <h3 className="font-semibold mb-3">Selected Services</h3>
             <div className="space-y-2">
               {bookingData.selectedServices.map((service) => (
-                <div key={service.id} className="flex justify-between items-center py-2 border-b">
+                <div
+                  key={service.id}
+                  className="flex justify-between items-center py-2 border-b"
+                >
                   <div>
                     <p className="font-medium">{service.name}</p>
                     <p className="text-sm text-gray-600">{service.duration}</p>
@@ -863,7 +1031,9 @@ function ReviewPaymentStep({
                 <div className="flex justify-between items-center py-2 border-b">
                   <div>
                     <p className="font-medium">Pickup & Drop Service</p>
-                    <p className="text-sm text-gray-600">Door-to-door service</p>
+                    <p className="text-sm text-gray-600">
+                      Door-to-door service
+                    </p>
                   </div>
                   <span className="font-medium">₹199</span>
                 </div>
@@ -880,14 +1050,18 @@ function ReviewPaymentStep({
             <div className="bg-gray-50 p-4 rounded-lg space-y-2">
               <p>
                 <span className="font-medium">Date:</span>{" "}
-                {bookingData.scheduleDate ? format(bookingData.scheduleDate, "PPP") : "Not selected"}
+                {bookingData.scheduleDate
+                  ? format(bookingData.scheduleDate, "PPP")
+                  : "Not selected"}
               </p>
               <p>
-                <span className="font-medium">Time:</span> {bookingData.timeSlot}
+                <span className="font-medium">Time:</span>{" "}
+                {bookingData.timeSlot}
               </p>
               {bookingData.notes && (
                 <p>
-                  <span className="font-medium">Notes:</span> {bookingData.notes}
+                  <span className="font-medium">Notes:</span>{" "}
+                  {bookingData.notes}
                 </p>
               )}
             </div>
@@ -907,7 +1081,10 @@ function ReviewPaymentStep({
                   onChange={(e) =>
                     setBookingData((prev) => ({
                       ...prev,
-                      customerDetails: { ...prev.customerDetails, name: e.target.value },
+                      customerDetails: {
+                        ...prev.customerDetails,
+                        name: e.target.value,
+                      },
                     }))
                   }
                 />
@@ -921,7 +1098,10 @@ function ReviewPaymentStep({
                   onChange={(e) =>
                     setBookingData((prev) => ({
                       ...prev,
-                      customerDetails: { ...prev.customerDetails, phone: e.target.value },
+                      customerDetails: {
+                        ...prev.customerDetails,
+                        phone: e.target.value,
+                      },
                     }))
                   }
                 />
@@ -935,7 +1115,10 @@ function ReviewPaymentStep({
                   onChange={(e) =>
                     setBookingData((prev) => ({
                       ...prev,
-                      customerDetails: { ...prev.customerDetails, email: e.target.value },
+                      customerDetails: {
+                        ...prev.customerDetails,
+                        email: e.target.value,
+                      },
                     }))
                   }
                 />
@@ -948,7 +1131,10 @@ function ReviewPaymentStep({
                   onChange={(e) =>
                     setBookingData((prev) => ({
                       ...prev,
-                      customerDetails: { ...prev.customerDetails, address: e.target.value },
+                      customerDetails: {
+                        ...prev.customerDetails,
+                        address: e.target.value,
+                      },
                     }))
                   }
                   rows={3}
@@ -961,7 +1147,9 @@ function ReviewPaymentStep({
             <h3 className="font-semibold mb-3">Payment Method</h3>
             <RadioGroup
               value={bookingData.paymentMethod}
-              onValueChange={(value) => setBookingData((prev) => ({ ...prev, paymentMethod: value }))}
+              onValueChange={(value) =>
+                setBookingData((prev) => ({ ...prev, paymentMethod: value }))
+              }
             >
               <div className="space-y-4">
                 <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -971,7 +1159,9 @@ function ReviewPaymentStep({
                     <Label htmlFor="upi" className="font-medium cursor-pointer">
                       UPI Payment
                     </Label>
-                    <p className="text-sm text-gray-600">Pay using Google Pay, PhonePe, Paytm</p>
+                    <p className="text-sm text-gray-600">
+                      Pay using Google Pay, PhonePe, Paytm
+                    </p>
                   </div>
                 </div>
 
@@ -979,10 +1169,15 @@ function ReviewPaymentStep({
                   <RadioGroupItem value="card" id="card" />
                   <CreditCard className="h-6 w-6 text-[#2b4ba9]" />
                   <div className="flex-1">
-                    <Label htmlFor="card" className="font-medium cursor-pointer">
+                    <Label
+                      htmlFor="card"
+                      className="font-medium cursor-pointer"
+                    >
                       Credit/Debit Card
                     </Label>
-                    <p className="text-sm text-gray-600">Visa, Mastercard, RuPay</p>
+                    <p className="text-sm text-gray-600">
+                      Visa, Mastercard, RuPay
+                    </p>
                   </div>
                 </div>
 
@@ -990,10 +1185,15 @@ function ReviewPaymentStep({
                   <RadioGroupItem value="wallet" id="wallet" />
                   <Wallet className="h-6 w-6 text-[#2b4ba9]" />
                   <div className="flex-1">
-                    <Label htmlFor="wallet" className="font-medium cursor-pointer">
+                    <Label
+                      htmlFor="wallet"
+                      className="font-medium cursor-pointer"
+                    >
                       Digital Wallet
                     </Label>
-                    <p className="text-sm text-gray-600">Paytm, Amazon Pay, Mobikwik</p>
+                    <p className="text-sm text-gray-600">
+                      Paytm, Amazon Pay, Mobikwik
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1004,7 +1204,10 @@ function ReviewPaymentStep({
                 <Shield className="h-5 w-5 text-[#2b4ba9] mr-2 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-blue-700">
                   <p className="font-medium mb-1">Secure Payment</p>
-                  <p>Your payment is 100% secure. You can cancel or reschedule up to 2 hours before service.</p>
+                  <p>
+                    Your payment is 100% secure. You can cancel or reschedule up
+                    to 2 hours before service.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1012,8 +1215,8 @@ function ReviewPaymentStep({
             <Button
               className="w-full mt-6 bg-[#2b4ba9] hover:bg-[#1e3a8a]"
               onClick={() => {
-                console.log("Booking submitted:", bookingData)
-                window.location.href = "/garage-services/booking-success"
+                console.log("Booking submitted:", bookingData);
+                window.location.href = "/garage-services/booking-success";
               }}
               disabled={!bookingData.paymentMethod}
               size="lg"
@@ -1024,7 +1227,5 @@ function ReviewPaymentStep({
         </div>
       </div>
     </CardContent>
-  )
+  );
 }
-
-

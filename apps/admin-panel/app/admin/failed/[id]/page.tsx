@@ -28,7 +28,7 @@ export default function FailedOrderDetailPage() {
 
   useEffect(() => {
     const foundOrder = ordersDb.getById(id as string);
-    setOrder(foundOrder);
+    setOrder(foundOrder ?? null);
     setLoading(false);
   }, [id]);
 
@@ -70,8 +70,11 @@ export default function FailedOrderDetailPage() {
       "Average",
       "Poor",
     ];
-    mockInspectionResults[question.id] =
+    const randomCondition =
       conditions[Math.floor(Math.random() * conditions.length)];
+    if (randomCondition) {
+      mockInspectionResults[question.id] = randomCondition;
+    }
   });
 
   const questionsByCategory = inspectionQuestions.reduce(
@@ -79,7 +82,7 @@ export default function FailedOrderDetailPage() {
       if (!acc[question.category]) {
         acc[question.category] = [];
       }
-      acc[question.category].push(question);
+      acc[question.category]?.push(question);
       return acc;
     },
     {} as Record<string, typeof inspectionQuestions>
@@ -156,33 +159,33 @@ export default function FailedOrderDetailPage() {
             </div>
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">Device Details</div>
+              <div className="text-sm font-medium">Vehicle Details</div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-sm text-gray-400">RAM</div>
-                  <div>{order.specs.ram}</div>
+                  <div className="text-sm text-gray-400">Brand</div>
+                  <div>{order.specs.brand}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">Storage</div>
-                  <div>{order.specs.storage}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-400">Age</div>
-                  <div>{order.specs.age}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-400">Screen Condition</div>
-                  <div>{order.specs.screenCondition}</div>
+                  <div className="text-sm text-gray-400">Model</div>
+                  <div>{order.specs.model}</div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-400">
-                    Physical Condition
+                    Manufacturing Year
                   </div>
-                  <div>{order.specs.physicalCondition}</div>
+                  <div>{order.specs.manufacturingYear}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">Accessories</div>
-                  <div>{order.specs.accessories}</div>
+                  <div className="text-sm text-gray-400">Variant</div>
+                  <div>{order.specs.variant}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400">Fuel Type</div>
+                  <div>{order.specs.fuelType}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400">Kilometers Driven</div>
+                  <div>{order.specs.kilometersDriven}</div>
                 </div>
               </div>
             </div>

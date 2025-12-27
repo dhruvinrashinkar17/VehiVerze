@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   CheckCircle,
   Shield,
@@ -21,14 +21,19 @@ import {
   Phone,
   Users,
   ArrowLeft,
-} from "lucide-react"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { cn } from "@vehiverze/shared-utils/cn"
+} from "lucide-react";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { cn } from "@vehiverze/shared-utils/cn";
 
 // Define types
-type VehicleType = "2-wheeler" | "3-wheeler" | "4-wheeler" | "6-wheeler" | "8-wheeler"
-type VehicleSubType = "car" | "commercial" | "truck" | "bus" | null
+type VehicleType =
+  | "2-wheeler"
+  | "3-wheeler"
+  | "4-wheeler"
+  | "6-wheeler"
+  | "8-wheeler";
+type VehicleSubType = "car" | "commercial" | "truck" | "bus" | null;
 type Step =
   | "brand"
   | "model"
@@ -41,24 +46,31 @@ type Step =
   | "timeline"
   | "contact"
   | "otp"
-  | "summary"
+  | "summary";
 
 interface Brand {
-  name: string
-  logo: string
-  popular?: boolean
+  name: string;
+  logo: string;
+  popular?: boolean;
 }
 
 interface EnhancedSellFlowProps {
-  vehicleType: VehicleType
-  brands: Brand[]
-  vehicleTypeName: string
-  icon?: string
+  vehicleType: VehicleType;
+  brands: Brand[];
+  vehicleTypeName: string;
+  icon?: string;
 }
 
-export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = "🚗" }: EnhancedSellFlowProps) {
-  const [step, setStep] = useState<Step>("brand")
-  const [vehicleSubType, setVehicleSubType] = useState<VehicleSubType>(vehicleType === "4-wheeler" ? "car" : null)
+export function EnhancedSellFlow({
+  vehicleType,
+  brands,
+  vehicleTypeName,
+  icon = "🚗",
+}: EnhancedSellFlowProps) {
+  const [step, setStep] = useState<Step>("brand");
+  const [vehicleSubType, setVehicleSubType] = useState<VehicleSubType>(
+    vehicleType === "4-wheeler" ? "car" : null
+  );
   const [formData, setFormData] = useState({
     registrationNumber: "",
     brand: "",
@@ -74,15 +86,15 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
     name: "",
     email: "",
     otp: "",
-  })
-  const [isOtpVerified, setIsOtpVerified] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [animatePrice, setAnimatePrice] = useState(false)
-  const [selectedCondition, setSelectedCondition] = useState("excellent")
-  const router = useRouter()
+  });
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [animatePrice, setAnimatePrice] = useState(false);
+  const [selectedCondition, setSelectedCondition] = useState("excellent");
+  const router = useRouter();
 
   // Create refs for OTP input fields
-  const otpRefs = useRef<(HTMLInputElement | null)[]>([])
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Update progress bar based on current step
   useEffect(() => {
@@ -99,32 +111,32 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
       contact: 90,
       otp: 95,
       summary: 100,
-    }
+    };
 
-    setProgress(stepValues[step])
-  }, [step])
+    setProgress(stepValues[step]);
+  }, [step]);
 
   // Initialize OTP refs when step changes to OTP
   useEffect(() => {
     if (step === "otp") {
       // Reset OTP refs array
-      otpRefs.current = Array(4).fill(null)
+      otpRefs.current = Array(4).fill(null);
 
       // Focus the first input when the OTP step is shown
       setTimeout(() => {
         if (otpRefs.current[0]) {
-          otpRefs.current[0].focus()
+          otpRefs.current[0].focus();
         }
-      }, 300)
+      }, 300);
     }
-  }, [step])
+  }, [step]);
 
   // Animate price on condition change
   useEffect(() => {
-    setAnimatePrice(true)
-    const timer = setTimeout(() => setAnimatePrice(false), 500)
-    return () => clearTimeout(timer)
-  }, [selectedCondition])
+    setAnimatePrice(true);
+    const timer = setTimeout(() => setAnimatePrice(false), 500);
+    return () => clearTimeout(timer);
+  }, [selectedCondition]);
 
   // Price ranges for different conditions
   const priceRanges = {
@@ -132,156 +144,165 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
     good: { min: "₹6,55,442", max: "₹7,89,227" },
     veryGood: { min: "₹7,83,534", max: "₹8,54,696" },
     excellent: { min: "₹8,40,464", max: "₹8,68,929" },
-  }
+  };
 
   // Get current price range based on selected condition
   const getCurrentPriceRange = () => {
-    return priceRanges[selectedCondition as keyof typeof priceRanges] || priceRanges.excellent
-  }
+    return (
+      priceRanges[selectedCondition as keyof typeof priceRanges] ||
+      priceRanges.excellent
+    );
+  };
 
   // Update form data
   const updateFormData = (key: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
 
   // Handle brand selection
   const handleBrandSelect = (brandName: string) => {
-    updateFormData("brand", brandName)
-    setStep("model")
-  }
+    updateFormData("brand", brandName);
+    setStep("model");
+  };
 
   // Handle model selection
   const handleModelSelect = (model: string) => {
-    updateFormData("model", model)
-    setStep("year")
-  }
+    updateFormData("model", model);
+    setStep("year");
+  };
 
   // Handle year selection
   const handleYearSelect = (year: string) => {
-    updateFormData("year", year)
-    setStep("variant")
-  }
+    updateFormData("year", year);
+    setStep("variant");
+  };
 
   // Handle variant selection
   const handleVariantSelect = (variant: string) => {
-    updateFormData("variant", variant)
-    setStep("ownership")
-  }
+    updateFormData("variant", variant);
+    setStep("ownership");
+  };
 
   // Handle ownership selection
   const handleOwnershipSelect = (ownership: string) => {
-    updateFormData("ownership", ownership)
-    setStep("fuel")
-  }
+    updateFormData("ownership", ownership);
+    setStep("fuel");
+  };
 
   // Handle fuel type selection
   const handleFuelTypeSelect = (fuelType: string) => {
-    updateFormData("fuelType", fuelType)
-    setStep("kilometers")
-  }
+    updateFormData("fuelType", fuelType);
+    setStep("kilometers");
+  };
 
   // Handle kilometers selection
   const handleKilometersSelect = (kilometers: string) => {
-    updateFormData("kilometers", kilometers)
-    setStep("city")
-  }
+    updateFormData("kilometers", kilometers);
+    setStep("city");
+  };
 
   // Handle city selection
   const handleCitySelect = (city: string) => {
-    updateFormData("city", city)
-    setStep("timeline")
-  }
+    updateFormData("city", city);
+    setStep("timeline");
+  };
 
   // Handle timeline selection
   const handleTimelineSelect = (timeline: string) => {
-    updateFormData("timeline", timeline)
-    setStep("contact")
-  }
+    updateFormData("timeline", timeline);
+    setStep("contact");
+  };
 
   // Handle contact form submission
   const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (formData.name && formData.phone && formData.email) {
-      setStep("otp")
+      setStep("otp");
     }
-  }
+  };
 
   // Handle OTP input change
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const value = e.target.value
+  const handleOtpChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const value = e.target.value;
 
     // Only allow digits
     if (value && !/^\d+$/.test(value)) {
-      return
+      return;
     }
 
     // Update OTP in form data
-    const otp = formData.otp.split("")
-    otp[index] = value
-    updateFormData("otp", otp.join(""))
+    const otp = formData.otp.split("");
+    otp[index] = value;
+    updateFormData("otp", otp.join(""));
 
     // Auto-focus next input if value is entered
     if (value && index < 3) {
       if (otpRefs.current[index + 1]) {
-        otpRefs.current[index + 1].focus()
+        otpRefs.current[index + 1]?.focus();
       }
     }
-  }
+  };
 
   // Handle key down in OTP input
-  const handleOtpKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleOtpKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
     // Handle backspace to go to previous input
     if (e.key === "Backspace" && !formData.otp[index] && index > 0) {
       if (otpRefs.current[index - 1]) {
-        otpRefs.current[index - 1].focus()
+        otpRefs.current[index - 1]?.focus();
       }
     }
 
     // Handle arrow keys for navigation
     if (e.key === "ArrowLeft" && index > 0) {
       if (otpRefs.current[index - 1]) {
-        otpRefs.current[index - 1].focus()
+        otpRefs.current[index - 1]?.focus();
       }
     }
 
     if (e.key === "ArrowRight" && index < 3) {
       if (otpRefs.current[index + 1]) {
-        otpRefs.current[index + 1].focus()
+        otpRefs.current[index + 1]?.focus();
       }
     }
-  }
+  };
 
   // Handle paste event for OTP
   const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const pastedData = e.clipboardData.getData("text/plain").trim()
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text/plain").trim();
 
     // Check if pasted content is a 4-digit number
     if (/^\d{4}$/.test(pastedData)) {
-      updateFormData("otp", pastedData)
+      updateFormData("otp", pastedData);
 
       // Fill all inputs with respective digits
       for (let i = 0; i < 4; i++) {
         if (otpRefs.current[i]) {
-          otpRefs.current[i].value = pastedData[i]
+          otpRefs.current[i]!.value = pastedData[i]!;
         }
       }
 
       // Focus the last input
       if (otpRefs.current[3]) {
-        otpRefs.current[3].focus()
+        otpRefs.current[3]?.focus();
       }
     }
-  }
+  };
 
   // Handle OTP verification
   const handleOtpSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (formData.otp.length === 4) {
-      setIsOtpVerified(true)
-      setStep("summary")
+      setIsOtpVerified(true);
+      setStep("summary");
     }
-  }
+  };
 
   // Handle final submission
   const handleSubmitSummary = () => {
@@ -299,40 +320,40 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           fuelType: formData.fuelType,
           kilometers: formData.kilometers,
           city: formData.city,
-        }),
-      )
+        })
+      );
     } catch (e) {
-      console.error("Error saving sell flow data:", e)
+      console.error("Error saving sell flow data:", e);
     }
 
-    router.push(`/sell/final-checkout?type=${vehicleType}`)
-  }
+    router.push(`/sell/final-checkout?type=${vehicleType}`);
+  };
 
   // Get vehicle icon
   const getVehicleIcon = () => {
     switch (vehicleType) {
       case "2-wheeler":
-        return "🏍️"
+        return "🏍️";
       case "3-wheeler":
-        return "🛺"
+        return "🛺";
       case "4-wheeler":
-        return "🚗"
+        return "🚗";
       case "6-wheeler":
-        return "🚚"
+        return "🚚";
       case "8-wheeler":
-        return "🚛"
+        return "🚛";
       default:
-        return icon
+        return icon;
     }
-  }
+  };
 
   // Get formatted vehicle type
   const getFormattedVehicleType = () => {
     switch (vehicleType) {
       case "2-wheeler":
-        return "Bike"
+        return "Bike";
       case "3-wheeler":
-        return "Auto"
+        return "Auto";
       case "4-wheeler":
         return vehicleSubType === "car"
           ? "Car"
@@ -342,28 +363,109 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
               ? "Truck"
               : vehicleSubType === "bus"
                 ? "Bus"
-                : "Vehicle"
+                : "Vehicle";
       case "6-wheeler":
-        return "Medium Truck"
+        return "Medium Truck";
       case "8-wheeler":
-        return "Heavy Truck"
+        return "Heavy Truck";
       default:
-        return vehicleTypeName
+        return vehicleTypeName;
     }
-  }
+  };
 
   // Sample models based on brand
   const getModels = (brand: string) => {
     const modelsByBrand: Record<string, string[]> = {
-      "Maruti Suzuki": ["Swift", "Baleno", "Dzire", "Alto", "Wagon R", "Ertiga", "Brezza", "Celerio"],
-      Hyundai: ["i10", "i20", "Venue", "Creta", "Verna", "Aura", "Alcazar", "Tucson"],
-      Tata: ["Tiago", "Nexon", "Altroz", "Harrier", "Safari", "Punch", "Tigor", "Hexa"],
-      Mahindra: ["XUV700", "Thar", "Scorpio", "XUV300", "Bolero", "Marazzo", "KUV100", "TUV300"],
-      Honda: ["City", "Amaze", "Jazz", "WR-V", "Civic", "CR-V", "Accord", "BR-V"],
-      Toyota: ["Innova", "Fortuner", "Glanza", "Urban Cruiser", "Camry", "Vellfire", "Yaris", "Etios"],
-      Hero: ["Splendor", "HF Deluxe", "Passion", "Glamour", "Xtreme", "Xpulse", "Pleasure", "Destini"],
-      Bajaj: ["Pulsar", "Platina", "CT", "Avenger", "Dominar", "V", "Discover", "Chetak"],
-      TVS: ["Apache", "Jupiter", "XL", "Ntorq", "Sport", "Star City", "Radeon", "iQube"],
+      "Maruti Suzuki": [
+        "Swift",
+        "Baleno",
+        "Dzire",
+        "Alto",
+        "Wagon R",
+        "Ertiga",
+        "Brezza",
+        "Celerio",
+      ],
+      Hyundai: [
+        "i10",
+        "i20",
+        "Venue",
+        "Creta",
+        "Verna",
+        "Aura",
+        "Alcazar",
+        "Tucson",
+      ],
+      Tata: [
+        "Tiago",
+        "Nexon",
+        "Altroz",
+        "Harrier",
+        "Safari",
+        "Punch",
+        "Tigor",
+        "Hexa",
+      ],
+      Mahindra: [
+        "XUV700",
+        "Thar",
+        "Scorpio",
+        "XUV300",
+        "Bolero",
+        "Marazzo",
+        "KUV100",
+        "TUV300",
+      ],
+      Honda: [
+        "City",
+        "Amaze",
+        "Jazz",
+        "WR-V",
+        "Civic",
+        "CR-V",
+        "Accord",
+        "BR-V",
+      ],
+      Toyota: [
+        "Innova",
+        "Fortuner",
+        "Glanza",
+        "Urban Cruiser",
+        "Camry",
+        "Vellfire",
+        "Yaris",
+        "Etios",
+      ],
+      Hero: [
+        "Splendor",
+        "HF Deluxe",
+        "Passion",
+        "Glamour",
+        "Xtreme",
+        "Xpulse",
+        "Pleasure",
+        "Destini",
+      ],
+      Bajaj: [
+        "Pulsar",
+        "Platina",
+        "CT",
+        "Avenger",
+        "Dominar",
+        "V",
+        "Discover",
+        "Chetak",
+      ],
+      TVS: [
+        "Apache",
+        "Jupiter",
+        "XL",
+        "Ntorq",
+        "Sport",
+        "Star City",
+        "Radeon",
+        "iQube",
+      ],
       "Royal Enfield": [
         "Classic 350",
         "Bullet 350",
@@ -374,21 +476,73 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
         "Hunter",
         "Scram",
       ],
-      Yamaha: ["FZ", "R15", "MT", "Fascino", "Ray ZR", "FZ-X", "Aerox", "RayZR"],
-      Suzuki: ["Access", "Burgman", "Gixxer", "Intruder", "Hayabusa", "V-Strom", "Avenis", "Katana"],
+      Yamaha: [
+        "FZ",
+        "R15",
+        "MT",
+        "Fascino",
+        "Ray ZR",
+        "FZ-X",
+        "Aerox",
+        "RayZR",
+      ],
+      Suzuki: [
+        "Access",
+        "Burgman",
+        "Gixxer",
+        "Intruder",
+        "Hayabusa",
+        "V-Strom",
+        "Avenis",
+        "Katana",
+      ],
       Piaggio: ["Ape", "Porter", "Vespa", "Aprilia"],
       Atul: ["Gem", "Shakti", "Smart", "Elite"],
-      "Ashok Leyland": ["Dost", "Partner", "Bada Dost", "AVTR", "Boss", "Captain", "Ecomet", "Guru"],
-      BharatBenz: ["1015R", "1217C", "2823R", "3528CM", "4023T", "4928T", "5528TT", "5528TT"],
-      Eicher: ["Pro 1000", "Pro 2000", "Pro 3000", "Pro 5000", "Pro 6000", "Pro 8000"],
+      "Ashok Leyland": [
+        "Dost",
+        "Partner",
+        "Bada Dost",
+        "AVTR",
+        "Boss",
+        "Captain",
+        "Ecomet",
+        "Guru",
+      ],
+      BharatBenz: [
+        "1015R",
+        "1217C",
+        "2823R",
+        "3528CM",
+        "4023T",
+        "4928T",
+        "5528TT",
+        "5528TT",
+      ],
+      Eicher: [
+        "Pro 1000",
+        "Pro 2000",
+        "Pro 3000",
+        "Pro 5000",
+        "Pro 6000",
+        "Pro 8000",
+      ],
       Force: ["Traveller", "Trax", "Gurkha", "Trump"],
       Scania: ["P Series", "G Series", "R Series", "S Series"],
       Volvo: ["FH", "FM", "FMX", "FE", "FL"],
-      KTM: ["Duke 125", "Duke 200", "Duke 390", "RC 125", "RC 200", "RC 390", "Adventure 390", "Adventure 250"],
-    }
+      KTM: [
+        "Duke 125",
+        "Duke 200",
+        "Duke 390",
+        "RC 125",
+        "RC 200",
+        "RC 390",
+        "Adventure 390",
+        "Adventure 250",
+      ],
+    };
 
-    return modelsByBrand[brand] || ["Model 1", "Model 2", "Model 3", "Model 4"]
-  }
+    return modelsByBrand[brand] || ["Model 1", "Model 2", "Model 3", "Model 4"];
+  };
 
   // Sample variants based on model
   const getVariants = (model: string) => {
@@ -402,24 +556,36 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
       "Classic 350": ["Redditch", "Halcyon", "Signals", "Dark", "Chrome"],
       Access: ["125", "125 Special Edition", "125 Ride Connect Edition"],
       Ape: ["City", "Auto DX", "Auto LDX", "Auto+"],
-    }
+    };
 
-    return variantsByModel[model] || ["Variant 1", "Variant 2", "Variant 3", "Variant 4"]
-  }
+    return (
+      variantsByModel[model] || [
+        "Variant 1",
+        "Variant 2",
+        "Variant 3",
+        "Variant 4",
+      ]
+    );
+  };
 
   // Ownership options
-  const ownershipOptions = ["1st Owner", "2nd Owner", "3rd Owner", "4th Owner or more"]
+  const ownershipOptions = [
+    "1st Owner",
+    "2nd Owner",
+    "3rd Owner",
+    "4th Owner or more",
+  ];
 
   // Sample fuel types based on vehicle type
   const getFuelTypes = () => {
     if (vehicleType === "2-wheeler") {
-      return ["Petrol", "Electric"]
+      return ["Petrol", "Electric"];
     } else if (vehicleType === "3-wheeler") {
-      return ["Petrol", "CNG", "Electric"]
+      return ["Petrol", "CNG", "Electric"];
     } else {
-      return ["Petrol", "Diesel", "CNG", "Electric", "Hybrid"]
+      return ["Petrol", "Diesel", "CNG", "Electric", "Hybrid"];
     }
-  }
+  };
 
   // Kilometer ranges
   const kilometerRanges = [
@@ -440,7 +606,7 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
     "2,00,000 Km - 2,25,000 Km",
     "2,25,000 Km - 2,50,000 Km",
     "2,50,000 Km or more",
-  ]
+  ];
 
   // Sample cities
   const cities = [
@@ -459,17 +625,22 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
     "Indore",
     "Bhopal",
     "Nagpur",
-  ]
+  ];
 
   // Sample timelines
-  const timelines = ["Immediately", "Within a week", "Within a month", "After 1-2 months"]
+  const timelines = [
+    "Immediately",
+    "Within a week",
+    "Within a month",
+    "After 1-2 months",
+  ];
 
   // Animation variants for page transitions
   const pageVariants = {
     initial: { opacity: 0, x: 100 },
     in: { opacity: 1, x: 0 },
     out: { opacity: 0, x: -100 },
-  }
+  };
 
   // Animation variants for items
   const itemVariants = {
@@ -480,10 +651,10 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
       transition: {
         delay: i * 0.1,
         duration: 0.5,
-        ease: "easeOut",
+        ease: "easeOut" as const,
       },
     }),
-  }
+  };
 
   // Condition options
   const conditionOptions = [
@@ -491,14 +662,23 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
     { value: "good", label: "Good" },
     { value: "veryGood", label: "Very Good" },
     { value: "excellent", label: "Excellent" },
-  ]
+  ];
 
   // Benefits data
   const benefits = [
-    { icon: <CheckCircle className="text-green-500" />, text: "Free home inspection" },
-    { icon: <Shield className="text-blue-500" />, text: "Secure payment guarantee" },
-    { icon: <Settings className="text-orange-500" />, text: "Professional evaluation" },
-  ]
+    {
+      icon: <CheckCircle className="text-green-500" />,
+      text: "Free home inspection",
+    },
+    {
+      icon: <Shield className="text-blue-500" />,
+      text: "Secure payment guarantee",
+    },
+    {
+      icon: <Settings className="text-orange-500" />,
+      text: "Professional evaluation",
+    },
+  ];
 
   // Get step number for progress display
   const getStepNumber = (currentStep: Step): number => {
@@ -515,9 +695,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
       "contact",
       "otp",
       "summary",
-    ]
-    return steps.indexOf(currentStep) + 1
-  }
+    ];
+    return steps.indexOf(currentStep) + 1;
+  };
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -532,16 +712,23 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                 ? `Sell Your ${formData.year} ${formData.brand} ${formData.model} for Instant Cash – Vehiverze`
                 : `Sell Your Used ${getFormattedVehicleType()} for Instant Cash – Vehiverze`}
         </h1>
-        <p className="text-gray-500 mt-2">Get the best price with our 2x faster process</p>
+        <p className="text-gray-500 mt-2">
+          Get the best price with our 2x faster process
+        </p>
       </div>
 
       {/* Progress bar */}
       <div className="mb-8 px-4">
         <div className="flex justify-between mb-2">
           <span className="text-sm font-medium text-gray-700">
-            <span className="text-blue-600 font-bold">{Math.round(progress)}%</span> Complete
+            <span className="text-blue-600 font-bold">
+              {Math.round(progress)}%
+            </span>{" "}
+            Complete
           </span>
-          <span className="text-sm font-medium text-gray-700">Step {getStepNumber(step)} of 12</span>
+          <span className="text-sm font-medium text-gray-700">
+            Step {getStepNumber(step)} of 12
+          </span>
         </div>
         <div className="relative h-3 w-full bg-gray-100 rounded-full overflow-hidden">
           <div
@@ -567,7 +754,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
             <div
               key={stepName}
               className={`w-2 h-2 rounded-full ${
-                getStepNumber(stepName as Step) <= getStepNumber(step) ? "bg-blue-600" : "bg-gray-300"
+                getStepNumber(stepName as Step) <= getStepNumber(step)
+                  ? "bg-blue-600"
+                  : "bg-gray-300"
               }`}
             />
           ))}
@@ -605,7 +794,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                   transition={{ delay: 0.3, duration: 0.5 }}
                   className="mb-8"
                 >
-                  <h2 className="text-lg font-medium text-center mb-4">Select your 4 Wheeler type</h2>
+                  <h2 className="text-lg font-medium text-center mb-4">
+                    Select your 4 Wheeler type
+                  </h2>
                   <div className="flex justify-center gap-4 flex-wrap">
                     <Button
                       onClick={() => setVehicleSubType("car")}
@@ -613,7 +804,7 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                         "flex items-center gap-2 px-6 py-6 rounded-xl transition-all duration-300",
                         vehicleSubType === "car"
                           ? "bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg shadow-blue-200"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-800",
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-800"
                       )}
                     >
                       <Car className="h-5 w-5" />
@@ -625,7 +816,7 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                         "flex items-center gap-2 px-6 py-6 rounded-xl transition-all duration-300",
                         vehicleSubType === "commercial"
                           ? "bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg shadow-blue-200"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-800",
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-800"
                       )}
                     >
                       <Car className="h-5 w-5" />
@@ -637,7 +828,7 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                         "flex items-center gap-2 px-6 py-6 rounded-xl transition-all duration-300",
                         vehicleSubType === "truck"
                           ? "bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg shadow-blue-200"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-800",
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-800"
                       )}
                     >
                       <Truck className="h-5 w-5" />
@@ -649,7 +840,7 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                         "flex items-center gap-2 px-6 py-6 rounded-xl transition-all duration-300",
                         vehicleSubType === "bus"
                           ? "bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg shadow-blue-200"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-800",
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-800"
                       )}
                     >
                       <Truck className="h-5 w-5" />
@@ -698,9 +889,13 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                             className="object-contain"
                           />
                         </div>
-                        <span className="text-gray-800 group-hover:text-blue-600 font-medium">{brand.name}</span>
+                        <span className="text-gray-800 group-hover:text-blue-600 font-medium">
+                          {brand.name}
+                        </span>
                         {brand.popular && (
-                          <span className="mt-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">Popular</span>
+                          <span className="mt-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                            Popular
+                          </span>
                         )}
                       </div>
                     </motion.button>
@@ -714,11 +909,16 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "model" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("brand")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("brand")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h2 className="text-2xl font-bold">
-                  Select the model of your {formData.brand} {getFormattedVehicleType()}
+                  Select the model of your {formData.brand}{" "}
+                  {getFormattedVehicleType()}
                 </h2>
               </div>
 
@@ -752,8 +952,12 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                       />
                     </div>
                     <div className="p-4">
-                      <h4 className="text-lg font-medium text-gray-800">{model}</h4>
-                      <p className="text-sm text-gray-500 mt-1">{formData.brand}</p>
+                      <h4 className="text-lg font-medium text-gray-800">
+                        {model}
+                      </h4>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {formData.brand}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
@@ -765,10 +969,16 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "year" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("model")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("model")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <h2 className="text-2xl font-bold">Select the manufacturing year</h2>
+                <h2 className="text-2xl font-bold">
+                  Select the manufacturing year
+                </h2>
               </div>
 
               <div className="text-center mb-8">
@@ -786,7 +996,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                 animate="visible"
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
               >
-                {Array.from({ length: 18 }, (_, i) => (new Date().getFullYear() - i).toString()).map((year, index) => (
+                {Array.from({ length: 18 }, (_, i) =>
+                  (new Date().getFullYear() - i).toString()
+                ).map((year, index) => (
                   <motion.button
                     key={year}
                     custom={index}
@@ -794,7 +1006,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                     onClick={() => handleYearSelect(year)}
                     className="p-6 rounded-xl bg-white hover:bg-gradient-to-br hover:from-blue-50 hover:to-green-50 transition-all duration-300 border border-gray-100 hover:border-blue-200 hover:shadow-lg text-center"
                   >
-                    <span className="text-2xl font-medium text-gray-800">{year}</span>
+                    <span className="text-2xl font-medium text-gray-800">
+                      {year}
+                    </span>
                   </motion.button>
                 ))}
               </motion.div>
@@ -805,7 +1019,11 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "variant" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("year")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("year")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h2 className="text-2xl font-bold">Select the variant</h2>
@@ -832,7 +1050,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                     className="flex items-center justify-between p-6 rounded-xl bg-white hover:bg-gradient-to-br hover:from-blue-50 hover:to-green-50 transition-all duration-300 border border-gray-100 hover:border-blue-200 hover:shadow-lg"
                     whileHover={{ y: -3 }}
                   >
-                    <span className="text-lg font-medium text-gray-800">{variant}</span>
+                    <span className="text-lg font-medium text-gray-800">
+                      {variant}
+                    </span>
                     <ChevronRight className="h-5 w-5 text-gray-400" />
                   </motion.button>
                 ))}
@@ -844,10 +1064,16 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "ownership" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("variant")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("variant")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <h2 className="text-2xl font-bold">Select the ownership history of your car</h2>
+                <h2 className="text-2xl font-bold">
+                  Select the ownership history of your car
+                </h2>
               </div>
 
               <div className="text-center mb-8">
@@ -873,7 +1099,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                   >
                     <div className="flex items-center">
                       <Users className="h-5 w-5 text-blue-500 mr-3" />
-                      <span className="text-lg font-medium text-gray-800">{ownership}</span>
+                      <span className="text-lg font-medium text-gray-800">
+                        {ownership}
+                      </span>
                     </div>
                     <ChevronRight className="h-5 w-5 text-gray-400" />
                   </motion.button>
@@ -886,7 +1114,11 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "fuel" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("ownership")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("ownership")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h2 className="text-2xl font-bold">Select the fuel type</h2>
@@ -896,7 +1128,8 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                 <div className="inline-flex items-center bg-blue-50 px-4 py-2 rounded-lg">
                   <Car className="h-5 w-5 text-blue-500 mr-2" />
                   <span className="text-blue-700">
-                    {formData.brand} {formData.model} {formData.variant} ({formData.ownership})
+                    {formData.brand} {formData.model} {formData.variant} (
+                    {formData.ownership})
                   </span>
                 </div>
               </div>
@@ -920,7 +1153,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                       {fuelType === "Electric" && "⚡"}
                       {fuelType === "Hybrid" && "🔋⚡"}
                     </div>
-                    <span className="text-xl font-medium text-gray-800">{fuelType}</span>
+                    <span className="text-xl font-medium text-gray-800">
+                      {fuelType}
+                    </span>
                   </motion.button>
                 ))}
               </div>
@@ -931,17 +1166,24 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "kilometers" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("fuel")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("fuel")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <h2 className="text-2xl font-bold">Select the kilometers driven by your car</h2>
+                <h2 className="text-2xl font-bold">
+                  Select the kilometers driven by your car
+                </h2>
               </div>
 
               <div className="text-center mb-8">
                 <div className="inline-flex items-center bg-blue-50 px-4 py-2 rounded-lg">
                   <Car className="h-5 w-5 text-blue-500 mr-2" />
                   <span className="text-blue-700">
-                    {formData.brand} {formData.model} {formData.year} {formData.fuelType}
+                    {formData.brand} {formData.model} {formData.year}{" "}
+                    {formData.fuelType}
                   </span>
                 </div>
               </div>
@@ -958,7 +1200,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                     className="flex items-center justify-between p-6 rounded-xl bg-white hover:bg-gradient-to-br hover:from-blue-50 hover:to-green-50 transition-all duration-300 border border-gray-100 hover:border-blue-200 hover:shadow-lg"
                     whileHover={{ y: -3 }}
                   >
-                    <span className="text-lg font-medium text-gray-800">{range}</span>
+                    <span className="text-lg font-medium text-gray-800">
+                      {range}
+                    </span>
                     <ChevronRight className="h-5 w-5 text-gray-400" />
                   </motion.button>
                 ))}
@@ -970,7 +1214,11 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "city" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("kilometers")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("kilometers")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h2 className="text-2xl font-bold">Select your city</h2>
@@ -1018,10 +1266,16 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "timeline" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("city")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("city")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <h2 className="text-2xl font-bold">When are you planning to sell?</h2>
+                <h2 className="text-2xl font-bold">
+                  When are you planning to sell?
+                </h2>
               </div>
 
               <div className="text-center mb-8"></div>
@@ -1040,7 +1294,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                   >
                     <div className="flex items-center">
                       <Clock className="h-5 w-5 text-blue-500 mr-3" />
-                      <span className="text-lg font-medium text-gray-800">{timeline}</span>
+                      <span className="text-lg font-medium text-gray-800">
+                        {timeline}
+                      </span>
                     </div>
                     <ChevronRight className="h-5 w-5 text-gray-400" />
                   </motion.button>
@@ -1053,7 +1309,11 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "contact" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("timeline")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("timeline")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h2 className="text-2xl font-bold">Your contact information</h2>
@@ -1062,13 +1322,18 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
               <div className="text-center mb-8">
                 <div className="inline-flex items-center bg-blue-50 px-4 py-2 rounded-lg">
                   <Clock className="h-5 w-5 text-blue-500 mr-2" />
-                  <span className="text-blue-700">Selling {formData.timeline.toLowerCase()}</span>
+                  <span className="text-blue-700">
+                    Selling {formData.timeline.toLowerCase()}
+                  </span>
                 </div>
               </div>
 
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Full Name
                   </label>
                   <Input
@@ -1083,11 +1348,16 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Phone Number
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">+91</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                      +91
+                    </span>
                     <Input
                       id="phone"
                       type="tel"
@@ -1101,7 +1371,10 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Email Address
                   </label>
                   <Input
@@ -1130,7 +1403,11 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
           {step === "otp" && (
             <div className="p-8">
               <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" onClick={() => setStep("contact")} className="rounded-full w-10 h-10 p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep("contact")}
+                  className="rounded-full w-10 h-10 p-0"
+                >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h2 className="text-2xl font-bold">Verify your phone number</h2>
@@ -1146,7 +1423,8 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
               <form onSubmit={handleOtpSubmit} className="space-y-6">
                 <div>
                   <p className="text-sm text-gray-500 mb-4">
-                    We've sent a 4-digit verification code to your phone number. Please enter it below.
+                    We've sent a 4-digit verification code to your phone number.
+                    Please enter it below.
                   </p>
                   <div className="flex justify-center gap-2">
                     {[0, 1, 2, 3].map((index) => (
@@ -1156,7 +1434,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                         inputMode="numeric"
                         pattern="[0-9]*"
                         maxLength={1}
-                        ref={(el) => (otpRefs.current[index] = el)}
+                        ref={(el) => {
+                          otpRefs.current[index] = el;
+                        }}
                         className="w-14 h-14 text-center text-xl font-bold rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                         onChange={(e) => handleOtpChange(e, index)}
                         onKeyDown={(e) => handleOtpKeyDown(e, index)}
@@ -1205,7 +1485,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                   transition={{ delay: 0.2 }}
                   className="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-xl space-y-6"
                 >
-                  <h3 className="text-xl font-semibold border-b border-gray-200 pb-2">Vehicle Details</h3>
+                  <h3 className="text-xl font-semibold border-b border-gray-200 pb-2">
+                    Vehicle Details
+                  </h3>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -1278,14 +1560,18 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                     )}
                     {formData.timeline && (
                       <div>
-                        <p className="text-sm text-gray-500">Selling Timeline</p>
+                        <p className="text-sm text-gray-500">
+                          Selling Timeline
+                        </p>
                         <p className="font-medium">{formData.timeline}</p>
                       </div>
                     )}
                   </div>
 
                   <div className="pt-4 border-t border-gray-200">
-                    <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+                    <h3 className="text-lg font-semibold mb-4">
+                      Contact Information
+                    </h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm text-gray-500">Name</p>
@@ -1345,7 +1631,10 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                                 : selectedCondition === "veryGood"
                                   ? "66.6%"
                                   : "100%",
-                          marginLeft: selectedCondition === "excellent" ? "-12px" : "-6px",
+                          marginLeft:
+                            selectedCondition === "excellent"
+                              ? "-12px"
+                              : "-6px",
                         }}
                       ></div>
                     </div>
@@ -1359,7 +1648,8 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                   >
                     <h3 className="text-3xl font-bold mb-3 flex items-center">
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
-                        {getCurrentPriceRange().min} - {getCurrentPriceRange().max}
+                        {getCurrentPriceRange().min} -{" "}
+                        {getCurrentPriceRange().max}
                       </span>
                     </h3>
                     <div className="inline-block bg-green-900 text-green-400 text-xs font-medium px-2 py-1 rounded mb-3">
@@ -1382,7 +1672,9 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
                         className="flex items-center bg-gray-800 p-3 rounded-xl"
                       >
                         {benefit.icon}
-                        <span className="ml-3 text-gray-300">{benefit.text}</span>
+                        <span className="ml-3 text-gray-300">
+                          {benefit.text}
+                        </span>
                       </motion.div>
                     ))}
                   </div>
@@ -1401,7 +1693,5 @@ export function EnhancedSellFlow({ vehicleType, brands, vehicleTypeName, icon = 
         </motion.div>
       </AnimatePresence>
     </div>
-  )
+  );
 }
-
-

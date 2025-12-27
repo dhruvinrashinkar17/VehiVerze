@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { ArrowLeft, Check, CreditCard, Landmark, Truck } from "lucide-react"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Label } from "@vehiverze/ui/label"
-import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@vehiverze/ui/tabs"
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft, Check, CreditCard, Landmark, Truck } from "lucide-react";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Label } from "@vehiverze/ui/label";
+import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@vehiverze/ui/tabs";
 
 interface CheckoutProps {
-  brandId: string
-  modelId: string
-  year: string
-  variantId: string
-  transmissionId: string
-  brandName: string
-  modelName: string
-  variantName: string
-  transmissionName: string
+  brandId: string;
+  modelId: string;
+  year: string;
+  variantId: string;
+  transmissionId: string;
+  brandName: string;
+  modelName: string;
+  variantName: string;
+  transmissionName: string;
 }
 
 interface CarColor {
-  id: string
-  name: string
-  hex: string
+  id: string;
+  name: string;
+  hex: string;
 }
 
 const carColors: CarColor[] = [
@@ -35,7 +35,7 @@ const carColors: CarColor[] = [
   { id: "black", name: "Midnight Black", hex: "#000000" },
   { id: "red", name: "Racing Red", hex: "#FF0000" },
   { id: "blue", name: "Ocean Blue", hex: "#0000FF" },
-]
+];
 
 export function Checkout({
   brandId,
@@ -48,9 +48,9 @@ export function Checkout({
   variantName,
   transmissionName,
 }: CheckoutProps) {
-  const [activeStep, setActiveStep] = useState(1)
-  const [selectedColor, setSelectedColor] = useState(carColors[0])
-  const [paymentMethod, setPaymentMethod] = useState("full")
+  const [activeStep, setActiveStep] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(carColors[0]);
+  const [paymentMethod, setPaymentMethod] = useState("full");
 
   // Car details - in a real app, this would be fetched from an API
   const carDetails = {
@@ -59,47 +59,52 @@ export function Checkout({
     transmission: transmissionName,
     basePrice: 745000, // ₹7.45 Lakh in rupees
     image: "/placeholder.svg?height=300&width=500",
-  }
+  };
 
   // Calculate total price
-  const taxes = carDetails.basePrice * 0.18 // 18% GST
-  const registrationFee = 15000
-  const insuranceCost = 35000
-  const totalPrice = carDetails.basePrice + taxes + registrationFee + insuranceCost
+  const taxes = carDetails.basePrice * 0.18; // 18% GST
+  const registrationFee = 15000;
+  const insuranceCost = 35000;
+  const totalPrice =
+    carDetails.basePrice + taxes + registrationFee + insuranceCost;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
       maximumFractionDigits: 0,
-    }).format(price)
-  }
+    }).format(price);
+  };
 
   const handleNext = () => {
     if (activeStep < 3) {
-      setActiveStep(activeStep + 1)
+      setActiveStep(activeStep + 1);
     } else {
       // Submit order
-      window.location.href = "/buy/new-cars/order-success"
+      window.location.href = "/buy/new-cars/order-success";
     }
-  }
+  };
 
   const handleBack = () => {
     if (activeStep > 1) {
-      setActiveStep(activeStep - 1)
+      setActiveStep(activeStep - 1);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center mb-8">
-          <Link href={`/buy/new-cars/${brandId}/models/${modelId}/years/${year}/variants/${variantId}/transmission`}>
+          <Link
+            href={`/buy/new-cars/${brandId}/models/${modelId}/years/${year}/variants/${variantId}/transmission`}
+          >
             <Button variant="ghost" size="icon" className="mr-2">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold">Complete Your Purchase</h1>
+          <h1 className="text-3xl md:text-4xl font-bold">
+            Complete Your Purchase
+          </h1>
         </div>
 
         {/* Progress Steps */}
@@ -155,14 +160,15 @@ export function Checkout({
                   {carColors.map((color) => (
                     <button
                       key={color.id}
-                      className={`p-4 rounded-lg border ${selectedColor.id === color.id ? "border-blue-600 ring-2 ring-blue-200" : "border-gray-200"}`}
+                      className={`p-4 rounded-lg border ${selectedColor?.id === color.id ? "border-blue-600 ring-2 ring-blue-200" : "border-gray-200"}`}
                       onClick={() => setSelectedColor(color)}
                     >
                       <div
                         className="w-full h-12 rounded-md mb-2"
                         style={{
                           backgroundColor: color.hex,
-                          border: color.id === "white" ? "1px solid #e5e7eb" : "none",
+                          border:
+                            color.id === "white" ? "1px solid #e5e7eb" : "none",
                         }}
                       ></div>
                       <p className="text-sm font-medium">{color.name}</p>
@@ -179,7 +185,9 @@ export function Checkout({
                   />
                 </div>
 
-                <h3 className="text-xl font-semibold mb-4">Car Specifications</h3>
+                <h3 className="text-xl font-semibold mb-4">
+                  Car Specifications
+                </h3>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
                     <p className="text-gray-600">Brand</p>
@@ -203,12 +211,15 @@ export function Checkout({
                   </div>
                   <div>
                     <p className="text-gray-600">Color</p>
-                    <p className="font-medium">{selectedColor.name}</p>
+                    <p className="font-medium">{selectedColor?.name}</p>
                   </div>
                 </div>
 
                 <div className="flex justify-end">
-                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={handleNext}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
                     Continue to Personal Info
                   </Button>
                 </div>
@@ -218,13 +229,18 @@ export function Checkout({
             {/* Step 2: Personal Information */}
             {activeStep === 2 && (
               <div className="bg-white p-6 rounded-lg border">
-                <h2 className="text-2xl font-semibold mb-6">Personal Information</h2>
+                <h2 className="text-2xl font-semibold mb-6">
+                  Personal Information
+                </h2>
 
                 <div className="space-y-4 mb-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" placeholder="Enter your first name" />
+                      <Input
+                        id="firstName"
+                        placeholder="Enter your first name"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="lastName">Last Name</Label>
@@ -234,7 +250,11 @@ export function Checkout({
 
                   <div>
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" placeholder="Enter your email address" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email address"
+                    />
                   </div>
 
                   <div>
@@ -267,7 +287,10 @@ export function Checkout({
                   <Button variant="outline" onClick={handleBack}>
                     Back
                   </Button>
-                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={handleNext}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
                     Continue to Payment
                   </Button>
                 </div>
@@ -308,14 +331,29 @@ export function Checkout({
                   <TabsContent value="loan" className="pt-4">
                     <div className="space-y-4">
                       <div className="border rounded-lg p-4">
-                        <h3 className="font-semibold mb-2">Bank Financing Options</h3>
-                        <p className="text-gray-600 mb-4">Choose from our partner banks for the best interest rates</p>
+                        <h3 className="font-semibold mb-2">
+                          Bank Financing Options
+                        </h3>
+                        <p className="text-gray-600 mb-4">
+                          Choose from our partner banks for the best interest
+                          rates
+                        </p>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          <div className="border rounded p-3 text-center">HDFC Bank</div>
-                          <div className="border rounded p-3 text-center">ICICI Bank</div>
-                          <div className="border rounded p-3 text-center">SBI</div>
-                          <div className="border rounded p-3 text-center">Axis Bank</div>
-                          <div className="border rounded p-3 text-center">Kotak Bank</div>
+                          <div className="border rounded p-3 text-center">
+                            HDFC Bank
+                          </div>
+                          <div className="border rounded p-3 text-center">
+                            ICICI Bank
+                          </div>
+                          <div className="border rounded p-3 text-center">
+                            SBI
+                          </div>
+                          <div className="border rounded p-3 text-center">
+                            Axis Bank
+                          </div>
+                          <div className="border rounded p-3 text-center">
+                            Kotak Bank
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -324,7 +362,9 @@ export function Checkout({
                   <TabsContent value="lease" className="pt-4">
                     <div className="border rounded-lg p-4">
                       <h3 className="font-semibold mb-2">Leasing Options</h3>
-                      <p className="text-gray-600 mb-4">Flexible leasing terms available</p>
+                      <p className="text-gray-600 mb-4">
+                        Flexible leasing terms available
+                      </p>
                       <div className="space-y-2">
                         <div className="flex items-center">
                           <Check className="h-5 w-5 text-green-500 mr-2" />
@@ -347,7 +387,10 @@ export function Checkout({
                   <Button variant="outline" onClick={handleBack}>
                     Back
                   </Button>
-                  <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={handleNext}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
                     Complete Purchase
                   </Button>
                 </div>
@@ -387,14 +430,13 @@ export function Checkout({
                 <span className="font-medium">Estimated Delivery</span>
               </div>
               <p className="text-gray-600">
-                Your vehicle will be ready for delivery within 2-3 weeks from the date of purchase.
+                Your vehicle will be ready for delivery within 2-3 weeks from
+                the date of purchase.
               </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-

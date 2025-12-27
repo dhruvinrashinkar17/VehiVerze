@@ -29,6 +29,7 @@ import type {
   VehicleProduct,
   VehicleCondition,
 } from "@/lib/mock-data/vehicle-types";
+import type { InspectionResult } from "@/lib/mock-data/inspection-questions";
 import { InspectionForm } from "./inspection-form";
 
 const formSchema = z.object({
@@ -63,6 +64,14 @@ interface ProductFormProps {
   maxImages?: number;
 }
 
+interface InspectionResultData {
+  totalScore: number;
+  maxScore: number;
+  condition: VehicleCondition;
+  adjustedPrice: number;
+  results: InspectionResult[];
+}
+
 export function ProductForm({
   product,
   onSuccess,
@@ -71,7 +80,8 @@ export function ProductForm({
 }: ProductFormProps) {
   const [loading, setLoading] = useState(false);
   const [showInspection, setShowInspection] = useState(false);
-  const [inspectionData, setInspectionData] = useState<any>(null);
+  const [inspectionData, setInspectionData] =
+    useState<InspectionResultData | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,7 +110,7 @@ export function ProductForm({
   const basePrice = form.watch("basePrice");
   const brands = vehicleBrands[vehicleType];
 
-  const handleInspectionComplete = (results: any) => {
+  const handleInspectionComplete = (results: InspectionResultData) => {
     setInspectionData(results);
     setShowInspection(false);
   };

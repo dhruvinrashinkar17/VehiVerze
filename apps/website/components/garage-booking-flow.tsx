@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -26,44 +26,112 @@ import {
   Zap,
   Eye,
   Wind,
-} from "lucide-react"
-import { Button } from "@vehiverze/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group"
-import { Label } from "@vehiverze/ui/label"
-import { Input } from "@vehiverze/ui/input"
-import { Textarea } from "@vehiverze/ui/textarea"
-import { Checkbox } from "@vehiverze/ui/checkbox"
-import { Badge } from "@vehiverze/ui/badge"
-import { Separator } from "@vehiverze/ui/separator"
+} from "lucide-react";
+import { Button } from "@vehiverze/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group";
+import { Label } from "@vehiverze/ui/label";
+import { Input } from "@vehiverze/ui/input";
+import { Textarea } from "@vehiverze/ui/textarea";
+import { Checkbox } from "@vehiverze/ui/checkbox";
+import { Badge } from "@vehiverze/ui/badge";
+import { Separator } from "@vehiverze/ui/separator";
 
 // Vehicle types with their icons
 const vehicleTypes = [
-  { id: "2w", name: "2 Wheeler", icon: <Bike className="h-8 w-8" />, description: "Motorcycles, Scooters" },
-  { id: "3w", name: "3 Wheeler", icon: <Bike className="h-8 w-8" />, description: "Auto Rickshaws" },
-  { id: "4w", name: "4 Wheeler", icon: <Car className="h-8 w-8" />, description: "Cars, SUVs" },
-  { id: "6w", name: "6 Wheeler", icon: <Truck className="h-8 w-8" />, description: "Medium Trucks" },
-  { id: "8w", name: "8+ Wheeler", icon: <Truck className="h-8 w-8" />, description: "Heavy Trucks" },
-]
+  {
+    id: "2w",
+    name: "2 Wheeler",
+    icon: <Bike className="h-8 w-8" />,
+    description: "Motorcycles, Scooters",
+  },
+  {
+    id: "3w",
+    name: "3 Wheeler",
+    icon: <Bike className="h-8 w-8" />,
+    description: "Auto Rickshaws",
+  },
+  {
+    id: "4w",
+    name: "4 Wheeler",
+    icon: <Car className="h-8 w-8" />,
+    description: "Cars, SUVs",
+  },
+  {
+    id: "6w",
+    name: "6 Wheeler",
+    icon: <Truck className="h-8 w-8" />,
+    description: "Medium Trucks",
+  },
+  {
+    id: "8w",
+    name: "8+ Wheeler",
+    icon: <Truck className="h-8 w-8" />,
+    description: "Heavy Trucks",
+  },
+];
 
 // Vehicle brands by type
 const vehicleBrands = {
-  "2w": ["Honda", "Hero", "Bajaj", "TVS", "Yamaha", "Royal Enfield", "KTM", "Suzuki"],
+  "2w": [
+    "Honda",
+    "Hero",
+    "Bajaj",
+    "TVS",
+    "Yamaha",
+    "Royal Enfield",
+    "KTM",
+    "Suzuki",
+  ],
   "3w": ["Bajaj", "Mahindra", "Piaggio", "TVS", "Force Motors", "Atul Auto"],
-  "4w": ["Maruti Suzuki", "Hyundai", "Tata", "Mahindra", "Honda", "Toyota", "Ford", "Volkswagen", "BMW", "Mercedes"],
-  "6w": ["Tata", "Ashok Leyland", "Mahindra", "Force Motors", "Eicher", "BharatBenz"],
+  "4w": [
+    "Maruti Suzuki",
+    "Hyundai",
+    "Tata",
+    "Mahindra",
+    "Honda",
+    "Toyota",
+    "Ford",
+    "Volkswagen",
+    "BMW",
+    "Mercedes",
+  ],
+  "6w": [
+    "Tata",
+    "Ashok Leyland",
+    "Mahindra",
+    "Force Motors",
+    "Eicher",
+    "BharatBenz",
+  ],
   "8w": ["Tata", "Ashok Leyland", "Volvo", "Scania", "BharatBenz", "Mahindra"],
-}
+};
 
 // Vehicle models by brand (simplified for demo)
 const vehicleModels = {
   Honda: ["Activa", "CB Shine", "Unicorn", "City", "Amaze", "WR-V"],
   Hero: ["Splendor", "HF Deluxe", "Passion", "Xtreme"],
-  "Maruti Suzuki": ["Swift", "Baleno", "Alto", "Wagon R", "Dzire", "Vitara Brezza"],
+  "Maruti Suzuki": [
+    "Swift",
+    "Baleno",
+    "Alto",
+    "Wagon R",
+    "Dzire",
+    "Vitara Brezza",
+  ],
   Hyundai: ["i20", "Creta", "Verna", "Grand i10", "Venue"],
-  Tata: ["Nexon", "Harrier", "Altroz", "Tigor", "Safari", "Ace", "407", "Prima"],
+  Tata: [
+    "Nexon",
+    "Harrier",
+    "Altroz",
+    "Tigor",
+    "Safari",
+    "Ace",
+    "407",
+    "Prima",
+  ],
   // Add more as needed
-}
+};
 
 // Garage services by vehicle type
 const garageServices = {
@@ -263,7 +331,7 @@ const garageServices = {
       description: "Heavy-duty transmission service",
     },
   ],
-}
+};
 
 // Service packages
 const servicePackages = {
@@ -279,7 +347,12 @@ const servicePackages = {
     description: "Comprehensive service",
     duration: "3-4 hours",
     warranty: "3 months",
-    features: ["Complete inspection", "Oil change", "Filter replacement", "Basic repairs"],
+    features: [
+      "Complete inspection",
+      "Oil change",
+      "Filter replacement",
+      "Basic repairs",
+    ],
     recommended: true,
   },
   premium: {
@@ -287,9 +360,14 @@ const servicePackages = {
     description: "Complete overhaul",
     duration: "4-6 hours",
     warranty: "6 months",
-    features: ["Detailed inspection", "All fluids change", "Complete service", "Priority support"],
+    features: [
+      "Detailed inspection",
+      "All fluids change",
+      "Complete service",
+      "Priority support",
+    ],
   },
-}
+};
 
 // Pricing by service and package
 const servicePricing = {
@@ -324,19 +402,39 @@ const servicePricing = {
   "brake-8w": { basic: 1999, standard: 3799, premium: 5999 },
   "engine-8w": { basic: 3999, standard: 7999, premium: 12999 },
   "transmission-8w": { basic: 2799, standard: 4999, premium: 7799 },
-}
+};
 
 // Add-on services
 const addOnServices = [
-  { id: "pickup", name: "Pick & Drop", price: 199, description: "Free pickup and drop at your location" },
-  { id: "express", name: "Express Service", price: 299, description: "Priority service - 50% faster" },
-  { id: "warranty", name: "Extended Warranty", price: 499, description: "Additional 6 months warranty" },
-  { id: "insurance", name: "Insurance Support", price: 99, description: "Help with insurance claims" },
-]
+  {
+    id: "pickup",
+    name: "Pick & Drop",
+    price: 199,
+    description: "Free pickup and drop at your location",
+  },
+  {
+    id: "express",
+    name: "Express Service",
+    price: 299,
+    description: "Priority service - 50% faster",
+  },
+  {
+    id: "warranty",
+    name: "Extended Warranty",
+    price: 499,
+    description: "Additional 6 months warranty",
+  },
+  {
+    id: "insurance",
+    name: "Insurance Support",
+    price: 99,
+    description: "Help with insurance claims",
+  },
+];
 
 export function GarageBookingFlow() {
-  const router = useRouter()
-  const [currentStep, setCurrentStep] = useState(1)
+  const router = useRouter();
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     vehicleType: "",
     brand: "",
@@ -354,85 +452,92 @@ export function GarageBookingFlow() {
     addOns: [] as string[],
     paymentMethod: "",
     specialInstructions: "",
-  })
+  });
 
-  const totalSteps = 6 // Reduced from 7 since we skip vehicle type selection
+  const totalSteps = 6; // Reduced from 7 since we skip vehicle type selection
 
   // Initialize vehicle type from session storage
   useEffect(() => {
-    const selectedVehicleType = sessionStorage.getItem("selectedVehicleType")
+    const selectedVehicleType = sessionStorage.getItem("selectedVehicleType");
     if (selectedVehicleType) {
-      setFormData((prev) => ({ ...prev, vehicleType: selectedVehicleType }))
+      setFormData((prev) => ({ ...prev, vehicleType: selectedVehicleType }));
     } else {
       // If no vehicle type selected, redirect back to garage services page
-      router.push("/garage-services")
+      router.push("/garage-services");
     }
-  }, [router])
+  }, [router]);
 
   // Get filtered brands based on vehicle type
   const getFilteredBrands = () => {
-    return vehicleBrands[formData.vehicleType as keyof typeof vehicleBrands] || []
-  }
+    return (
+      vehicleBrands[formData.vehicleType as keyof typeof vehicleBrands] || []
+    );
+  };
 
   // Get filtered models based on brand
   const getFilteredModels = () => {
-    return vehicleModels[formData.brand as keyof typeof vehicleModels] || []
-  }
+    return vehicleModels[formData.brand as keyof typeof vehicleModels] || [];
+  };
 
   // Get filtered services based on vehicle type
   const getFilteredServices = () => {
-    return garageServices[formData.vehicleType as keyof typeof garageServices] || []
-  }
+    return (
+      garageServices[formData.vehicleType as keyof typeof garageServices] || []
+    );
+  };
 
   // Get service price
   const getServicePrice = (packageType: string) => {
-    const serviceKey = formData.service as keyof typeof servicePricing
-    const packageKey = packageType as keyof (typeof servicePricing)[typeof serviceKey]
-    return servicePricing[serviceKey]?.[packageKey] || 0
-  }
+    const serviceKey = formData.service as keyof typeof servicePricing;
+    const packageKey =
+      packageType as keyof (typeof servicePricing)[typeof serviceKey];
+    return servicePricing[serviceKey]?.[packageKey] || 0;
+  };
 
   // Calculate total price
   const calculateTotalPrice = () => {
-    const basePrice = getServicePrice(formData.package)
+    const basePrice = getServicePrice(formData.package);
     const addOnPrice = formData.addOns.reduce((total, addOnId) => {
-      const addOn = addOnServices.find((ao) => ao.id === addOnId)
-      return total + (addOn?.price || 0)
-    }, 0)
-    return basePrice + addOnPrice
-  }
+      const addOn = addOnServices.find((ao) => ao.id === addOnId);
+      return total + (addOn?.price || 0);
+    }, 0);
+    return basePrice + addOnPrice;
+  };
 
   // Handle form data update
   const updateFormData = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Handle add-on toggle
   const toggleAddOn = (addOnId: string) => {
     setFormData((prev) => ({
       ...prev,
-      addOns: prev.addOns.includes(addOnId) ? prev.addOns.filter((id) => id !== addOnId) : [...prev.addOns, addOnId],
-    }))
-  }
+      addOns: prev.addOns.includes(addOnId)
+        ? prev.addOns.filter((id) => id !== addOnId)
+        : [...prev.addOns, addOnId],
+    }));
+  };
 
   // Handle next step
   const handleNext = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep + 1);
     }
-  }
+  };
 
   // Handle previous step
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+      setCurrentStep(currentStep - 1);
     }
-  }
+  };
 
   // Handle booking completion
   const handleCompleteBooking = () => {
     // Here you would typically make an API call to create the booking
-    router.push("/garage-services/booking-success")
-  }
+    router.push("/garage-services/booking-success");
+  };
 
   // Generate time slots
   const timeSlots = [
@@ -441,23 +546,23 @@ export function GarageBookingFlow() {
     "01:00 PM - 03:00 PM",
     "03:00 PM - 05:00 PM",
     "05:00 PM - 07:00 PM",
-  ]
+  ];
 
   // Generate next 7 days
   const getNextSevenDays = () => {
-    const days = []
+    const days = [];
     for (let i = 1; i <= 7; i++) {
-      const date = new Date()
-      date.setDate(date.getDate() + i)
-      days.push(date)
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      days.push(date);
     }
-    return days
-  }
+    return days;
+  };
 
   // Get current vehicle type name
   const getCurrentVehicleTypeName = () => {
-    return vehicleTypes.find((v) => v.id === formData.vehicleType)?.name || ""
-  }
+    return vehicleTypes.find((v) => v.id === formData.vehicleType)?.name || "";
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -469,33 +574,47 @@ export function GarageBookingFlow() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={currentStep > 1 ? handlePrevious : () => router.push("/garage-services")}
+                onClick={
+                  currentStep > 1
+                    ? handlePrevious
+                    : () => router.push("/garage-services")
+                }
                 className="rounded-full"
               >
                 <ChevronLeft className="h-5 w-5" />
               </Button>
               <div>
                 <h1 className="text-xl font-bold">Book Garage Service</h1>
-                {formData.vehicleType && <p className="text-sm text-gray-600">{getCurrentVehicleTypeName()}</p>}
+                {formData.vehicleType && (
+                  <p className="text-sm text-gray-600">
+                    {getCurrentVehicleTypeName()}
+                  </p>
+                )}
               </div>
             </div>
 
             {/* Progress Steps */}
             <div className="hidden md:flex items-center space-x-2">
-              {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
-                <div key={step} className="flex items-center">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      currentStep >= step ? "bg-[#2b4ba9] text-white" : "bg-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {step}
+              {Array.from({ length: totalSteps }, (_, i) => i + 1).map(
+                (step) => (
+                  <div key={step} className="flex items-center">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                        currentStep >= step
+                          ? "bg-[#2b4ba9] text-white"
+                          : "bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {step}
+                    </div>
+                    {step < totalSteps && (
+                      <div
+                        className={`w-8 h-1 ${currentStep > step ? "bg-[#2b4ba9]" : "bg-gray-200"}`}
+                      ></div>
+                    )}
                   </div>
-                  {step < totalSteps && (
-                    <div className={`w-8 h-1 ${currentStep > step ? "bg-[#2b4ba9]" : "bg-gray-200"}`}></div>
-                  )}
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
         </div>
@@ -507,7 +626,9 @@ export function GarageBookingFlow() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4">Select Vehicle Brand</h2>
-              <p className="text-gray-600">Choose your {getCurrentVehicleTypeName()} brand</p>
+              <p className="text-gray-600">
+                Choose your {getCurrentVehicleTypeName()} brand
+              </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -515,11 +636,13 @@ export function GarageBookingFlow() {
                 <Card
                   key={brand}
                   className={`cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-                    formData.brand === brand ? "ring-2 ring-blue-500 bg-blue-50" : ""
+                    formData.brand === brand
+                      ? "ring-2 ring-blue-500 bg-blue-50"
+                      : ""
                   }`}
                   onClick={() => {
-                    updateFormData("brand", brand)
-                    updateFormData("model", "")
+                    updateFormData("brand", brand);
+                    updateFormData("model", "");
                   }}
                 >
                   <CardContent className="p-4 text-center">
@@ -530,7 +653,11 @@ export function GarageBookingFlow() {
             </div>
 
             <div className="flex justify-center mt-8">
-              <Button onClick={handleNext} disabled={!formData.brand} className="px-8">
+              <Button
+                onClick={handleNext}
+                disabled={!formData.brand}
+                className="px-8"
+              >
                 Continue
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
@@ -543,7 +670,9 @@ export function GarageBookingFlow() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4">Select Vehicle Model</h2>
-              <p className="text-gray-600">Choose your {formData.brand} model</p>
+              <p className="text-gray-600">
+                Choose your {formData.brand} model
+              </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -551,7 +680,9 @@ export function GarageBookingFlow() {
                 <Card
                   key={model}
                   className={`cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-                    formData.model === model ? "ring-2 ring-blue-500 bg-blue-50" : ""
+                    formData.model === model
+                      ? "ring-2 ring-blue-500 bg-blue-50"
+                      : ""
                   }`}
                   onClick={() => updateFormData("model", model)}
                 >
@@ -563,7 +694,11 @@ export function GarageBookingFlow() {
             </div>
 
             <div className="flex justify-center mt-8">
-              <Button onClick={handleNext} disabled={!formData.model} className="px-8">
+              <Button
+                onClick={handleNext}
+                disabled={!formData.model}
+                className="px-8"
+              >
                 Continue
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
@@ -577,7 +712,8 @@ export function GarageBookingFlow() {
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4">Select Service</h2>
               <p className="text-gray-600">
-                Choose the service you need for your {formData.brand} {formData.model}
+                Choose the service you need for your {formData.brand}{" "}
+                {formData.model}
               </p>
             </div>
 
@@ -586,7 +722,9 @@ export function GarageBookingFlow() {
                 <Card
                   key={service.id}
                   className={`cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-                    formData.service === service.id ? "ring-2 ring-[#2b4ba9] bg-blue-50" : ""
+                    formData.service === service.id
+                      ? "ring-2 ring-[#2b4ba9] bg-blue-50"
+                      : ""
                   }`}
                   onClick={() => updateFormData("service", service.id)}
                 >
@@ -597,10 +735,14 @@ export function GarageBookingFlow() {
                       </div>
                       <div>
                         <h3 className="font-semibold">{service.name}</h3>
-                        <p className="text-sm text-gray-500">{service.description}</p>
+                        <p className="text-sm text-gray-500">
+                          {service.description}
+                        </p>
                       </div>
                     </div>
-                    <div className="text-sm text-green-600 font-medium">Starting from ₹{getServicePrice("basic")}</div>
+                    <div className="text-sm text-green-600 font-medium">
+                      Starting from ₹{getServicePrice("basic")}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -623,51 +765,68 @@ export function GarageBookingFlow() {
         {currentStep === 4 && (
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Choose Service Package</h2>
-              <p className="text-gray-600">Select the package that best fits your needs</p>
+              <h2 className="text-3xl font-bold mb-4">
+                Choose Service Package
+              </h2>
+              <p className="text-gray-600">
+                Select the package that best fits your needs
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {Object.entries(servicePackages).map(([packageId, packageInfo]) => (
-                <Card
-                  key={packageId}
-                  className={`cursor-pointer transition-all duration-300 hover:scale-105 relative ${
-                    formData.package === packageId ? "ring-2 ring-[#2b4ba9]" : ""
-                  } ${packageInfo.recommended ? "ring-2 ring-orange-400" : ""}`}
-                  onClick={() => updateFormData("package", packageId)}
-                >
-                  {packageInfo.recommended && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-orange-500 text-white">Recommended</Badge>
-                    </div>
-                  )}
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-xl">{packageInfo.name}</CardTitle>
-                    <div className="space-y-2">
-                      <div className="text-3xl font-bold text-[#2b4ba9]">₹{getServicePrice(packageId)}</div>
-                      <div className="flex items-center justify-center text-sm text-gray-500">
-                        <Clock className="h-4 w-4 mr-1" />
-                        {packageInfo.duration}
-                      </div>
-                      <div className="flex items-center justify-center text-sm text-gray-500">
-                        <Shield className="h-4 w-4 mr-1" />
-                        {packageInfo.warranty} warranty
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 text-center mb-4">{packageInfo.description}</p>
-                    <div className="space-y-2">
-                      {packageInfo.features.map((feature, index) => (
-                        <div key={index} className="flex items-center">
-                          <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                          <span className="text-sm">{feature}</span>
+              {Object.entries(servicePackages).map(
+                ([packageId, packageInfo]) => (
+                  <Card
+                    key={packageId}
+                    className={`cursor-pointer transition-all duration-300 hover:scale-105 relative ${
+                      formData.package === packageId
+                        ? "ring-2 ring-[#2b4ba9]"
+                        : ""
+                    } ${"recommended" in packageInfo && packageInfo.recommended ? "ring-2 ring-orange-400" : ""}`}
+                    onClick={() => updateFormData("package", packageId)}
+                  >
+                    {"recommended" in packageInfo &&
+                      packageInfo.recommended && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                          <Badge className="bg-orange-500 text-white">
+                            Recommended
+                          </Badge>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      )}
+                    <CardHeader className="text-center">
+                      <CardTitle className="text-xl">
+                        {packageInfo.name}
+                      </CardTitle>
+                      <div className="space-y-2">
+                        <div className="text-3xl font-bold text-[#2b4ba9]">
+                          ₹{getServicePrice(packageId)}
+                        </div>
+                        <div className="flex items-center justify-center text-sm text-gray-500">
+                          <Clock className="h-4 w-4 mr-1" />
+                          {packageInfo.duration}
+                        </div>
+                        <div className="flex items-center justify-center text-sm text-gray-500">
+                          <Shield className="h-4 w-4 mr-1" />
+                          {packageInfo.warranty} warranty
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 text-center mb-4">
+                        {packageInfo.description}
+                      </p>
+                      <div className="space-y-2">
+                        {packageInfo.features.map((feature, index) => (
+                          <div key={index} className="flex items-center">
+                            <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                            <span className="text-sm">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              )}
             </div>
 
             <div className="flex justify-center mt-8">
@@ -688,7 +847,9 @@ export function GarageBookingFlow() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4">Customer Details</h2>
-              <p className="text-gray-600">Please provide your details and preferred service time</p>
+              <p className="text-gray-600">
+                Please provide your details and preferred service time
+              </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -706,7 +867,9 @@ export function GarageBookingFlow() {
                     <Input
                       id="name"
                       value={formData.customerName}
-                      onChange={(e) => updateFormData("customerName", e.target.value)}
+                      onChange={(e) =>
+                        updateFormData("customerName", e.target.value)
+                      }
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -734,7 +897,9 @@ export function GarageBookingFlow() {
                     <Textarea
                       id="address"
                       value={formData.address}
-                      onChange={(e) => updateFormData("address", e.target.value)}
+                      onChange={(e) =>
+                        updateFormData("address", e.target.value)
+                      }
                       placeholder="Enter your complete address"
                       rows={3}
                     />
@@ -754,7 +919,9 @@ export function GarageBookingFlow() {
                       <Input
                         id="pincode"
                         value={formData.pincode}
-                        onChange={(e) => updateFormData("pincode", e.target.value)}
+                        onChange={(e) =>
+                          updateFormData("pincode", e.target.value)
+                        }
                         placeholder="Pincode"
                       />
                     </div>
@@ -779,7 +946,12 @@ export function GarageBookingFlow() {
                         {getNextSevenDays().map((date, index) => (
                           <div
                             key={index}
-                            onClick={() => updateFormData("date", date.toISOString().split("T")[0])}
+                            onClick={() =>
+                              updateFormData(
+                                "date",
+                                date.toISOString().split("T")[0]
+                              )
+                            }
                             className={`flex flex-col items-center p-2 rounded-lg cursor-pointer border transition-all ${
                               formData.date === date.toISOString().split("T")[0]
                                 ? "bg-blue-100 border-blue-600"
@@ -787,9 +959,13 @@ export function GarageBookingFlow() {
                             }`}
                           >
                             <span className="text-xs text-gray-500">
-                              {date.toLocaleDateString("en-US", { weekday: "short" })}
+                              {date.toLocaleDateString("en-US", {
+                                weekday: "short",
+                              })}
                             </span>
-                            <span className="text-sm font-medium">{date.getDate()}</span>
+                            <span className="text-sm font-medium">
+                              {date.getDate()}
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -822,7 +998,10 @@ export function GarageBookingFlow() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {addOnServices.map((addOn) => (
-                      <div key={addOn.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div
+                        key={addOn.id}
+                        className="flex items-center justify-between p-3 border rounded-lg"
+                      >
                         <div className="flex items-center space-x-3">
                           <Checkbox
                             checked={formData.addOns.includes(addOn.id)}
@@ -830,10 +1009,14 @@ export function GarageBookingFlow() {
                           />
                           <div>
                             <h4 className="font-medium">{addOn.name}</h4>
-                            <p className="text-sm text-gray-600">{addOn.description}</p>
+                            <p className="text-sm text-gray-600">
+                              {addOn.description}
+                            </p>
                           </div>
                         </div>
-                        <span className="font-semibold text-blue-600">₹{addOn.price}</span>
+                        <span className="font-semibold text-blue-600">
+                          ₹{addOn.price}
+                        </span>
                       </div>
                     ))}
                   </CardContent>
@@ -847,7 +1030,9 @@ export function GarageBookingFlow() {
                   <CardContent>
                     <Textarea
                       value={formData.specialInstructions}
-                      onChange={(e) => updateFormData("specialInstructions", e.target.value)}
+                      onChange={(e) =>
+                        updateFormData("specialInstructions", e.target.value)
+                      }
                       placeholder="Any special instructions for the service..."
                       rows={3}
                     />
@@ -880,7 +1065,9 @@ export function GarageBookingFlow() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4">Checkout</h2>
-              <p className="text-gray-600">Review your booking and complete payment</p>
+              <p className="text-gray-600">
+                Review your booking and complete payment
+              </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -893,25 +1080,35 @@ export function GarageBookingFlow() {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Vehicle</span>
                     <span className="font-medium">
-                      {formData.brand} {formData.model} ({getCurrentVehicleTypeName()})
+                      {formData.brand} {formData.model} (
+                      {getCurrentVehicleTypeName()})
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Service</span>
                     <span className="font-medium">
-                      {getFilteredServices().find((s) => s.id === formData.service)?.name}
+                      {
+                        getFilteredServices().find(
+                          (s) => s.id === formData.service
+                        )?.name
+                      }
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Package</span>
                     <span className="font-medium">
-                      {servicePackages[formData.package as keyof typeof servicePackages]?.name}
+                      {
+                        servicePackages[
+                          formData.package as keyof typeof servicePackages
+                        ]?.name
+                      }
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Date & Time</span>
                     <span className="font-medium">
-                      {new Date(formData.date).toLocaleDateString()} • {formData.timeSlot}
+                      {new Date(formData.date).toLocaleDateString()} •{" "}
+                      {formData.timeSlot}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -924,7 +1121,9 @@ export function GarageBookingFlow() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Address</span>
-                    <span className="font-medium text-right">{formData.address}</span>
+                    <span className="font-medium text-right">
+                      {formData.address}
+                    </span>
                   </div>
 
                   <Separator />
@@ -935,18 +1134,25 @@ export function GarageBookingFlow() {
                       <span>₹{getServicePrice(formData.package)}</span>
                     </div>
                     {formData.addOns.map((addOnId) => {
-                      const addOn = addOnServices.find((ao) => ao.id === addOnId)
+                      const addOn = addOnServices.find(
+                        (ao) => ao.id === addOnId
+                      );
                       return (
-                        <div key={addOnId} className="flex justify-between text-sm">
+                        <div
+                          key={addOnId}
+                          className="flex justify-between text-sm"
+                        >
                           <span>{addOn?.name}</span>
                           <span>₹{addOn?.price}</span>
                         </div>
-                      )
+                      );
                     })}
                     <Separator />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Total Amount</span>
-                      <span className="text-[#2b4ba9]">₹{calculateTotalPrice()}</span>
+                      <span className="text-[#2b4ba9]">
+                        ₹{calculateTotalPrice()}
+                      </span>
                     </div>
                   </div>
                 </CardContent>
@@ -960,17 +1166,24 @@ export function GarageBookingFlow() {
                 <CardContent>
                   <RadioGroup
                     value={formData.paymentMethod}
-                    onValueChange={(value) => updateFormData("paymentMethod", value)}
+                    onValueChange={(value) =>
+                      updateFormData("paymentMethod", value)
+                    }
                   >
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
                         <RadioGroupItem value="upi" id="upi" />
                         <Smartphone className="h-6 w-6 text-[#2b4ba9]" />
                         <div className="flex-1">
-                          <Label htmlFor="upi" className="font-medium cursor-pointer">
+                          <Label
+                            htmlFor="upi"
+                            className="font-medium cursor-pointer"
+                          >
                             UPI Payment
                           </Label>
-                          <p className="text-sm text-gray-600">Pay using Google Pay, PhonePe, Paytm</p>
+                          <p className="text-sm text-gray-600">
+                            Pay using Google Pay, PhonePe, Paytm
+                          </p>
                         </div>
                       </div>
 
@@ -978,10 +1191,15 @@ export function GarageBookingFlow() {
                         <RadioGroupItem value="card" id="card" />
                         <CreditCard className="h-6 w-6 text-[#2b4ba9]" />
                         <div className="flex-1">
-                          <Label htmlFor="card" className="font-medium cursor-pointer">
+                          <Label
+                            htmlFor="card"
+                            className="font-medium cursor-pointer"
+                          >
                             Credit/Debit Card
                           </Label>
-                          <p className="text-sm text-gray-600">Visa, Mastercard, RuPay</p>
+                          <p className="text-sm text-gray-600">
+                            Visa, Mastercard, RuPay
+                          </p>
                         </div>
                       </div>
 
@@ -989,10 +1207,15 @@ export function GarageBookingFlow() {
                         <RadioGroupItem value="wallet" id="wallet" />
                         <Wallet className="h-6 w-6 text-[#2b4ba9]" />
                         <div className="flex-1">
-                          <Label htmlFor="wallet" className="font-medium cursor-pointer">
+                          <Label
+                            htmlFor="wallet"
+                            className="font-medium cursor-pointer"
+                          >
                             Digital Wallet
                           </Label>
-                          <p className="text-sm text-gray-600">Paytm, Amazon Pay, Mobikwik</p>
+                          <p className="text-sm text-gray-600">
+                            Paytm, Amazon Pay, Mobikwik
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1003,7 +1226,10 @@ export function GarageBookingFlow() {
                       <Shield className="h-5 w-5 text-[#2b4ba9] mr-2 flex-shrink-0 mt-0.5" />
                       <div className="text-sm text-blue-700">
                         <p className="font-medium mb-1">Secure Payment</p>
-                        <p>Your payment is 100% secure. You can cancel or reschedule up to 2 hours before service.</p>
+                        <p>
+                          Your payment is 100% secure. You can cancel or
+                          reschedule up to 2 hours before service.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1023,7 +1249,5 @@ export function GarageBookingFlow() {
         )}
       </div>
     </div>
-  )
+  );
 }
-
-

@@ -2413,14 +2413,18 @@ export default function ProductManagementPage() {
                       ([category, categoryQuestions]) => {
                         const answeredCount = categoryQuestions.filter(
                           (_, index) => {
-                            const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(categoryQuestions[index]) + 1}`;
+                            const question = categoryQuestions[index];
+                            if (!question) return false;
+                            const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(question) + 1}`;
                             return inspectionAnswers[questionId];
                           }
                         ).length;
 
                         const categoryScore = categoryQuestions.reduce(
                           (sum, _, index) => {
-                            const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(categoryQuestions[index]) + 1}`;
+                            const question = categoryQuestions[index];
+                            if (!question) return sum;
+                            const questionId = `${inspectingProduct.type}_${Object.values(questions).flat().indexOf(question) + 1}`;
                             const condition =
                               inspectionAnswers[questionId] || "Good";
                             return (

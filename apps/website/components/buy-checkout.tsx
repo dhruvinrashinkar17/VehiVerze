@@ -1,30 +1,33 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@vehiverze/ui/button"
-import { Input } from "@vehiverze/ui/input"
-import { Label } from "@vehiverze/ui/label"
-import { Separator } from "@vehiverze/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@vehiverze/ui/tabs"
-import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group"
-import { CelebrationAnimation } from "@/components/celebration-animation"
-import { NavBar } from "@/components/nav-bar"
-import { Footer } from "@/components/footer"
-import { ArrowLeft } from "lucide-react"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@vehiverze/ui/button";
+import { Input } from "@vehiverze/ui/input";
+import { Label } from "@vehiverze/ui/label";
+import { Separator } from "@vehiverze/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@vehiverze/ui/tabs";
+import { RadioGroup, RadioGroupItem } from "@vehiverze/ui/radio-group";
+import { CelebrationAnimation } from "@/components/celebration-animation";
+import { NavBar } from "@/components/nav-bar";
+import { Footer } from "@/components/footer";
+import { ArrowLeft } from "lucide-react";
 
 interface BuyCheckoutProps {
-  vehicleId: string
+  vehicleId?: string;
 }
 
-export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
-  const router = useRouter()
-  const [activeTab, setActiveTab] = useState("details")
-  const [showCelebration, setShowCelebration] = useState(false)
-  const [vehicle, setVehicle] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+export function BuyCheckout({ vehicleId: propVehicleId }: BuyCheckoutProps) {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("details");
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [vehicle, setVehicle] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [vehicleId, setVehicleId] = useState<string | null>(
+    propVehicleId ?? null
+  );
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -38,12 +41,26 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
     cardName: "",
     expiryDate: "",
     cvv: "",
-  })
+  });
 
   useEffect(() => {
+    // Get vehicleId from sessionStorage if not provided as prop
+    if (!vehicleId) {
+      const storedId =
+        typeof window !== "undefined"
+          ? sessionStorage.getItem("buyVehicleId")
+          : null;
+      if (storedId) {
+        setVehicleId(storedId);
+        return;
+      }
+      setLoading(false);
+      return;
+    }
+
     // Simulate fetching vehicle data
     const fetchVehicle = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         // In a real app, this would be an API call
         // For now, we'll simulate with some sample data
@@ -66,51 +83,49 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
             seatingCapacity: 5,
             description:
               "Well maintained Maruti Suzuki Swift with all service records. Single owner vehicle with no accidents.",
-          }
-          setVehicle(vehicleData)
-          setLoading(false)
-        }, 1000)
+          };
+          setVehicle(vehicleData);
+          setLoading(false);
+        }, 1000);
       } catch (error) {
-        console.error("Error fetching vehicle:", error)
-        setLoading(false)
+        console.error("Error fetching vehicle:", error);
+        setLoading(false);
       }
-    }
+    };
 
-    if (vehicleId) {
-      fetchVehicle()
-    }
-  }, [vehicleId])
+    fetchVehicle();
+  }, [vehicleId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleRadioChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, paymentMethod: value }))
-  }
+    setFormData((prev) => ({ ...prev, paymentMethod: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Process payment and show celebration
-    setShowCelebration(true)
+    setShowCelebration(true);
 
     // In a real app, you would submit the form data to your backend
-    console.log("Form submitted:", formData)
-  }
+    console.log("Form submitted:", formData);
+  };
 
   const handleContinue = () => {
     if (activeTab === "details") {
-      setActiveTab("payment")
+      setActiveTab("payment");
     } else if (activeTab === "payment") {
-      handleSubmit({ preventDefault: () => {} } as React.FormEvent)
+      handleSubmit({ preventDefault: () => {} } as React.FormEvent);
     }
-  }
+  };
 
   const handleCloseCelebration = () => {
-    setShowCelebration(false)
-    router.push("/buy/order-success")
-  }
+    setShowCelebration(false);
+    router.push("/buy/order-success");
+  };
 
   if (loading) {
     return (
@@ -119,11 +134,13 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
         <div className="container mx-auto px-4 py-12">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-lg text-gray-600">Loading vehicle details...</p>
+            <p className="mt-4 text-lg text-gray-600">
+              Loading vehicle details...
+            </p>
           </div>
         </div>
       </>
-    )
+    );
   }
 
   if (!vehicle) {
@@ -132,15 +149,22 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
         <NavBar />
         <div className="container mx-auto px-4 py-12">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Vehicle Not Found</h2>
-            <p className="text-gray-600 mb-8">The vehicle you are looking for could not be found.</p>
-            <Button onClick={() => router.push("/buy")} className="bg-blue-600 hover:bg-blue-700">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Vehicle Not Found
+            </h2>
+            <p className="text-gray-600 mb-8">
+              The vehicle you are looking for could not be found.
+            </p>
+            <Button
+              onClick={() => router.push("/buy")}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
               Browse Vehicles
             </Button>
           </div>
         </div>
       </>
-    )
+    );
   }
 
   return (
@@ -158,7 +182,9 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
           </button>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Complete Your Purchase</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          Complete Your Purchase
+        </h1>
 
         {showCelebration && (
           <CelebrationAnimation
@@ -173,7 +199,11 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-2 mb-8">
                 <TabsTrigger value="details">Personal Details</TabsTrigger>
                 <TabsTrigger value="payment">Payment</TabsTrigger>
@@ -269,7 +299,10 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
                 </div>
 
                 <div className="pt-4">
-                  <Button onClick={handleContinue} className="w-full bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={handleContinue}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                  >
                     Continue to Payment
                   </Button>
                 </div>
@@ -277,8 +310,14 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
 
               <TabsContent value="payment" className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Select Payment Method</h3>
-                  <RadioGroup value={formData.paymentMethod} onValueChange={handleRadioChange} className="space-y-3">
+                  <h3 className="text-lg font-medium mb-4">
+                    Select Payment Method
+                  </h3>
+                  <RadioGroup
+                    value={formData.paymentMethod}
+                    onValueChange={handleRadioChange}
+                    className="space-y-3"
+                  >
                     <div className="flex items-center space-x-3 border p-4 rounded-md">
                       <RadioGroupItem value="card" id="card" />
                       <Label htmlFor="card" className="flex-1 cursor-pointer">
@@ -293,7 +332,10 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
                     </div>
                     <div className="flex items-center space-x-3 border p-4 rounded-md">
                       <RadioGroupItem value="netbanking" id="netbanking" />
-                      <Label htmlFor="netbanking" className="flex-1 cursor-pointer">
+                      <Label
+                        htmlFor="netbanking"
+                        className="flex-1 cursor-pointer"
+                      >
                         Net Banking
                       </Label>
                     </div>
@@ -358,14 +400,23 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
                 {formData.paymentMethod === "upi" && (
                   <div>
                     <Label htmlFor="upiId">UPI ID</Label>
-                    <Input id="upiId" placeholder="yourname@upi" className="mt-1" required />
+                    <Input
+                      id="upiId"
+                      placeholder="yourname@upi"
+                      className="mt-1"
+                      required
+                    />
                   </div>
                 )}
 
                 {formData.paymentMethod === "netbanking" && (
                   <div>
                     <Label htmlFor="bank">Select Bank</Label>
-                    <select id="bank" className="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                    <select
+                      id="bank"
+                      className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                      required
+                    >
                       <option value="">Select your bank</option>
                       <option value="sbi">State Bank of India</option>
                       <option value="hdfc">HDFC Bank</option>
@@ -377,7 +428,10 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
                 )}
 
                 <div className="pt-4">
-                  <Button onClick={handleSubmit} className="w-full bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={handleSubmit}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                  >
                     Complete Purchase
                   </Button>
                 </div>
@@ -423,7 +477,9 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">GST (18%)</span>
-                <span>₹{Math.round(vehicle.price * 0.18).toLocaleString()}</span>
+                <span>
+                  ₹{Math.round(vehicle.price * 0.18).toLocaleString()}
+                </span>
               </div>
             </div>
 
@@ -431,14 +487,26 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
 
             <div className="flex justify-between font-semibold text-lg">
               <span>Total</span>
-              <span>₹{(vehicle.price + 5000 + 2500 + 15000 + Math.round(vehicle.price * 0.18)).toLocaleString()}</span>
+              <span>
+                ₹
+                {(
+                  vehicle.price +
+                  5000 +
+                  2500 +
+                  15000 +
+                  Math.round(vehicle.price * 0.18)
+                ).toLocaleString()}
+              </span>
             </div>
 
             <div className="mt-6 bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-800 mb-2">Delivery Information</h4>
+              <h4 className="font-medium text-blue-800 mb-2">
+                Delivery Information
+              </h4>
               <p className="text-sm text-blue-700">
-                Your vehicle will be delivered within 7 working days after payment confirmation. Our team will contact
-                you to schedule the delivery.
+                Your vehicle will be delivered within 7 working days after
+                payment confirmation. Our team will contact you to schedule the
+                delivery.
               </p>
             </div>
           </div>
@@ -447,7 +515,5 @@ export function BuyCheckout({ vehicleId }: BuyCheckoutProps) {
 
       <Footer />
     </>
-  )
+  );
 }
-
-

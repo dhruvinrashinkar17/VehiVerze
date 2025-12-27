@@ -519,8 +519,8 @@ export function VehicleTypeContent({
       vehicles.length > 0 ? Math.min(...vehicles.map((v) => v.price)) : 0;
     const priceFactor = (maxPrice - minPrice) / 100;
     const matchesPrice =
-      vehicle.price >= priceRange[0] * priceFactor + minPrice &&
-      vehicle.price <= priceRange[1] * priceFactor + minPrice;
+      vehicle.price >= priceRange[0]! * priceFactor + minPrice &&
+      vehicle.price <= priceRange[1]! * priceFactor + minPrice;
 
     return matchesSearch && matchesCategory && matchesPrice;
   });

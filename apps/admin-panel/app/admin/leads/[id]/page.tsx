@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useParams, useRouter } from "next/navigation"
-import { Button } from "@vehiverze/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { Badge } from "@vehiverze/ui/badge"
-import { Skeleton } from "@vehiverze/ui/skeleton"
-import { leadsDb } from "@/lib/mock-data/stores"
-import { useState, useEffect } from "react"
-import { ordersDb } from "@/lib/mock-data"
+import { useParams, useRouter } from "next/navigation";
+import { Button } from "@vehiverze/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { Badge } from "@vehiverze/ui/badge";
+import { Skeleton } from "@vehiverze/ui/skeleton";
+import { leadsDb } from "@/lib/mock-data/stores";
+import { useState, useEffect } from "react";
+import { ordersDb } from "@/lib/mock-data";
 
 function LoadingSkeleton() {
   return (
@@ -30,64 +30,66 @@ function LoadingSkeleton() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 export default function LeadDetailPage() {
-  const { id } = useParams()
-  const router = useRouter()
-  const [lead, setLead] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { id } = useParams();
+  const router = useRouter();
+  const [lead, setLead] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLead = async () => {
       try {
-        const foundLead = leadsDb.getById(id as string)
+        const foundLead = leadsDb.getById(id as string);
         if (!foundLead) {
-          setError("Lead not found")
+          setError("Lead not found");
         } else {
-          setLead(foundLead)
+          setLead(foundLead);
         }
       } catch (err) {
-        setError("Failed to load lead")
+        setError("Failed to load lead");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchLead()
-  }, [id])
+    fetchLead();
+  }, [id]);
 
   if (loading) {
-    return <LoadingSkeleton />
+    return <LoadingSkeleton />;
   }
 
   if (error || !lead) {
     return (
       <Card className="bg-[#1A1A1A] border-[#2A2A2A]">
         <CardContent className="flex flex-col items-center justify-center h-[400px]">
-          <h3 className="text-xl font-semibold mb-4">{error || "Lead not found"}</h3>
+          <h3 className="text-xl font-semibold mb-4">
+            {error || "Lead not found"}
+          </h3>
           <Button onClick={() => router.back()}>Go Back</Button>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Qualified":
-        return "bg-green-500/20 text-green-500"
+        return "bg-green-500/20 text-green-500";
       case "Failed":
-        return "bg-red-500/20 text-red-500"
+        return "bg-red-500/20 text-red-500";
       case "Converted":
-        return "bg-purple-500/20 text-purple-500"
+        return "bg-purple-500/20 text-purple-500";
       case "New":
-        return "bg-blue-500/20 text-blue-500"
+        return "bg-blue-500/20 text-blue-500";
       default:
-        return "bg-yellow-500/20 text-yellow-500"
+        return "bg-yellow-500/20 text-yellow-500";
     }
-  }
+  };
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
@@ -141,8 +143,11 @@ export default function LeadDetailPage() {
               className="bg-green-600 hover:bg-green-700"
               onClick={() => {
                 // Update lead status to converted
-                const updatedLead = leadsDb.update(lead.id, { ...lead, status: "Converted" })
-                setLead(updatedLead)
+                const updatedLead = leadsDb.update(lead.id, {
+                  ...lead,
+                  status: "Converted",
+                });
+                setLead(updatedLead);
 
                 // Create a new order from this lead
                 const newOrder = {
@@ -151,18 +156,23 @@ export default function LeadDetailPage() {
                   city: lead.city,
                   type: lead.vehicleType,
                   serviceType: lead.serviceType,
-                  status: "Pending",
+                  status: "Pending" as const,
                   token: Math.random().toString(36).substr(2, 10).toUpperCase(),
-                  pickup: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+                  pickup: new Date(
+                    Date.now() + 24 * 60 * 60 * 1000
+                  ).toISOString(), // Tomorrow
                   vendor: null,
                   specs: {
-                    ram: "4GB",
-                    storage: "64GB",
-                    age: "12 Months",
-                    screenCondition: "Good",
-                    physicalCondition: "Good",
-                    bodyCondition: "Good",
-                    accessories: "Original",
+                    brand: lead.model.split(" ")[0] || "Unknown",
+                    model: lead.model,
+                    manufacturingYear: "2020",
+                    variant: "Base",
+                    ownershipHistory: "1st Owner",
+                    fuelType: "Petrol",
+                    kilometersDriven: "50000 km",
+                    city: lead.city,
+                    planningToSell: "Immediately" as const,
+                    priceEstimate: "Good" as const,
                   },
                   pricing: {
                     quoted: Math.floor(Math.random() * 50000) + 10000,
@@ -175,7 +185,7 @@ export default function LeadDetailPage() {
                     address: "Address from lead",
                     pincode: "400001",
                     city: lead.city,
-                    payment: "Cash",
+                    payment: "Cash" as const,
                   },
                   logs: [
                     {
@@ -183,14 +193,14 @@ export default function LeadDetailPage() {
                       action: "Order created from lead conversion",
                     },
                   ],
-                }
+                };
 
                 // Add to orders database
-                ordersDb.create(newOrder)
+                ordersDb.create(newOrder);
 
                 // Show success message and redirect
-                alert("Lead successfully converted to order!")
-                router.push("/admin/orders")
+                alert("Lead successfully converted to order!");
+                router.push("/admin/orders");
               }}
             >
               Convert to Order
@@ -199,8 +209,11 @@ export default function LeadDetailPage() {
               variant="destructive"
               onClick={() => {
                 // Update lead status to failed
-                const updatedLead = leadsDb.update(lead.id, { ...lead, status: "Failed" })
-                setLead(updatedLead)
+                const updatedLead = leadsDb.update(lead.id, {
+                  ...lead,
+                  status: "Failed",
+                });
+                setLead(updatedLead);
 
                 // Create a failed order entry
                 const failedOrder = {
@@ -209,18 +222,21 @@ export default function LeadDetailPage() {
                   city: lead.city,
                   type: lead.vehicleType,
                   serviceType: lead.serviceType,
-                  status: "Cancelled by Vehiverze",
+                  status: "Cancelled by Vehiverze" as const,
                   token: Math.random().toString(36).substr(2, 10).toUpperCase(),
                   pickup: new Date().toISOString(),
                   vendor: null,
                   specs: {
-                    ram: "N/A",
-                    storage: "N/A",
-                    age: "N/A",
-                    screenCondition: "N/A",
-                    physicalCondition: "N/A",
-                    bodyCondition: "N/A",
-                    accessories: "N/A",
+                    brand: lead.model.split(" ")[0] || "Unknown",
+                    model: lead.model,
+                    manufacturingYear: "N/A",
+                    variant: "N/A",
+                    ownershipHistory: "N/A",
+                    fuelType: "N/A",
+                    kilometersDriven: "N/A",
+                    city: lead.city,
+                    planningToSell: "Immediately" as const,
+                    priceEstimate: "Fair" as const,
                   },
                   pricing: {
                     quoted: 0,
@@ -233,7 +249,7 @@ export default function LeadDetailPage() {
                     address: "Address from failed lead",
                     pincode: "400001",
                     city: lead.city,
-                    payment: "Cash",
+                    payment: "Cash" as const,
                   },
                   logs: [
                     {
@@ -241,14 +257,14 @@ export default function LeadDetailPage() {
                       action: "Lead marked as failed",
                     },
                   ],
-                }
+                };
 
                 // Add to orders database as failed
-                ordersDb.create(failedOrder)
+                ordersDb.create(failedOrder);
 
                 // Show success message and redirect
-                alert("Lead marked as failed!")
-                router.push("/admin/failed")
+                alert("Lead marked as failed!");
+                router.push("/admin/failed");
               }}
             >
               Mark as Failed
@@ -267,21 +283,23 @@ export default function LeadDetailPage() {
               <div className="w-2 h-2 rounded-full bg-blue-500" />
               <div>
                 <div className="text-sm font-medium">Lead Created</div>
-                <div className="text-sm text-gray-400">{new Date(lead.date).toLocaleString()}</div>
+                <div className="text-sm text-gray-400">
+                  {new Date(lead.date).toLocaleString()}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="w-2 h-2 rounded-full bg-yellow-500" />
               <div>
                 <div className="text-sm font-medium">Last Contact</div>
-                <div className="text-sm text-gray-400">{new Date(lead.lastContact).toLocaleString()}</div>
+                <div className="text-sm text-gray-400">
+                  {new Date(lead.lastContact).toLocaleString()}
+                </div>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-
-

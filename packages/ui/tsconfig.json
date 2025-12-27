@@ -2,24 +2,17 @@
   "extends": "@vehiverze/typescript-config/react-library.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": [
-      "ES2022",
-      "DOM"
-    ],
+    "lib": ["ES2022", "DOM"],
     "module": "ESNext",
     "target": "ES6",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@/lib/utils": [
-        "@vehiverze/shared-utils/cn"
-      ]
+      "@/lib/utils": ["@vehiverze/shared-utils/cn"]
     },
     "strictNullChecks": true
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

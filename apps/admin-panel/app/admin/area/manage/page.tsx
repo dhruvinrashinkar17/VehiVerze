@@ -82,7 +82,10 @@ export default function AreaManagementPage() {
                     <TableCell>
                       <Badge
                         variant={
-                          pincode.status === "Live" ? "success" : "destructive"
+                          pincode.status === "Live" ? "default" : "destructive"
+                        }
+                        className={
+                          pincode.status === "Live" ? "bg-green-500" : undefined
                         }
                       >
                         {pincode.status}

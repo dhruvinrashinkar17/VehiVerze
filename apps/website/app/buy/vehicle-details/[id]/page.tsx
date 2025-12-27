@@ -1,9 +1,13 @@
-import type { Metadata } from "next"
-import { VehicleDetailsPage } from "@/components/vehicle-details-page"
+import type { Metadata } from "next";
+import { VehicleDetailsPage } from "@/components/vehicle-details-page";
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
   // In a real app, fetch vehicle data from API
-  const vehicleId = params.id
+  const { id: vehicleId } = await params;
   const vehicleData: Record<string, any> = {
     "1": {
       name: "Honda Activa 6G",
@@ -35,9 +39,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       price: 3500000,
       description: "Heavy-duty truck for long-haul transportation",
     },
-  }
+  };
 
-  const vehicle = vehicleData[vehicleId] || vehicleData["1"]
+  const vehicle = vehicleData[vehicleId] || vehicleData["1"];
 
   return {
     title: `Buy ${vehicle.name} | ₹${vehicle.price.toLocaleString()} | Vehiverze`,
@@ -46,7 +50,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     openGraph: {
       title: `Buy ${vehicle.name} | Vehiverze`,
       description: `${vehicle.description}. Buy with instant financing and free delivery.`,
-      type: "product",
+      type: "website",
       url: `https://vehiverze.com/buy/vehicle-details/${vehicleId}`,
     },
     twitter: {
@@ -61,9 +65,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     alternates: {
       canonical: `https://vehiverze.com/buy/vehicle-details/${vehicleId}`,
     },
-  }
+  };
 }
 
 export default function VehicleDetails({ params }: { params: { id: string } }) {
-  return <VehicleDetailsPage vehicleId={params.id} />
+  return <VehicleDetailsPage vehicleId={params.id} />;
 }

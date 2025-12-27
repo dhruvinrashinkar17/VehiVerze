@@ -34,7 +34,6 @@ export const users = pgTable("user", {
 export const usersRelations = relations(users, ({ many }) => ({
   vehicles: many(vehicles),
   insurances: many(insurances),
-  garageBookings: many(garageBookings),
   healthInsurances: many(healthInsurances),
 }));
 
@@ -154,34 +153,6 @@ export const healthInsurancesRelations = relations(
     }),
   })
 );
-
-// ============================================
-// GARAGE BOOKING (Legacy)
-// ============================================
-export const garageBookings = pgTable("garage_booking", {
-  id: text("id").primaryKey().$defaultFn(cuid),
-  vehicleDetails: json("vehicle_details").notNull(),
-  serviceType: text("service_type").notNull(),
-  description: text("description"),
-  address: text("address"),
-  date: timestamp("date", { mode: "date" }).notNull(),
-  timeSlot: text("time_slot").notNull(),
-  estimatedCost: decimal("estimated_cost", { precision: 10, scale: 2 }),
-  finalCost: decimal("final_cost", { precision: 10, scale: 2 }),
-  status: text("status").default("scheduled").notNull(),
-  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id),
-});
-
-export const garageBookingsRelations = relations(garageBookings, ({ one }) => ({
-  user: one(users, {
-    fields: [garageBookings.userId],
-    references: [users.id],
-  }),
-}));
 
 // ============================================
 // GARAGE PARTNER
@@ -532,9 +503,6 @@ export type NewInsurance = typeof insurances.$inferInsert;
 
 export type HealthInsurance = typeof healthInsurances.$inferSelect;
 export type NewHealthInsurance = typeof healthInsurances.$inferInsert;
-
-export type GarageBooking = typeof garageBookings.$inferSelect;
-export type NewGarageBooking = typeof garageBookings.$inferInsert;
 
 export type GaragePartner = typeof garagePartners.$inferSelect;
 export type NewGaragePartner = typeof garagePartners.$inferInsert;

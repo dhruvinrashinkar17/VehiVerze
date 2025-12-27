@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Marketplace() {
-  const [activeTab, setActiveTab] = useState("buy")
-  const router = useRouter()
+  const [activeTab, setActiveTab] = useState("buy");
+  const router = useRouter();
 
   const categories = [
     {
@@ -38,12 +38,19 @@ export default function Marketplace() {
       title: "Garage Services",
       image: "/placeholder.svg?height=80&width=80&text=Garage",
     },
-  ]
+  ];
 
-  const handleCategoryClick = (category) => {
-    const path = category.id === "garage-services" ? "/garage-services" : `/${activeTab}/${category.id}`
-    router.push(path)
-  }
+  const handleCategoryClick = (category: {
+    id: string;
+    title: string;
+    image: string;
+  }) => {
+    const path =
+      category.id === "garage-services"
+        ? "/garage-services"
+        : `/${activeTab}/${category.id}`;
+    router.push(path);
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen py-8">
@@ -52,7 +59,9 @@ export default function Marketplace() {
         <div className="inline-flex rounded-md overflow-hidden">
           <button
             className={`px-12 py-3 text-lg font-medium ${
-              activeTab === "buy" ? "bg-blue-600 text-white" : "bg-white text-gray-800"
+              activeTab === "buy"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-gray-800"
             }`}
             onClick={() => setActiveTab("buy")}
           >
@@ -60,7 +69,9 @@ export default function Marketplace() {
           </button>
           <button
             className={`px-12 py-3 text-lg font-medium ${
-              activeTab === "sell" ? "bg-blue-600 text-white" : "bg-white text-gray-800"
+              activeTab === "sell"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-gray-800"
             }`}
             onClick={() => setActiveTab("sell")}
           >
@@ -78,14 +89,18 @@ export default function Marketplace() {
               className="bg-white rounded-lg shadow-sm p-6 flex flex-col items-center cursor-pointer hover:shadow-md transition-shadow"
               onClick={() => handleCategoryClick(category)}
             >
-              <img src={category.image || "/placeholder.svg"} alt={category.title} className="w-20 h-20 mb-6" />
-              <h3 className="text-xl font-medium text-gray-800">{category.title}</h3>
+              <img
+                src={category.image || "/placeholder.svg"}
+                alt={category.title}
+                className="w-20 h-20 mb-6"
+              />
+              <h3 className="text-xl font-medium text-gray-800">
+                {category.title}
+              </h3>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-

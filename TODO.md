@@ -146,9 +146,12 @@ Use: `todo` · `in-progress` · `blocked` · `done` · `removed`
 
 ## Milestone 2 — Data Model Cleanup (P1/P2)
 
-- (P1, todo) Choose one garage booking table and retire the legacy path.
-  - Current: `garage_booking` (legacy) and `garage_service_booking` (new)
-  - Schema: `packages/database/src/schema.ts`
+- (P1, done) Choose one garage booking table and retire the legacy path.
+  - Kept: `garage_service_booking` (comprehensive fields, indexes, partner relations)
+  - Removed: `garage_booking` (legacy, required userId FK, fewer fields)
+  - Deleted: `/api/garage/book` route (was using legacy table)
+  - Schema updated in `packages/database/src/schema.ts`
+  - Run `drizzle-kit generate` to create migration for dropping the legacy table
 - (P2, todo) Add retention/cleanup for OTP table (delete expired codes).
 - (P2, todo) Add appropriate indexes based on real query patterns.
 
@@ -161,13 +164,40 @@ Use: `todo` · `in-progress` · `blocked` · `done` · `removed`
   - Fixed package lint globs (`eslint "src/**/*.{ts,tsx}"`).
   - Removed duplicate JSX props in premium selector components.
 
-- (P1, todo) Remove `ignoreBuildErrors` / `ignoreDuringBuilds`.
-  - Website: `apps/website/next.config.mjs`
-  - Admin: `apps/admin-panel/next.config.mjs`
-- (P1, todo) Pin runtime dependencies (avoid `latest` in production).
-- (P1, todo) Align React + TypeScript types across all workspaces.
-  - Current mismatch: `apps/admin-panel/package.json`
-- (P1, todo) Add CI checks: lint, type-check, build.
+- (P1, done) Remove `ignoreBuildErrors` / `ignoreDuringBuilds`.
+  - Website: `apps/website/next.config.mjs` — removed `ignoreBuildErrors: true`
+  - Admin: `apps/admin-panel/next.config.mjs` — removed `ignoreBuildErrors: true`
+  - Fixed 50+ TypeScript errors across both apps to enable strict builds
+  - Key fixes included:
+    - Component prop mismatches (CelebrationAnimation, selector components)
+    - React types version mismatches between packages (Label, Input, Textarea)
+    - Array index access safety (non-null assertions where values are guaranteed)
+    - react-day-picker v9 migration (IconLeft/IconRight → Chevron)
+    - Tailwind v4 config compatibility (darkMode format)
+    - Event handler type annotations
+    - Optional chaining for potentially undefined values
+
+- (P1, done) Pin runtime dependencies (avoid `latest` in production).
+  - Pinned `@faker-js/faker` to `^9.3.0` (was `latest`)
+  - Pinned `turbo` to `^2.6.1` (was `latest`)
+  - Aligned versions across workspaces:
+    - React: `^19.2.3` everywhere
+    - @types/react: `^19.2.7` everywhere
+    - @types/react-dom: `^19.2.3` everywhere
+    - TypeScript: `^5.9.3` everywhere
+    - ESLint: `^9.39.2` everywhere
+    - lucide-react: `^0.561.0` everywhere
+
+- (P1, done) Align React + TypeScript types across all workspaces.
+  - Synchronized all package.json files to use same versions
+  - Note: `@ts-expect-error` comments remain for Radix UI components (they internally use React 18 types)
+  - This is a known issue with Radix UI + React 19 and will resolve when Radix updates
+
+- (P1, done) Add CI checks: lint, type-check, build.
+  - Created `.github/workflows/ci.yml`
+  - Runs on push to main and pull requests
+  - Three parallel jobs: lint, type-check, build
+  - Uses Bun for fast installs
 
 ---
 

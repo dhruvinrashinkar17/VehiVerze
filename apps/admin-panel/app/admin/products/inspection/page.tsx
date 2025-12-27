@@ -42,7 +42,7 @@ export default function InspectionQuestionsPage() {
       if (!acc[question.category]) {
         acc[question.category] = [];
       }
-      acc[question.category].push(question);
+      acc[question.category]?.push(question);
       return acc;
     },
     {} as Record<string, typeof questions>

@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { NavBar } from "@/components/nav-bar"
-import { Footer } from "@/components/footer"
-import { ContactForm } from "@/components/contact-form"
-import { SellPageFAQs } from "@/components/sell-page-faqs"
+import { NavBar } from "@/components/nav-bar";
+import { Footer } from "@/components/footer";
+import { ContactForm } from "@/components/contact-form";
+import { SellPageFAQs } from "@/components/sell-page-faqs";
 
 export default function ContactPage() {
   return (
@@ -11,13 +11,11 @@ export default function ContactPage() {
       <NavBar />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-md mx-auto">
-          <ContactForm onSubmit={(data) => console.log(data)} onBack={() => window.history.back()} />
+          <ContactForm />
         </div>
       </div>
       <SellPageFAQs pageType="contact" />
       <Footer />
     </main>
-  )
+  );
 }
-
-

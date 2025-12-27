@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { Button } from "@vehiverze/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card"
-import { Badge } from "@vehiverze/ui/badge"
-import { AssignVendorModal } from "@/components/modals/assign-vendor-modal"
-import { ReschedulePickupModal } from "@/components/modals/reschedule-pickup-modal"
-import { FailLeadModal } from "@/components/modals/fail-lead-modal"
-import { ordersDb } from "@/lib/mock-data"
-import type { Order } from "@/lib/mock-data"
-import { useEffect } from "react"
-import { Skeleton } from "@vehiverze/ui/skeleton"
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Button } from "@vehiverze/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@vehiverze/ui/card";
+import { Badge } from "@vehiverze/ui/badge";
+import { AssignVendorModal } from "@/components/modals/assign-vendor-modal";
+import { ReschedulePickupModal } from "@/components/modals/reschedule-pickup-modal";
+import { FailLeadModal } from "@/components/modals/fail-lead-modal";
+import { ordersDb } from "@/lib/mock-data";
+import type { Order } from "@/lib/mock-data";
+import { useEffect } from "react";
+import { Skeleton } from "@vehiverze/ui/skeleton";
 
 function LoadingSkeleton() {
   return (
@@ -34,112 +34,113 @@ function LoadingSkeleton() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 export default function OrderDetailPage() {
-  const { id } = useParams()
-  const router = useRouter()
-  const [order, setOrder] = useState<Order | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { id } = useParams();
+  const router = useRouter();
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Modal states
-  const [showAssignModal, setShowAssignModal] = useState(false)
-  const [showRescheduleModal, setShowRescheduleModal] = useState(false)
-  const [showFailModal, setShowFailModal] = useState(false)
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const foundOrder = ordersDb.getById(id as string)
+        const foundOrder = ordersDb.getById(id as string);
         if (!foundOrder) {
-          setError("Order not found")
+          setError("Order not found");
         } else {
-          setOrder(foundOrder)
+          setOrder(foundOrder);
         }
       } catch (err) {
-        setError("Failed to load order")
+        setError("Failed to load order");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchOrder()
-  }, [id])
+    fetchOrder();
+  }, [id]);
 
   const handleAssignVendor = async (vendorId: string) => {
-    if (!order) return
+    if (!order) return;
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Update order with vendor
       const updatedOrder = ordersDb.update(order.id, {
         ...order,
         vendor: vendorId,
         status: "Assigned to Vendor",
-      })
-      setOrder(updatedOrder || null)
+      });
+      setOrder(updatedOrder || null);
     } catch (error) {
-      console.error("Error assigning vendor:", error)
-      throw error
+      console.error("Error assigning vendor:", error);
+      throw error;
     }
-  }
+  };
 
   const handleReschedulePickup = async (date: Date, time: string) => {
-    if (!order) return
+    if (!order) return;
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Update order with new pickup time
       const updatedOrder = ordersDb.update(order.id, {
         ...order,
         pickup: date.toISOString(),
-        pickupTime: time,
-      })
-      setOrder(updatedOrder || null)
+      });
+      setOrder(updatedOrder || null);
     } catch (error) {
-      console.error("Error rescheduling pickup:", error)
-      throw error
+      console.error("Error rescheduling pickup:", error);
+      throw error;
     }
-  }
+  };
 
   const handleFailLead = async () => {
-    if (!order) return
+    if (!order) return;
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Update order status
       const updatedOrder = ordersDb.update(order.id, {
         ...order,
         status: "Cancelled by Vehiverze",
-      })
-      setOrder(updatedOrder || null)
+      });
+      setOrder(updatedOrder || null);
     } catch (error) {
-      console.error("Error failing lead:", error)
-      throw error
+      console.error("Error failing lead:", error);
+      throw error;
     }
-  }
+  };
 
   if (loading) {
-    return <LoadingSkeleton />
+    return <LoadingSkeleton />;
   }
 
   if (error || !order) {
     return (
       <Card className="bg-[#1A1A1A] border-[#2A2A2A]">
         <CardContent className="flex flex-col items-center justify-center h-[400px]">
-          <h3 className="text-xl font-semibold mb-4">{error || "Order not found"}</h3>
+          <h3 className="text-xl font-semibold mb-4">
+            {error || "Order not found"}
+          </h3>
           <Button onClick={() => router.back()}>Go Back</Button>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -149,11 +150,15 @@ export default function OrderDetailPage() {
           <Card className="bg-[#1A1A1A] border-[#2A2A2A]">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <Badge className="bg-purple-500/20 text-purple-500">{order.type}</Badge>
+                <Badge className="bg-purple-500/20 text-purple-500">
+                  {order.type}
+                </Badge>
                 <Badge
                   variant="secondary"
                   className={
-                    order.status === "Completed" ? "bg-green-500/20 text-green-500" : "bg-yellow-500/20 text-yellow-500"
+                    order.status === "Completed"
+                      ? "bg-green-500/20 text-green-500"
+                      : "bg-yellow-500/20 text-yellow-500"
                   }
                 >
                   {order.status}
@@ -193,7 +198,9 @@ export default function OrderDetailPage() {
                     <div>{order.specs.model}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Manufacturing Year</div>
+                    <div className="text-sm text-gray-400">
+                      Manufacturing Year
+                    </div>
                     <div>{order.specs.manufacturingYear}</div>
                   </div>
                   <div>
@@ -201,7 +208,9 @@ export default function OrderDetailPage() {
                     <div>{order.specs.variant}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Ownership History</div>
+                    <div className="text-sm text-gray-400">
+                      Ownership History
+                    </div>
                     <div>{order.specs.ownershipHistory}</div>
                   </div>
                   <div>
@@ -209,7 +218,9 @@ export default function OrderDetailPage() {
                     <div>{order.specs.fuelType}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Kilometers Driven</div>
+                    <div className="text-sm text-gray-400">
+                      Kilometers Driven
+                    </div>
                     <div>{order.specs.kilometersDriven}</div>
                   </div>
                   <div>
@@ -217,7 +228,9 @@ export default function OrderDetailPage() {
                     <div>{order.specs.city}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Planning to sell?</div>
+                    <div className="text-sm text-gray-400">
+                      Planning to sell?
+                    </div>
                     <div>{order.specs.planningToSell}</div>
                   </div>
                   <div>
@@ -236,7 +249,9 @@ export default function OrderDetailPage() {
                   </div>
                   {order.pricing.requote && (
                     <div>
-                      <div className="text-sm text-gray-400">Requoted Price</div>
+                      <div className="text-sm text-gray-400">
+                        Requoted Price
+                      </div>
                       <div>₹{order.pricing.requote.toLocaleString()}</div>
                     </div>
                   )}
@@ -258,7 +273,10 @@ export default function OrderDetailPage() {
                 >
                   Reschedule
                 </Button>
-                <Button variant="destructive" onClick={() => setShowFailModal(true)}>
+                <Button
+                  variant="destructive"
+                  onClick={() => setShowFailModal(true)}
+                >
                   Fail Lead
                 </Button>
               </div>
@@ -308,7 +326,9 @@ export default function OrderDetailPage() {
               <div className="space-y-4">
                 {order.logs.map((log, i) => (
                   <div key={i} className="flex gap-4">
-                    <div className="text-sm text-gray-400">{new Date(log.timestamp).toLocaleString()}</div>
+                    <div className="text-sm text-gray-400">
+                      {new Date(log.timestamp).toLocaleString()}
+                    </div>
                     <div>{log.action}</div>
                   </div>
                 ))}
@@ -331,9 +351,11 @@ export default function OrderDetailPage() {
         onReschedule={handleReschedulePickup}
       />
 
-      <FailLeadModal isOpen={showFailModal} onClose={() => setShowFailModal(false)} onConfirm={handleFailLead} />
+      <FailLeadModal
+        isOpen={showFailModal}
+        onClose={() => setShowFailModal(false)}
+        onConfirm={handleFailLead}
+      />
     </>
-  )
+  );
 }
-
-
